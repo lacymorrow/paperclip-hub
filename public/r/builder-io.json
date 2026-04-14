@@ -9,7 +9,7 @@
     "@builder.io/dev-tools"
   ],
   "registryDependencies": [
-    "cn"
+    "@shipkit/cn"
   ],
   "files": [
     {

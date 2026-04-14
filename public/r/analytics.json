@@ -7,8 +7,8 @@
     "posthog-js"
   ],
   "registryDependencies": [
-    "cn",
-    "features-config"
+    "@shipkit/cn",
+    "@shipkit/features-config"
   ],
   "files": [
     {

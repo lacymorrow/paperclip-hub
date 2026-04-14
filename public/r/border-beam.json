@@ -4,7 +4,7 @@
   "title": "Border Beam",
   "description": "An animated beam effect that traces along the border of a container.",
   "registryDependencies": [
-    "cn"
+    "@shipkit/cn"
   ],
   "files": [
     {

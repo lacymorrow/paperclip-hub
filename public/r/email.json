@@ -8,7 +8,7 @@
     "zod"
   ],
   "registryDependencies": [
-    "cn",
+    "@shipkit/cn",
     "button",
     "input",
     "label"

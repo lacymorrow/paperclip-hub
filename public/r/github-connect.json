@@ -7,9 +7,9 @@
     "octokit"
   ],
   "registryDependencies": [
-    "cn",
-    "routes-config",
-    "features-config",
+    "@shipkit/cn",
+    "@shipkit/routes-config",
+    "@shipkit/features-config",
     "button",
     "card",
     "input"

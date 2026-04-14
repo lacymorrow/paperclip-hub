@@ -10,8 +10,8 @@
     "zod"
   ],
   "registryDependencies": [
-    "cn",
-    "routes-config",
+    "@shipkit/cn",
+    "@shipkit/routes-config",
     "accordion",
     "scroll-area",
     "skeleton",

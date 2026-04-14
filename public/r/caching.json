@@ -8,7 +8,7 @@
     "@upstash/ratelimit"
   ],
   "registryDependencies": [
-    "features-config"
+    "@shipkit/features-config"
   ],
   "files": [
     {

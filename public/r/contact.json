@@ -10,8 +10,8 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "cn",
-    "routes-config",
+    "@shipkit/cn",
+    "@shipkit/routes-config",
     "button",
     "card",
     "input",

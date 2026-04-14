@@ -4,7 +4,7 @@
   "title": "Retro Grid",
   "description": "A perspective grid background effect with retro aesthetics.",
   "registryDependencies": [
-    "cn"
+    "@shipkit/cn"
   ],
   "files": [
     {

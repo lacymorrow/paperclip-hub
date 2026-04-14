@@ -8,8 +8,8 @@
     "uuid"
   ],
   "registryDependencies": [
-    "cn",
-    "features-config",
+    "@shipkit/cn",
+    "@shipkit/features-config",
     "builder-io",
     "button",
     "card",

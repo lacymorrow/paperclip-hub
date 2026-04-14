@@ -4,7 +4,7 @@
   "title": "Marquee",
   "description": "An infinite scrolling marquee component with horizontal and vertical support.",
   "registryDependencies": [
-    "cn"
+    "@shipkit/cn"
   ],
   "files": [
     {

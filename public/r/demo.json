@@ -11,8 +11,8 @@
     "react-resizable-panels"
   ],
   "registryDependencies": [
-    "cn",
-    "routes-config",
+    "@shipkit/cn",
+    "@shipkit/routes-config",
     "button",
     "card",
     "badge",

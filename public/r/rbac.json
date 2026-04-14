@@ -4,8 +4,8 @@
   "title": "RBAC",
   "description": "Role-based access control with permission service, client-side hook, and API permission check endpoint.",
   "registryDependencies": [
-    "cn",
-    "routes-config"
+    "@shipkit/cn",
+    "@shipkit/routes-config"
   ],
   "files": [
     {

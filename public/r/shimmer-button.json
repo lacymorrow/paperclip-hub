@@ -4,7 +4,7 @@
   "title": "Shimmer Button",
   "description": "A button with a rotating shimmer light effect.",
   "registryDependencies": [
-    "cn"
+    "@shipkit/cn"
   ],
   "files": [
     {

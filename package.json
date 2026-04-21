@@ -75,7 +75,7 @@
     "verify:quick": "tsx scripts/verify.ts --quick"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "1.11.1",
+    "@auth/drizzle-adapter": "1.11.2",
     "@aws-sdk/client-s3": "^3.990.0",
     "@aws-sdk/s3-request-presigner": "^3.990.0",
     "@builder.io/dev-tools": "1.26.12",
@@ -182,7 +182,7 @@
     "mathjs": "^15.1.1",
     "motion": "^12.34.0",
     "next": "16.1.6",
-    "next-auth": "5.0.0-beta.29",
+    "next-auth": "5.0.0-beta.31",
     "next-mdx-remote": "^6.0.0",
     "next-pwa": "^5.6.0",
     "next-themes": "0.4.6",

@@ -201,7 +201,7 @@ export const providers: NextAuthConfig["providers"] = [
               githubUsername: profile.login,
             };
           },
-          checks: ["state", "pkce"],
+          checks: ["state"],
           allowDangerousEmailAccountLinking: true,
         }),
       ]

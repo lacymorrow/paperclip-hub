@@ -85,15 +85,10 @@ export const UserMenu = ({
     onThemeChange: handleThemePersist,
   });
 
-  // Detect invalid session state: user object exists but is missing required fields
-  // This can happen after deployment or session invalidation
+  // Detect invalid session state: user object exists but is missing the id field
   const isInvalidSession = React.useMemo(() => {
     if (!currentUser) return false;
-    // A valid user must have an id - if currentUser exists but has no id, session is invalid
     if (!currentUser.id) return true;
-    // If user has no name AND no image, the session data is likely corrupted/stale
-    // This causes the "?" avatar fallback which indicates an invalid session
-    if (!currentUser.name && !currentUser.image) return true;
     return false;
   }, [currentUser]);
 

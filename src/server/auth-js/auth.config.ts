@@ -115,11 +115,13 @@ export const authOptions: NextAuthConfig = {
               githubUsername,
             });
 
-            // Update the user record with the GitHub username
+            // Update the user record with GitHub profile data
             await db
               ?.update(users)
               .set({
                 githubUsername,
+                name: user.name || githubUsername,
+                image: user.image || undefined,
                 updatedAt: new Date(),
               })
               .where(eq(users.id, targetUserId));

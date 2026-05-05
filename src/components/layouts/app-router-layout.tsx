@@ -12,8 +12,8 @@ import { TeamProvider } from "@/components/providers/team-provider";
  * reads so that Next.js can statically render the root shell. Pages or nested
  * layouts that need the server session should call `auth()` themselves.
  *
- * `KitProvider` passes `session={null}` to `SessionProvider`, which will
- * client-fetch `/api/auth/session` on mount. Team data is loaded in the
+ * `KitProvider` omits the `session` prop so `SessionProvider` receives
+ * `undefined` and client-fetches `/api/auth/session` on mount. Team data is loaded in the
  * dashboard layout where it's actually consumed.
  *
  * Theme is provided by KitProvider's internal ThemeProvider (shared with Pages Router).
@@ -29,7 +29,7 @@ export function AppRouterLayout({
       <PageTracker />
 
       {/* KitProvider - Manage all core providers including theme (session fetched client-side) */}
-      <KitProvider session={null}>
+      <KitProvider>
         <NuqsAdapter>
           <TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
             {children}

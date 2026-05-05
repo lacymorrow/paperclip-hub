@@ -61,8 +61,8 @@ export function OAuthButtons({
   const options = nextUrl ? { redirectTo: nextUrl } : {};
   const [currentVariant, setCurrentVariant] = useState<"default" | "icons">(variant);
 
-  const handleSignIn = (providerId: string) => {
-    void signInWithOAuthAction({ providerId, options });
+  const handleSignIn = async (providerId: string) => {
+    await signInWithOAuthAction({ providerId, options });
   };
 
   const toggleVariant = () => {
@@ -137,9 +137,7 @@ export function OAuthButtons({
           return (
             <form
               key={id}
-              action={() => {
-                handleSignIn(id);
-              }}
+              action={() => handleSignIn(id)}
             >
               {currentVariant === "icons" ? (
                 <Tooltip>

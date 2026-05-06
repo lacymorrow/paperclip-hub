@@ -18,7 +18,7 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
         <div className="flex flex-col items-end gap-1 text-sm text-muted-foreground">
           <a
             href={`tel:${basics.phone}`}
-            className="flex items-center gap-1.5 hover:text-foreground"
+            className="flex items-center gap-1.5 whitespace-nowrap hover:text-foreground"
           >
             <Phone className="h-3.5 w-3.5" />
             {basics.phone}

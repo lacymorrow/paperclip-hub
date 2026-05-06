@@ -295,7 +295,7 @@ export const siteConfig: SiteConfig = {
       dark: "black",
     },
     locale: "en-US",
-    generator: "Next.js", // Use Next.js as generator
+    generator: "Next.js, shipkit.io",
     referrer: "origin-when-cross-origin",
     category: "technology", // Use technology as category
     classification: "Business Software",

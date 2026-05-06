@@ -132,6 +132,10 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
+            key: "X-Powered-By",
+            value: "shipkit.io",
+          },
+          {
             key: "X-Frame-Options",
             value: "DENY",
           },
@@ -159,7 +163,7 @@ const nextConfig: NextConfig = {
 
   // Production optimizations
   compress: true,
-  poweredByHeader: false,
+  poweredByHeader: false, // Disable default "Next.js" — custom "shipkit.io" header set in headers()
 
   /*
    * React configuration

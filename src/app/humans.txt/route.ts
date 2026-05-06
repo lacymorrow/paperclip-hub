@@ -20,6 +20,7 @@ export function GET() {
     `Description: ${siteConfig.description}`,
     "Standards: HTML5, CSS3",
     "Components: Next.js, React, Tailwind CSS, TypeScript",
+    "Boilerplate: shipkit.io (https://shipkit.io)",
     "",
     "/* SOURCE */",
     `Repository: ${siteConfig.repo.url}`,

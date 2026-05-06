@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
+import { ShipkitBranding } from "@/components/modules/shipkit-branding";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { fontSans, fontSerif } from "@/config/fonts";
 import { siteConfig } from "@/config/site-config";
@@ -74,12 +75,27 @@ export default async function Layout({
               codeRepository: siteConfig.repo.url,
               programmingLanguage: ["TypeScript", "JavaScript"],
               runtimePlatform: "Node.js",
+              isBasedOn: {
+                "@type": "SoftwareApplication",
+                name: "shipkit.io",
+                url: "https://shipkit.io",
+                applicationCategory: "DeveloperApplication",
+              },
             }),
           }}
         />
         {headLinkHints.map((l: HeadLinkHint) => (
           <link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
         ))}
+
+        {/* shipkit.io attribution — to fully white-label, remove:
+            1. This <ShipkitBranding /> component (meta tags + console log)
+            2. The isBasedOn block in the JSON-LD above
+            3. X-Powered-By header in next.config.ts headers()
+            4. "Boilerplate: shipkit.io" line in src/app/humans.txt/route.ts
+            5. generator value in src/config/site-config.ts
+        */}
+        <ShipkitBranding />
 
         {env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED && (
           <script

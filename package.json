@@ -1,7 +1,7 @@
 {
-  "name": "paperclip-hub",
+  "name": "cliphub",
   "version": "0.1.0",
-  "homepage": "https://hub.paperclip.dev",
+  "homepage": "https://cliphub.lacy.sh",
   "repository": {
     "type": "git",
     "url": "https://github.com/paperclipai/paperclip-hub"

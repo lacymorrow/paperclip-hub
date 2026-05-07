@@ -189,25 +189,25 @@ export const siteConfig: SiteConfig = {
   name: "Paperclip Hub",
   title: "Paperclip Hub",
   tagline: "Extend Paperclip. Build anything.",
-  url: "https://hub.paperclip.dev",
+  url: "https://cliphub.lacy.sh",
   ogImage: "/app/og-image.png",
   description:
     "The plugin marketplace for Paperclip. Discover connectors, automations, and extensions built by the community.",
 
   branding: {
     projectName: "Paperclip Hub",
-    projectSlug: "paperclip-hub",
+    projectSlug: "cliphub",
     productNames: {
       bones: "Bones",
       brains: "Brains",
       main: "Paperclip Hub",
     },
-    domain: "hub.paperclip.dev",
+    domain: "cliphub.lacy.sh",
     protocol: "web+paperclip",
     githubOrg: "paperclipai",
     githubRepo: "paperclip-hub",
-    vercelProjectName: "paperclip-hub",
-    databaseName: "paperclip-hub",
+    vercelProjectName: "cliphub",
+    databaseName: "cliphub",
   },
 
   links: {

@@ -1,10 +1,10 @@
 {
-  "name": "shipkit",
-  "version": "0.2.1",
-  "homepage": "https://shipkit.io",
+  "name": "paperclip-hub",
+  "version": "0.1.0",
+  "homepage": "https://hub.paperclip.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lacymorrow/shipkit"
+    "url": "https://github.com/paperclipai/paperclip-hub"
   },
   "shipkit": {
     "bones": "0.2.1"
@@ -328,7 +328,6 @@
       "es5-ext",
       "esbuild",
       "geckodriver",
-      "isolated-vm",
       "msw",
       "onnxruntime-node",
       "protobufjs",
@@ -349,7 +348,6 @@
     "edgedriver",
     "esbuild",
     "geckodriver",
-    "isolated-vm",
     "onnxruntime-node",
     "prisma",
     "protobufjs",

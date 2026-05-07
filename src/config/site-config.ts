@@ -186,42 +186,41 @@ export const siteConfig: SiteConfig = {
     pageTransitions: true,
   },
 
-  name: "Shipkit",
-  title: "Shipkit",
-  tagline: "Launch your app at light speed.",
-  url: "https://shipkit.io",
+  name: "Paperclip Hub",
+  title: "Paperclip Hub",
+  tagline: "Extend Paperclip. Build anything.",
+  url: "https://hub.paperclip.dev",
   ogImage: "/app/og-image.png",
   description:
-    "Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+    "The plugin marketplace for Paperclip. Discover connectors, automations, and extensions built by the community.",
 
   branding: {
-    projectName: "Shipkit",
-    projectSlug: "shipkit",
+    projectName: "Paperclip Hub",
+    projectSlug: "paperclip-hub",
     productNames: {
       bones: "Bones",
       brains: "Brains",
-      main: "Shipkit",
+      main: "Paperclip Hub",
     },
-    domain: "shipkit.io",
-    protocol: "web+shipkit",
-    githubOrg: "shipkit-io",
-    githubRepo: "shipkit",
-    vercelProjectName: "shipkit-app",
-    databaseName: "shipkit",
+    domain: "hub.paperclip.dev",
+    protocol: "web+paperclip",
+    githubOrg: "paperclipai",
+    githubRepo: "paperclip-hub",
+    vercelProjectName: "paperclip-hub",
+    databaseName: "paperclip-hub",
   },
 
   links: {
-    twitter: "https://twitter.com/lacybuilds",
-    twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
-    x: "https://x.com/lacybuilds",
-    x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
-    github: "https://github.com/lacymorrow/shipkit",
+    twitter: "https://twitter.com/paperclipai",
+    twitter_follow: "https://twitter.com/intent/follow?screen_name=paperclipai",
+    x: "https://x.com/paperclipai",
+    x_follow: "https://x.com/intent/follow?screen_name=paperclipai",
+    github: "https://github.com/paperclipai/paperclip-hub",
   },
 
-  // Configure social profiles here. Leave any you don't use as empty strings.
   social: {
-    github: "https://github.com/shipkit-io",
-    x: "https://x.com/lacybuilds",
+    github: "https://github.com/paperclipai",
+    x: "https://x.com/paperclipai",
     linkedin: "",
     instagram: "",
     facebook: "",
@@ -233,9 +232,9 @@ export const siteConfig: SiteConfig = {
   },
 
   repo: {
-    owner: "lacymorrow",
-    name: "shipkit",
-    url: "https://github.com/lacymorrow/shipkit",
+    owner: "paperclipai",
+    name: "paperclip-hub",
+    url: "https://github.com/paperclipai/paperclip-hub",
     format: {
       // Placeholder format functions - assigned below
       clone: () => "",
@@ -282,13 +281,13 @@ export const siteConfig: SiteConfig = {
 
   metadata: {
     keywords: [
-      "Next.js",
-      "React",
-      "Tailwind CSS",
-      "Server Components",
-      "Shipkit",
-      "Shadcn",
-      "UI Components",
+      "Paperclip",
+      "AI agents",
+      "plugins",
+      "marketplace",
+      "connectors",
+      "automation",
+      "developer tools",
     ],
     themeColor: {
       light: "white",

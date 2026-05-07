@@ -13,7 +13,8 @@ export interface NavLink {
 }
 
 export const defaultNavLinks: NavLink[] = [
-  { href: routes.faq, label: "Faqs" },
-  { href: routes.features, label: "Features" },
-  { href: routes.pricing, label: "Pricing" },
+  { href: "/plugins", label: "Plugins" },
+  { href: "/plugins?category=connector", label: "Connectors" },
+  { href: "/plugins?category=automation", label: "Automations" },
+  { href: "/docs/plugins", label: "Docs" },
 ];

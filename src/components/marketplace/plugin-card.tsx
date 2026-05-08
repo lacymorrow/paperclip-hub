@@ -8,32 +8,62 @@ import {
   BadgeCheck,
   BarChart3,
   BookOpen,
+  Box,
   Brain,
   Bug,
   Code,
+  Cpu,
   Database,
+  Eye,
+  Fingerprint,
   GitBranch,
+  GitPullRequest,
   Import,
   Link,
+  MessageCircle,
   MessageSquare,
+  Package,
+  Plug,
+  Radio,
+  Scan,
+  Send,
+  Server,
+  Shield,
   Star,
+  Target,
   Terminal,
+  Wand,
   Workflow,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   link: Link,
   "git-branch": GitBranch,
+  "git-pull-request": GitPullRequest,
   "message-square": MessageSquare,
+  "message-circle": MessageCircle,
+  "bar-chart-3": BarChart3,
+  "book-open": BookOpen,
   terminal: Terminal,
   brain: Brain,
-  "bar-chart-3": BarChart3,
   import: Import,
   code: Code,
   bug: Bug,
   database: Database,
   workflow: Workflow,
-  "book-open": BookOpen,
+  cpu: Cpu,
+  radio: Radio,
+  shield: Shield,
+  server: Server,
+  send: Send,
+  scan: Scan,
+  box: Box,
+  target: Target,
+  fingerprint: Fingerprint,
+  plug: Plug,
+  package: Package,
+  eye: Eye,
+  wand: Wand,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -52,13 +82,13 @@ export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) =
   const Icon = ICON_MAP[plugin.icon] ?? Code;
 
   return (
-    <a href={href} className="group block">
+    <a href={href} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl" aria-label={`${plugin.name} by ${plugin.author.name}`}>
       <Card className="h-full transition-all duration-200 hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Icon className="h-5 w-5 text-primary" />
+                <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
@@ -66,7 +96,7 @@ export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) =
                     {plugin.name}
                   </h3>
                   {plugin.verified && (
-                    <BadgeCheck className="h-4 w-4 shrink-0 text-blue-500" />
+                    <BadgeCheck className="h-4 w-4 shrink-0 text-blue-500" aria-label="Verified" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">{plugin.author.name}</p>
@@ -84,11 +114,13 @@ export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) =
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <ArrowDownToLine className="h-3.5 w-3.5" />
+                <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="sr-only">Downloads:</span>
                 {formatInstalls(plugin.installs)}
               </span>
               <span className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
+                <span className="sr-only">Rating:</span>
                 {plugin.rating}
               </span>
             </div>

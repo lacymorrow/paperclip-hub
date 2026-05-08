@@ -1,11 +1,12 @@
 import { Badge } from "@/components/ui/badge";
+import { CopyButton } from "@/components/marketplace/copy-button";
 import { getPluginBySlug, plugins } from "@/data/plugins";
+import { siteConfig } from "@/config/site-config";
 import {
   ArrowDownToLine,
   ArrowLeft,
   BadgeCheck,
   Calendar,
-  ClipboardCopy,
   Package,
   Shield,
   Star,
@@ -26,9 +27,29 @@ export async function generateMetadata({ params }: PluginDetailPageProps): Promi
   const { slug } = await params;
   const plugin = getPluginBySlug(slug);
   if (!plugin) return {};
+
+  const title = `${plugin.name} — Paperclip Hub`;
+  const description = plugin.description;
+  const ogUrl = new URL("/og", siteConfig.url);
+  ogUrl.searchParams.set("title", plugin.name);
+  ogUrl.searchParams.set("description", description);
+
   return {
-    title: `${plugin.name} — Paperclip Hub`,
-    description: plugin.description,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `${siteConfig.url}/plugins/${plugin.slug}`,
+      images: [{ url: ogUrl.toString(), width: 1200, height: 628, alt: plugin.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogUrl.toString()],
+    },
   };
 }
 
@@ -58,26 +79,26 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
   if (!plugin) notFound();
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <main className="container mx-auto max-w-4xl px-4 py-8">
       <a
         href="/plugins"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Back to plugins
       </a>
 
       <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
+        <article className="lg:col-span-2 space-y-6">
           <div className="flex items-start gap-4">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-              <Package className="h-8 w-8 text-primary" />
+              <Package className="h-8 w-8 text-primary" aria-hidden="true" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-bold">{plugin.name}</h1>
                 {plugin.verified && (
-                  <BadgeCheck className="h-5 w-5 text-blue-500" />
+                  <BadgeCheck className="h-5 w-5 text-blue-500" aria-label="Verified plugin" />
                 )}
               </div>
               <p className="text-sm text-muted-foreground">
@@ -90,33 +111,31 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
             {plugin.longDescription ?? plugin.description}
           </p>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-3">Installation</h2>
-            <div className="flex items-center gap-2 rounded-lg border bg-secondary/30 p-4 font-mono text-sm">
+          <section aria-labelledby="installation-heading">
+            <h2 id="installation-heading" className="text-lg font-semibold mb-3">Installation</h2>
+            <div className="flex items-center gap-2 rounded-lg border bg-secondary/30 dark:bg-secondary/10 p-4 font-mono text-sm">
               <code className="flex-1 overflow-x-auto">{plugin.installCommand}</code>
-              <button className="shrink-0 rounded-md p-1.5 hover:bg-secondary transition-colors" title="Copy command">
-                <ClipboardCopy className="h-4 w-4 text-muted-foreground" />
-              </button>
+              <CopyButton text={plugin.installCommand} />
             </div>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-3">Capabilities</h2>
-            <div className="flex flex-wrap gap-2">
+          <section aria-labelledby="capabilities-heading">
+            <h2 id="capabilities-heading" className="text-lg font-semibold mb-3">Capabilities</h2>
+            <ul className="flex flex-wrap gap-2" role="list">
               {plugin.capabilities.map((cap) => (
-                <div
+                <li
                   key={cap}
-                  className="flex items-center gap-1.5 rounded-md border bg-secondary/30 px-3 py-1.5 text-xs font-mono"
+                  className="flex items-center gap-1.5 rounded-md border bg-secondary/30 dark:bg-secondary/10 px-3 py-1.5 text-xs font-mono"
                 >
-                  <Shield className="h-3 w-3 text-muted-foreground" />
+                  <Shield className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
                   {cap}
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </section>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-3">Tags</h2>
+          <section aria-labelledby="tags-heading">
+            <h2 id="tags-heading" className="text-lg font-semibold mb-3">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {plugin.tags.map((tag) => (
                 <a
@@ -124,71 +143,73 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
                   href={`/plugins?q=${tag}`}
                   className="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
                 >
-                  <Tag className="h-3 w-3" />
+                  <Tag className="h-3 w-3" aria-hidden="true" />
                   {tag}
                 </a>
               ))}
             </div>
-          </div>
-        </div>
+          </section>
+        </article>
 
-        <div className="space-y-4">
+        <aside className="space-y-4 order-first lg:order-last">
           <div className="rounded-xl border bg-card p-5 space-y-4">
             <a
               href={`paperclip://install/${plugin.slug}`}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
-              <ArrowDownToLine className="h-4 w-4" />
+              <ArrowDownToLine className="h-4 w-4" aria-hidden="true" />
               Install Plugin
             </a>
 
-            <div className="space-y-3 text-sm">
+            <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Downloads</span>
-                <span className="font-medium flex items-center gap-1">
-                  <ArrowDownToLine className="h-3.5 w-3.5" />
+                <dt className="text-muted-foreground">Downloads</dt>
+                <dd className="font-medium flex items-center gap-1">
+                  <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                   {formatInstalls(plugin.installs)}
-                </span>
+                </dd>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Rating</span>
-                <span className="font-medium flex items-center gap-1">
-                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <dt className="text-muted-foreground">Rating</dt>
+                <dd className="font-medium flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
                   {plugin.rating}
-                </span>
+                </dd>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Version</span>
-                <span className="font-medium">v{plugin.version}</span>
+                <dt className="text-muted-foreground">Version</dt>
+                <dd className="font-medium">v{plugin.version}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Category</span>
-                <Badge variant="outline" className={CATEGORY_COLORS[plugin.category]}>
-                  {plugin.category}
-                </Badge>
+                <dt className="text-muted-foreground">Category</dt>
+                <dd>
+                  <Badge variant="outline" className={CATEGORY_COLORS[plugin.category]}>
+                    {plugin.category}
+                  </Badge>
+                </dd>
               </div>
               <hr />
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Published</span>
-                <span className="font-medium flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(plugin.createdAt)}
-                </span>
+                <dt className="text-muted-foreground">Published</dt>
+                <dd className="font-medium flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                  <time dateTime={plugin.createdAt}>{formatDate(plugin.createdAt)}</time>
+                </dd>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Updated</span>
-                <span className="font-medium flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(plugin.updatedAt)}
-                </span>
+                <dt className="text-muted-foreground">Updated</dt>
+                <dd className="font-medium flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                  <time dateTime={plugin.updatedAt}>{formatDate(plugin.updatedAt)}</time>
+                </dd>
               </div>
-            </div>
+            </dl>
           </div>
 
           {plugin.verified && (
             <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
               <div className="flex items-center gap-2 text-sm font-medium text-blue-500">
-                <BadgeCheck className="h-4 w-4" />
+                <BadgeCheck className="h-4 w-4" aria-hidden="true" />
                 Verified Plugin
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -196,8 +217,8 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
               </p>
             </div>
           )}
-        </div>
+        </aside>
       </div>
-    </div>
+    </main>
   );
 }

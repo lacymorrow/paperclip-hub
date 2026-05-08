@@ -15,7 +15,11 @@ export function GitHubSignInButton({ callbackUrl = "/", className }: GitHubSignI
 
   const handleClick = async () => {
     setIsLoading(true);
-    await signIn("github", { callbackUrl });
+    try {
+      await signIn("github", { callbackUrl });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

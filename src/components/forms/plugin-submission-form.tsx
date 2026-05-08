@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -28,22 +27,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   CAPABILITIES,
+  CATEGORIES,
   type PluginSubmissionData,
   pluginSubmissionSchema,
-  submitPlugin,
-} from "@/server/actions/plugin-submission";
+} from "@/server/actions/plugin-submission.schema";
+import { submitPlugin } from "@/server/actions/plugin-submission";
 
-const CATEGORIES = [
-  { value: "auth", label: "Auth" },
-  { value: "tools", label: "Tools" },
-  { value: "chat", label: "Chat" },
-  { value: "provider", label: "Provider" },
-  { value: "connector", label: "Connector" },
-  { value: "workspace", label: "Workspace" },
-  { value: "automation", label: "Automation" },
-  { value: "ui", label: "UI Extension" },
-  { value: "other", label: "Other" },
-] as const;
+const CATEGORY_LABELS: Record<(typeof CATEGORIES)[number], string> = {
+  auth: "Auth",
+  tools: "Tools",
+  chat: "Chat",
+  provider: "Provider",
+  connector: "Connector",
+  workspace: "Workspace",
+  automation: "Automation",
+  ui: "UI Extension",
+  other: "Other",
+};
 
 const CAPABILITY_LABELS: Record<(typeof CAPABILITIES)[number], string> = {
   event: "Event",
@@ -71,7 +71,7 @@ export function PluginSubmissionForm({ githubUsername }: PluginSubmissionFormPro
       name: "",
       npmPackage: "",
       description: "",
-      category: "",
+      category: undefined,
       capabilities: [],
       sourceRepo: "",
     },
@@ -219,8 +219,8 @@ export function PluginSubmissionForm({ githubUsername }: PluginSubmissionFormPro
                 </FormControl>
                 <SelectContent>
                   {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>
-                      {cat.label}
+                    <SelectItem key={cat} value={cat}>
+                      {CATEGORY_LABELS[cat]}
                     </SelectItem>
                   ))}
                 </SelectContent>

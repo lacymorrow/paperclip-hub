@@ -26,7 +26,7 @@ const PREREQS = [
     icon: Package,
     title: "Submit below",
     description:
-      "Fill out the form. We&apos;ll open a pull request to the registry on your behalf.",
+      "Fill out the form. We'll open a pull request to the registry on your behalf.",
   },
 ] as const;
 

@@ -1,51 +1,15 @@
 "use server";
 
 import { Octokit } from "@octokit/rest";
-import { and, eq } from "drizzle-orm";
-import { z } from "zod";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { accounts } from "@/server/db/schema";
+import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
+import { pluginSubmissionSchema, type PluginSubmissionData } from "./plugin-submission.schema";
 
 const REGISTRY_OWNER = "paperclipai";
 const REGISTRY_REPO = "paperclip-hub";
 const REGISTRY_BASE_BRANCH = "main";
 const REGISTRY_PLUGIN_PATH = "registry/plugins";
-
-const CAPABILITIES = [
-  "event",
-  "config",
-  "tool",
-  "auth",
-  "chat.message",
-  "chat.params",
-  "permission.ask",
-  "tool.execute.before",
-  "tool.execute.after",
-] as const;
-
-export const pluginSubmissionSchema = z.object({
-  name: z.string().min(1, "Plugin name is required").max(100),
-  npmPackage: z
-    .string()
-    .min(1, "npm package name is required")
-    .regex(
-      /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/,
-      "Invalid npm package name format"
-    ),
-  description: z.string().min(1, "Description is required").max(300),
-  category: z.string().min(1, "Category is required"),
-  capabilities: z
-    .array(z.enum(CAPABILITIES))
-    .min(1, "At least one capability is required"),
-  sourceRepo: z
-    .string()
-    .url("Must be a valid URL")
-    .optional()
-    .or(z.literal("")),
-});
-
-export type PluginSubmissionData = z.infer<typeof pluginSubmissionSchema>;
 
 interface NpmPackageInfo {
   version: string;
@@ -60,41 +24,39 @@ interface SubmissionResult {
 }
 
 async function fetchNpmPackageInfo(packageName: string): Promise<NpmPackageInfo | null> {
-  const encoded = encodeURIComponent(packageName).replace("%40", "@");
-  const res = await fetch(`https://registry.npmjs.org/${encoded}/latest`, {
-    headers: { Accept: "application/json" },
-    next: { revalidate: 0 },
-  });
-  if (!res.ok) return null;
-  const data = (await res.json()) as {
-    version?: string;
-    description?: string;
-    license?: string;
-  };
-  return {
-    version: data.version ?? "0.0.0",
-    description: data.description ?? "",
-    license: data.license ?? "unknown",
-  };
-}
-
-async function getGitHubAccessToken(userId: string): Promise<string | null> {
-  const row = await db?.query.accounts.findFirst({
-    where: and(eq(accounts.userId, userId), eq(accounts.provider, "github")),
-    columns: { access_token: true },
-  });
-  return row?.access_token ?? null;
+  // @scope/pkg → @scope%2Fpkg for npm registry API
+  const encoded = encodeURIComponent(packageName).replace(/%40/g, "@");
+  try {
+    const res = await fetch(`https://registry.npmjs.org/${encoded}/latest`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      version?: string;
+      description?: string;
+      license?: string;
+    };
+    return {
+      version: data.version ?? "0.0.0",
+      description: data.description ?? "",
+      license: data.license ?? "unknown",
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function ensureForked(
   octokit: Octokit,
   userLogin: string
 ): Promise<{ forkedOwner: string; forkedRepo: string }> {
-  // Check if fork already exists
   try {
     await octokit.repos.get({ owner: userLogin, repo: REGISTRY_REPO });
     return { forkedOwner: userLogin, forkedRepo: REGISTRY_REPO };
-  } catch {
+  } catch (err) {
+    const status = (err as { status?: number } | null)?.status;
+    if (status !== 404) throw err;
     // Fork doesn't exist, create it
   }
 
@@ -103,11 +65,15 @@ async function ensureForked(
     repo: REGISTRY_REPO,
   });
 
-  // GitHub fork creation is async — poll until the fork is ready (up to ~30s)
-  for (let i = 0; i < 12; i++) {
-    await new Promise((r) => setTimeout(r, 2500));
+  // GitHub fork creation is async — poll until the fork's default branch is present
+  for (let i = 0; i < 15; i++) {
+    await new Promise((r) => setTimeout(r, 2000));
     try {
-      await octokit.repos.get({ owner: userLogin, repo: REGISTRY_REPO });
+      await octokit.repos.getBranch({
+        owner: userLogin,
+        repo: REGISTRY_REPO,
+        branch: REGISTRY_BASE_BRANCH,
+      });
       return { forkedOwner: userLogin, forkedRepo: REGISTRY_REPO };
     } catch {
       // Not ready yet
@@ -117,19 +83,47 @@ async function ensureForked(
   throw new Error("Fork creation timed out. Please try again in a moment.");
 }
 
-export async function submitPlugin(
-  data: PluginSubmissionData
-): Promise<SubmissionResult> {
+async function findExistingPr(
+  octokit: Octokit,
+  head: string,
+  safeFilename: string
+): Promise<string | null> {
+  const { data: prs } = await octokit.pulls.list({
+    owner: REGISTRY_OWNER,
+    repo: REGISTRY_REPO,
+    state: "open",
+    head,
+  });
+  // Also search by filename in case a previous submission used a different fork branch
+  const byFilename = prs.find((pr) =>
+    pr.title.includes(safeFilename.replace("@", "").split("-")[0] ?? "")
+  );
+  const exact = prs.find((pr) => pr.head.label === head);
+  return exact?.html_url ?? byFilename?.html_url ?? null;
+}
+
+function octokitErrorMessage(err: unknown): string {
+  if (err && typeof err === "object") {
+    const e = err as { message?: string; response?: { data?: { message?: string } } };
+    return e.response?.data?.message ?? e.message ?? String(err);
+  }
+  return String(err);
+}
+
+export async function submitPlugin(data: PluginSubmissionData): Promise<SubmissionResult> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "You must be signed in to submit a plugin." };
   }
-
   if (!session.user.githubUsername) {
     return {
       success: false,
       error: "Your account must be connected to GitHub. Please sign in with GitHub.",
     };
+  }
+
+  if (!db) {
+    return { success: false, error: "Database is not configured." };
   }
 
   const validation = pluginSubmissionSchema.safeParse(data);
@@ -139,49 +133,74 @@ export async function submitPlugin(
       error: validation.error.errors[0]?.message ?? "Invalid form data.",
     };
   }
+  const validated = validation.data;
 
   const accessToken = await getGitHubAccessToken(session.user.id);
   if (!accessToken) {
     return {
       success: false,
-      error: "No GitHub access token found. Please sign out and reconnect with GitHub.",
+      error: "No GitHub access token found. Please sign out and sign in again with GitHub.",
     };
   }
 
   // Validate npm package exists
-  const npmInfo = await fetchNpmPackageInfo(data.npmPackage);
+  const npmInfo = await fetchNpmPackageInfo(validated.npmPackage);
   if (!npmInfo) {
     return {
       success: false,
-      error: `npm package "${data.npmPackage}" was not found in the registry.`,
+      error: `npm package "${validated.npmPackage}" was not found in the npm registry.`,
     };
   }
 
   const octokit = new Octokit({ auth: accessToken });
   const userLogin = session.user.githubUsername;
 
-  // Fork the registry repo if needed
+  // Ensure the registry repo is forked under the user's account
   let forkedOwner: string;
   let forkedRepo: string;
   try {
     ({ forkedOwner, forkedRepo } = await ensureForked(octokit, userLogin));
   } catch (err) {
+    const msg = octokitErrorMessage(err);
+    console.error("[submitPlugin] fork failed:", msg);
     return {
       success: false,
-      error: err instanceof Error ? err.message : "Failed to fork the registry repository.",
+      error: err instanceof Error ? err.message : `Failed to fork repository: ${msg}`,
     };
   }
 
-  // Get upstream HEAD SHA for branching (we branch from upstream, not fork, to stay current)
-  const { data: upstreamRef } = await octokit.git.getRef({
-    owner: REGISTRY_OWNER,
-    repo: REGISTRY_REPO,
-    ref: `heads/${REGISTRY_BASE_BRANCH}`,
-  });
-  const baseSha = upstreamRef.object.sha;
+  // Normalize scoped package names (@scope/pkg → @scope-pkg) for flat file naming
+  const safeFilename = validated.npmPackage.replace(/\//g, "-");
+  const filePath = `${REGISTRY_PLUGIN_PATH}/${safeFilename}.json`;
 
-  // Create a unique branch name
-  const safePkg = data.npmPackage.replace(/[^a-z0-9-]/g, "-");
+  // Check for an existing open PR to avoid duplicates
+  try {
+    const head = `${forkedOwner}:${REGISTRY_BASE_BRANCH}`;
+    const existingPrUrl = await findExistingPr(octokit, head, safeFilename);
+    if (existingPrUrl) {
+      return { success: true, prUrl: existingPrUrl };
+    }
+  } catch {
+    // Non-fatal: proceed even if the duplicate check fails
+  }
+
+  // Branch from the fork's own HEAD to handle stale forks safely
+  let baseSha: string;
+  try {
+    const { data: forkRef } = await octokit.git.getRef({
+      owner: forkedOwner,
+      repo: forkedRepo,
+      ref: `heads/${REGISTRY_BASE_BRANCH}`,
+    });
+    baseSha = forkRef.object.sha;
+  } catch (err) {
+    const msg = octokitErrorMessage(err);
+    console.error("[submitPlugin] getRef on fork failed:", msg);
+    return { success: false, error: `Could not read fork branch: ${msg}` };
+  }
+
+  // Create a unique timestamped branch
+  const safePkg = validated.npmPackage.replace(/[^a-z0-9-]/g, "-");
   const branchName = `submit/${safePkg}-${Date.now()}`;
 
   try {
@@ -191,59 +210,60 @@ export async function submitPlugin(
       ref: `refs/heads/${branchName}`,
       sha: baseSha,
     });
-  } catch (err: any) {
-    if (err?.status !== 422) {
-      return { success: false, error: "Failed to create branch in fork." };
+  } catch (err: unknown) {
+    const status = (err as { status?: number } | null)?.status;
+    const msg = octokitErrorMessage(err);
+    // 422 "Reference already exists" is safe to ignore (timestamp suffix makes collisions rare)
+    if (status !== 422 || !msg.includes("Reference already exists")) {
+      console.error("[submitPlugin] createRef failed:", msg);
+      return { success: false, error: `Failed to create branch: ${msg}` };
     }
-    // Branch already exists — unlikely given timestamp suffix, but handle gracefully
   }
 
-  // Build plugin JSON content
+  // Build and commit the plugin JSON
   const pluginJson = {
     $schema: "../schema.json",
-    name: data.name,
-    npmPackage: data.npmPackage,
-    description: data.description,
-    category: data.category,
-    capabilities: data.capabilities,
-    ...(data.sourceRepo ? { sourceRepo: data.sourceRepo } : {}),
+    name: validated.name,
+    npmPackage: validated.npmPackage,
+    description: validated.description,
+    category: validated.category,
+    capabilities: validated.capabilities,
+    ...(validated.sourceRepo ? { sourceRepo: validated.sourceRepo } : {}),
     author: userLogin,
     submittedAt: new Date().toISOString(),
   };
   const fileContent = `${JSON.stringify(pluginJson, null, 2)}\n`;
-  // Normalize scoped package names (@scope/pkg → @scope-pkg) for flat file naming
-  const safeFilename = data.npmPackage.replace(/\//g, "-");
-  const filePath = `${REGISTRY_PLUGIN_PATH}/${safeFilename}.json`;
 
-  // Commit the plugin JSON to the fork branch
   try {
     await octokit.repos.createOrUpdateFileContents({
       owner: forkedOwner,
       repo: forkedRepo,
       path: filePath,
-      message: `chore: add ${data.npmPackage} to plugin registry`,
+      message: `chore: add ${validated.npmPackage} to plugin registry`,
       content: Buffer.from(fileContent).toString("base64"),
       branch: branchName,
     });
   } catch (err) {
-    return { success: false, error: "Failed to commit plugin file to fork." };
+    const msg = octokitErrorMessage(err);
+    console.error("[submitPlugin] createOrUpdateFileContents failed:", msg);
+    return { success: false, error: `Failed to commit plugin file: ${msg}` };
   }
 
-  // Open the PR against the upstream repo
+  // Open the pull request
   let prUrl: string;
   try {
     const { data: pr } = await octokit.pulls.create({
       owner: REGISTRY_OWNER,
       repo: REGISTRY_REPO,
-      title: `feat(registry): add ${data.name} (${data.npmPackage})`,
+      title: `feat(registry): add ${validated.name} (${validated.npmPackage})`,
       body: [
         `## Plugin Submission\n`,
-        `**Package:** [\`${data.npmPackage}\`](https://www.npmjs.com/package/${data.npmPackage})`,
-        `**Category:** ${data.category}`,
-        `**Capabilities:** ${data.capabilities.join(", ")}`,
+        `**Package:** [\`${validated.npmPackage}\`](https://www.npmjs.com/package/${validated.npmPackage})`,
+        `**Category:** ${validated.category}`,
+        `**Capabilities:** ${validated.capabilities.join(", ")}`,
         `**npm version:** ${npmInfo.version}`,
         `**License:** ${npmInfo.license}`,
-        data.sourceRepo ? `**Source:** ${data.sourceRepo}` : "",
+        validated.sourceRepo ? `**Source:** ${validated.sourceRepo}` : "",
         `\nSubmitted via the [Paperclip Hub](https://cliphub.lacy.sh/submit) plugin submission form.`,
       ]
         .filter(Boolean)
@@ -254,10 +274,10 @@ export async function submitPlugin(
     });
     prUrl = pr.html_url;
   } catch (err) {
-    return { success: false, error: "Failed to open pull request." };
+    const msg = octokitErrorMessage(err);
+    console.error("[submitPlugin] pulls.create failed:", msg);
+    return { success: false, error: `Failed to open pull request: ${msg}` };
   }
 
   return { success: true, prUrl };
 }
-
-export { CAPABILITIES };

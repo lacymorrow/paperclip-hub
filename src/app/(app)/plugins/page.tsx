@@ -4,11 +4,12 @@ import { PluginCard } from "@/components/marketplace/plugin-card";
 import { SearchBar } from "@/components/marketplace/search-bar";
 import { SortSelect } from "@/components/marketplace/sort-select";
 import { filterPlugins } from "@/data/plugins";
+import { getPlugins } from "@/lib/registry";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Browse Plugins — Paperclip Hub",
-  description: "Discover plugins for Paperclip. Connectors, automations, workspace tools, and UI extensions built by the community.",
+  description: "Discover community plugins for OpenCode. Auth providers, tools, and more.",
 };
 
 interface PluginsPageProps {
@@ -16,8 +17,8 @@ interface PluginsPageProps {
 }
 
 export default async function PluginsPage({ searchParams }: PluginsPageProps) {
-  const params = await searchParams;
-  const results = filterPlugins({
+  const [params, allPlugins] = await Promise.all([searchParams, getPlugins()]);
+  const results = filterPlugins(allPlugins, {
     search: params.q,
     category: params.category,
     sort: params.sort,
@@ -28,7 +29,7 @@ export default async function PluginsPage({ searchParams }: PluginsPageProps) {
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Browse Plugins</h1>
         <p className="mt-1 text-muted-foreground">
-          {results.length} plugin{results.length !== 1 ? "s" : ""} available
+          {results.length} of {allPlugins.length} plugin{allPlugins.length !== 1 ? "s" : ""} in registry
         </p>
       </div>
 

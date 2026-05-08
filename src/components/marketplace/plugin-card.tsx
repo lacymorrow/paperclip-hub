@@ -3,44 +3,20 @@
 import type { Plugin } from "@/data/plugins";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  ArrowDownToLine,
-  BadgeCheck,
-  BarChart3,
-  BookOpen,
-  Brain,
-  Bug,
-  Code,
-  Database,
-  GitBranch,
-  Import,
-  Link,
-  MessageSquare,
-  Star,
-  Terminal,
-  Workflow,
-} from "lucide-react";
+import { ArrowDownToLine, Code, KeyRound, MessageCircle, Package2, Wrench } from "lucide-react";
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  link: Link,
-  "git-branch": GitBranch,
-  "message-square": MessageSquare,
-  terminal: Terminal,
-  brain: Brain,
-  "bar-chart-3": BarChart3,
-  import: Import,
-  code: Code,
-  bug: Bug,
-  database: Database,
-  workflow: Workflow,
-  "book-open": BookOpen,
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  auth: KeyRound,
+  provider: Package2,
+  tools: Wrench,
+  chat: MessageCircle,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  connector: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  workspace: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-  automation: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  ui: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+  auth: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  provider: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  tools: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+  chat: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
 };
 
 function formatInstalls(n: number): string {
@@ -49,7 +25,7 @@ function formatInstalls(n: number): string {
 }
 
 export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) => {
-  const Icon = ICON_MAP[plugin.icon] ?? Code;
+  const Icon = CATEGORY_ICONS[plugin.category] ?? Code;
 
   return (
     <a href={href} className="group block">
@@ -61,18 +37,16 @@ export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) =
                 <Icon className="h-5 w-5 text-primary" />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-primary transition-colors">
-                    {plugin.name}
-                  </h3>
-                  {plugin.verified && (
-                    <BadgeCheck className="h-4 w-4 shrink-0 text-blue-500" />
-                  )}
-                </div>
+                <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-primary transition-colors">
+                  {plugin.name}
+                </h3>
                 <p className="text-xs text-muted-foreground">{plugin.author.name}</p>
               </div>
             </div>
-            <Badge variant="outline" className={CATEGORY_COLORS[plugin.category]}>
+            <Badge
+              variant="outline"
+              className={CATEGORY_COLORS[plugin.category] ?? ""}
+            >
               {plugin.category}
             </Badge>
           </div>
@@ -82,17 +56,13 @@ export const PluginCard = ({ plugin, href }: { plugin: Plugin; href: string }) =
             {plugin.description}
           </p>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1">
-                <ArrowDownToLine className="h-3.5 w-3.5" />
-                {formatInstalls(plugin.installs)}
-              </span>
-              <span className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                {plugin.rating}
-              </span>
-            </div>
-            <span className="text-muted-foreground/60">v{plugin.version}</span>
+            <span className="flex items-center gap-1">
+              <ArrowDownToLine className="h-3.5 w-3.5" />
+              {formatInstalls(plugin.installs)}/wk
+            </span>
+            <span className="font-mono text-muted-foreground/60">
+              {plugin.version !== "unknown" ? `v${plugin.version}` : plugin.npmPackage}
+            </span>
           </div>
         </CardContent>
       </Card>

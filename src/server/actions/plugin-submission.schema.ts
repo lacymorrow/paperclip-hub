@@ -29,6 +29,7 @@ export const pluginSubmissionSchema = z.object({
   npmPackage: z
     .string()
     .min(1, "npm package name is required")
+    .max(214, "npm package name is too long")
     .regex(
       /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/,
       "Invalid npm package name format"
@@ -38,7 +39,12 @@ export const pluginSubmissionSchema = z.object({
     errorMap: () => ({ message: "Please select a valid category" }),
   }),
   capabilities: z.array(z.enum(CAPABILITIES)).min(1, "At least one capability is required"),
-  sourceRepo: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  sourceRepo: z
+    .string()
+    .url("Must be a valid URL")
+    .refine((url) => url.startsWith("https://"), "Source repo URL must use HTTPS")
+    .optional()
+    .or(z.literal("")),
 });
 
 export type PluginSubmissionData = z.infer<typeof pluginSubmissionSchema>;

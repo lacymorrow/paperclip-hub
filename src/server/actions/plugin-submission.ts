@@ -60,21 +60,22 @@ async function ensureForked(
     // Fork doesn't exist, create it
   }
 
-  await octokit.repos.createFork({
+  const { data: fork } = await octokit.repos.createFork({
     owner: REGISTRY_OWNER,
     repo: REGISTRY_REPO,
   });
+  const actualOwner = fork.owner.login;
 
   // GitHub fork creation is async — poll until the fork's default branch is present
   for (let i = 0; i < 15; i++) {
     await new Promise((r) => setTimeout(r, 2000));
     try {
       await octokit.repos.getBranch({
-        owner: userLogin,
+        owner: actualOwner,
         repo: REGISTRY_REPO,
         branch: REGISTRY_BASE_BRANCH,
       });
-      return { forkedOwner: userLogin, forkedRepo: REGISTRY_REPO };
+      return { forkedOwner: actualOwner, forkedRepo: REGISTRY_REPO };
     } catch {
       // Not ready yet
     }
@@ -100,6 +101,10 @@ async function findExistingPr(
   );
   const exact = prs.find((pr) => pr.head.label === head);
   return exact?.html_url ?? byFilename?.html_url ?? null;
+}
+
+function sanitizeMarkdown(str: string): string {
+  return str.replace(/[#*_\[\]()>!`|\\~<]/g, "");
 }
 
 function octokitErrorMessage(err: unknown): string {
@@ -161,27 +166,39 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
   try {
     ({ forkedOwner, forkedRepo } = await ensureForked(octokit, userLogin));
   } catch (err) {
-    const msg = octokitErrorMessage(err);
-    console.error("[submitPlugin] fork failed:", msg);
+    console.error("[submitPlugin] fork failed:", octokitErrorMessage(err));
     return {
       success: false,
-      error: err instanceof Error ? err.message : `Failed to fork repository: ${msg}`,
+      error: "Failed to fork the registry repository. Please try again.",
     };
   }
 
   // Normalize scoped package names (@scope/pkg → @scope-pkg) for flat file naming
   const safeFilename = validated.npmPackage.replace(/\//g, "-");
   const filePath = `${REGISTRY_PLUGIN_PATH}/${safeFilename}.json`;
+  const safePkg = validated.npmPackage.replace(/[^a-z0-9-]/g, "-");
+  const branchName = `submit/${safePkg}`;
 
   // Check for an existing open PR to avoid duplicates
   try {
-    const head = `${forkedOwner}:${REGISTRY_BASE_BRANCH}`;
+    const head = `${forkedOwner}:${branchName}`;
     const existingPrUrl = await findExistingPr(octokit, head, safeFilename);
     if (existingPrUrl) {
       return { success: true, prUrl: existingPrUrl };
     }
   } catch {
     // Non-fatal: proceed even if the duplicate check fails
+  }
+
+  // Sync fork with upstream to avoid stale-fork dirty PRs
+  try {
+    await octokit.repos.mergeUpstream({
+      owner: forkedOwner,
+      repo: forkedRepo,
+      branch: REGISTRY_BASE_BRANCH,
+    });
+  } catch {
+    // Non-fatal: proceed even if upstream sync fails
   }
 
   // Branch from the fork's own HEAD to handle stale forks safely
@@ -194,14 +211,11 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
     });
     baseSha = forkRef.object.sha;
   } catch (err) {
-    const msg = octokitErrorMessage(err);
-    console.error("[submitPlugin] getRef on fork failed:", msg);
-    return { success: false, error: `Could not read fork branch: ${msg}` };
+    console.error("[submitPlugin] getRef on fork failed:", octokitErrorMessage(err));
+    return { success: false, error: "Could not read the fork branch. Please try again." };
   }
 
-  // Create a unique timestamped branch
-  const safePkg = validated.npmPackage.replace(/[^a-z0-9-]/g, "-");
-  const branchName = `submit/${safePkg}-${Date.now()}`;
+  // Create or reuse the stable submission branch
 
   try {
     await octokit.git.createRef({
@@ -213,10 +227,10 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
   } catch (err: unknown) {
     const status = (err as { status?: number } | null)?.status;
     const msg = octokitErrorMessage(err);
-    // 422 "Reference already exists" is safe to ignore (timestamp suffix makes collisions rare)
+    // 422 "Reference already exists" is safe to ignore — stable branch may already exist
     if (status !== 422 || !msg.includes("Reference already exists")) {
       console.error("[submitPlugin] createRef failed:", msg);
-      return { success: false, error: `Failed to create branch: ${msg}` };
+      return { success: false, error: "Failed to create submission branch. Please try again." };
     }
   }
 
@@ -244,9 +258,8 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
       branch: branchName,
     });
   } catch (err) {
-    const msg = octokitErrorMessage(err);
-    console.error("[submitPlugin] createOrUpdateFileContents failed:", msg);
-    return { success: false, error: `Failed to commit plugin file: ${msg}` };
+    console.error("[submitPlugin] createOrUpdateFileContents failed:", octokitErrorMessage(err));
+    return { success: false, error: "Failed to commit the plugin file. Please try again." };
   }
 
   // Open the pull request
@@ -255,10 +268,11 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
     const { data: pr } = await octokit.pulls.create({
       owner: REGISTRY_OWNER,
       repo: REGISTRY_REPO,
-      title: `feat(registry): add ${validated.name} (${validated.npmPackage})`,
+      title: `feat(registry): add ${sanitizeMarkdown(validated.name)} (${validated.npmPackage})`,
       body: [
         `## Plugin Submission\n`,
         `**Package:** [\`${validated.npmPackage}\`](https://www.npmjs.com/package/${validated.npmPackage})`,
+        `**Description:** ${sanitizeMarkdown(validated.description)}`,
         `**Category:** ${validated.category}`,
         `**Capabilities:** ${validated.capabilities.join(", ")}`,
         `**npm version:** ${npmInfo.version}`,
@@ -274,9 +288,8 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
     });
     prUrl = pr.html_url;
   } catch (err) {
-    const msg = octokitErrorMessage(err);
-    console.error("[submitPlugin] pulls.create failed:", msg);
-    return { success: false, error: `Failed to open pull request: ${msg}` };
+    console.error("[submitPlugin] pulls.create failed:", octokitErrorMessage(err));
+    return { success: false, error: "Failed to open the pull request. Please try again." };
   }
 
   return { success: true, prUrl };

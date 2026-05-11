@@ -27,6 +27,13 @@ export const SORT_OPTIONS = [
   { value: "newest", label: "Newest" },
 ] as const;
 
+export const CATEGORY_COLORS: Record<string, string> = {
+  auth: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  provider: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  tools: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+  chat: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+};
+
 export function filterPlugins(
   plugins: Plugin[],
   { category, search, sort }: { category?: string; search?: string; sort?: string },

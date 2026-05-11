@@ -8,7 +8,7 @@ import { getPlugins } from "@/lib/registry";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Browse Plugins — Paperclip Hub",
+  title: "Browse Plugins — OpenCode Hub",
   description: "Discover community plugins for OpenCode. Auth providers, tools, and more.",
 };
 

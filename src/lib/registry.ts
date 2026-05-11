@@ -15,9 +15,10 @@ interface RegistryPlugin {
 
 async function fetchNpmData(npmPackage: string): Promise<{ version: string; weeklyDownloads: number }> {
   try {
+    const encoded = encodeURIComponent(npmPackage);
     const [regRes, dlRes] = await Promise.all([
-      fetch(`https://registry.npmjs.org/${npmPackage}/latest`, { next: { revalidate: 3600 } }),
-      fetch(`https://api.npmjs.org/downloads/point/last-week/${npmPackage}`, { next: { revalidate: 3600 } }),
+      fetch(`https://registry.npmjs.org/${encoded}/latest`, { next: { revalidate: 3600 } }),
+      fetch(`https://api.npmjs.org/downloads/point/last-week/${encoded}`, { next: { revalidate: 3600 } }),
     ]);
     const version = regRes.ok ? ((await regRes.json()) as { version: string }).version : "unknown";
     const weeklyDownloads = dlRes.ok ? ((await dlRes.json()) as { downloads: number }).downloads : 0;
@@ -31,7 +32,14 @@ function readRegistryDir(): RegistryPlugin[] {
   const dir = join(process.cwd(), "registry", "plugins");
   return readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
-    .map((file) => JSON.parse(readFileSync(join(dir, file), "utf-8")) as RegistryPlugin);
+    .flatMap((file) => {
+      try {
+        return [JSON.parse(readFileSync(join(dir, file), "utf-8")) as RegistryPlugin];
+      } catch {
+        console.warn(`[registry] skipping malformed file: ${file}`);
+        return [];
+      }
+    });
 }
 
 let _cache: Plugin[] | null = null;

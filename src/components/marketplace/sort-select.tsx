@@ -8,11 +8,11 @@ export const SortSelect = ({ className }: { className?: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
-  const active = searchParams.get("sort") ?? "popular";
+  const active = searchParams?.get("sort") ?? "popular";
 
   const handleSort = (sort: string) => {
     startTransition(() => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       if (sort === "popular") {
         params.delete("sort");
       } else {

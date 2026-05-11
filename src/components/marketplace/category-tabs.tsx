@@ -9,11 +9,11 @@ export const CategoryTabs = ({ className }: { className?: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
-  const active = searchParams.get("category") ?? "all";
+  const active = searchParams?.get("category") ?? "all";
 
   const handleCategoryChange = (category: string) => {
     startTransition(() => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       if (category === "all") {
         params.delete("category");
       } else {

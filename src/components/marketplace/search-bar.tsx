@@ -9,13 +9,13 @@ export const SearchBar = ({ className }: { className?: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [value, setValue] = useState(searchParams.get("q") ?? "");
+  const [value, setValue] = useState(searchParams?.get("q") ?? "");
 
   const handleSearch = useCallback(
     (term: string) => {
       setValue(term);
       startTransition(() => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams?.toString());
         if (term) {
           params.set("q", term);
         } else {

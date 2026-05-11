@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "$id": "https://cliphub.lacy.sh/registry/schema.json",
+  "$id": "https://cliphub.fyi/registry/schema.json",
   "title": "Plugin Registry Entry",
   "description": "Schema for a plugin entry in the Paperclip Hub plugin registry.",
   "type": "object",

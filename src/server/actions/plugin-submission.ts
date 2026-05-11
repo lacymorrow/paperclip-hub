@@ -278,7 +278,7 @@ export async function submitPlugin(data: PluginSubmissionData): Promise<Submissi
         `**npm version:** ${npmInfo.version}`,
         `**License:** ${npmInfo.license}`,
         validated.sourceRepo ? `**Source:** ${validated.sourceRepo}` : "",
-        `\nSubmitted via the [Paperclip Hub](https://cliphub.lacy.sh/submit) plugin submission form.`,
+        `\nSubmitted via the [Paperclip Hub](https://cliphub.fyi/submit) plugin submission form.`,
       ]
         .filter(Boolean)
         .join("\n"),

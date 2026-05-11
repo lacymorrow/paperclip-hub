@@ -189,7 +189,7 @@ export const siteConfig: SiteConfig = {
   name: "Paperclip Hub",
   title: "Paperclip Hub",
   tagline: "Extend Paperclip. Build anything.",
-  url: "https://cliphub.lacy.sh",
+  url: "https://cliphub.fyi",
   ogImage: "/app/og-image.png",
   description:
     "The plugin marketplace for Paperclip. Discover connectors, automations, and extensions built by the community.",
@@ -202,7 +202,7 @@ export const siteConfig: SiteConfig = {
       brains: "Brains",
       main: "Paperclip Hub",
     },
-    domain: "cliphub.lacy.sh",
+    domain: "cliphub.fyi",
     protocol: "web+paperclip",
     githubOrg: "paperclipai",
     githubRepo: "paperclip-hub",

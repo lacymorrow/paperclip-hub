@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 export default {
-  siteUrl: process.env.SITE_URL || "https://cliphub.lacy.sh",
+  siteUrl: process.env.SITE_URL || "https://cliphub.fyi",
   generateRobotsTxt: true,
   sitemapSize: 7000,
   robotsTxtOptions: {

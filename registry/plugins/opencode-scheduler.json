@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "Scheduler",
+  "npmPackage": "opencode-scheduler",
+  "description": "Schedule recurring jobs using launchd (Mac) or systemd (Linux). Automate repetitive agent tasks on a cron schedule.",
+  "category": "tools",
+  "capabilities": ["tool"],
+  "sourceRepo": "https://github.com/nichochar/opencode-scheduler",
+  "author": "nichochar",
+  "submittedAt": "2026-05-09T08:00:00Z"
+}

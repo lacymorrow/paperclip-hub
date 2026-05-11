@@ -66,7 +66,7 @@ export async function getPlugins(): Promise<Plugin[]> {
         version: npm.version,
         capabilities: rp.capabilities,
         sourceRepo: rp.sourceRepo,
-        installCommand: `bunx opencode plugin add ${rp.npmPackage}`,
+        installCommand: `paperclip plugin add ${rp.npmPackage}`,
         submittedAt: rp.submittedAt,
       };
     }),

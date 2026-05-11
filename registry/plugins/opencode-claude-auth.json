@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "Claude Auth",
+  "npmPackage": "opencode-claude-auth",
+  "description": "Use your Claude Code credentials with OpenCode — no separate login needed. Seamless authentication bridge.",
+  "category": "auth",
+  "capabilities": ["auth"],
+  "sourceRepo": "https://github.com/nichochar/opencode-claude-auth",
+  "author": "nichochar",
+  "submittedAt": "2026-05-08T00:00:00Z"
+}

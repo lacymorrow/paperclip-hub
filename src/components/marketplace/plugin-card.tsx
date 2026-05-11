@@ -3,13 +3,16 @@
 import { CATEGORY_COLORS, type Plugin } from "@/data/plugins";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ArrowDownToLine, Code, KeyRound, MessageCircle, Package2, Wrench } from "lucide-react";
+import { Activity, ArrowDownToLine, Brain, Code, KeyRound, Link2, MessageCircle, Package2, Wrench } from "lucide-react";
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   auth: KeyRound,
   provider: Package2,
   tools: Wrench,
   chat: MessageCircle,
+  integration: Link2,
+  observability: Activity,
+  memory: Brain,
 };
 
 function formatInstalls(n: number): string {

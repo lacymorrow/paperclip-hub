@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "LiteLLM Provider",
+  "npmPackage": "opencode-plugin-litellm",
+  "description": "LiteLLM proxy support with auto-detection and dynamic model discovery. Use 100+ LLM providers through a single interface.",
+  "category": "provider",
+  "capabilities": ["config"],
+  "sourceRepo": "https://github.com/kelvich/opencode-plugin-litellm",
+  "author": "kelvich",
+  "submittedAt": "2026-05-08T12:00:00Z"
+}

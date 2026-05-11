@@ -26,12 +26,13 @@ export const Hero = () => (
       <Suspense fallback={<div className="h-12" />}>
         <SearchBar className="mx-auto max-w-xl" />
       </Suspense>
-      <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground">
+      <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground flex-wrap">
         <span>Popular:</span>
-        <a href="/plugins?q=github" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">GitHub</a>
-        <a href="/plugins?q=slack" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Slack</a>
-        <a href="/plugins?q=code-review" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Code Review</a>
-        <a href="/plugins?q=sandbox" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Sandbox</a>
+        <a href="/plugins?category=auth" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Auth</a>
+        <a href="/plugins?category=memory" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Memory</a>
+        <a href="/plugins?category=observability" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Observability</a>
+        <a href="/plugins?category=tools" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Tools</a>
+        <a href="/plugins?category=integration" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Integrations</a>
       </div>
     </div>
   </section>

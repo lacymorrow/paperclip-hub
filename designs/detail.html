@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Langfuse Tracing — Paperclip Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .detail-page {
+      padding-top: 110px;
+      padding-bottom: var(--space-4xl);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-xl);
+      transition: color var(--duration-fast);
+      cursor: pointer;
+    }
+
+    .back-link:hover { color: var(--text-primary); }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .detail-layout { grid-template-columns: 1fr; }
+    }
+
+    .detail-header {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: flex-start;
+      margin-bottom: var(--space-xl);
+    }
+
+    .detail-icon {
+      width: 64px;
+      height: 64px;
+      min-width: 64px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(244, 63, 94, 0.12);
+    }
+
+    .detail-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 4px;
+    }
+
+    .detail-author {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+    }
+
+    .detail-author a {
+      color: var(--violet-400);
+      transition: color var(--duration-fast);
+    }
+
+    .detail-author a:hover { color: var(--violet-500); }
+
+    .detail-badges {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .detail-description {
+      font-size: 1.0625rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--space-2xl);
+      max-width: 640px;
+    }
+
+    .detail-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .detail-section h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      color: var(--text-primary);
+    }
+
+    .capabilities-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      padding: var(--space-lg);
+    }
+
+    .sidebar-card .btn {
+      width: 100%;
+      margin-bottom: var(--space-lg);
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: var(--space-md) 0;
+    }
+
+    /* Readme-like content section */
+    .readme-section {
+      padding: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .readme-section h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .readme-section p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--space-md);
+    }
+
+    .readme-section ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: var(--space-md);
+    }
+
+    .readme-section li {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .readme-section li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--violet-400);
+    }
+
+    /* Related plugins */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+    }
+
+    @media (max-width: 640px) {
+      .related-grid { grid-template-columns: 1fr; }
+    }
+
+    .related-card {
+      padding: var(--space-md);
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .related-card__icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .related-card__name {
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .related-card__desc {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- === NAVBAR === -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z"/>
+        <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8"/>
+        <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4"/>
+        <line x1="12" y1="20" x2="12" y2="22"/>
+      </svg>
+      <span>Paperclip Hub</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="browse.html">Plugins</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><a href="submit.html">Submit</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="submit.html" class="btn btn--primary btn--sm">Submit Plugin</a>
+    </div>
+  </nav>
+
+  <!-- === DETAIL PAGE === -->
+  <div class="detail-page container">
+    <a href="browse.html" class="back-link animate-in">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to plugins
+    </a>
+
+    <div class="detail-layout">
+      <!-- LEFT COLUMN: Main content -->
+      <div>
+        <div class="detail-header animate-in delay-1">
+          <div class="detail-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <h1 class="detail-title">Langfuse Tracing</h1>
+            <span class="detail-author">by <a href="#">langfuse</a></span>
+            <div class="detail-badges">
+              <span class="badge badge--observability">observability</span>
+              <span class="badge badge--violet">verified</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="detail-description animate-in delay-2">
+          Full observability for your AI agents with distributed tracing, cost tracking, and prompt management.
+          Automatically instruments all LLM calls, tool executions, and agent lifecycle events.
+        </p>
+
+        <!-- Installation -->
+        <div class="detail-section animate-in delay-3">
+          <h3>Installation</h3>
+          <div class="code-block">
+            <button class="code-block__copy" aria-label="Copy to clipboard">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+            <span class="prompt">$</span> paperclip plugin add <span class="string">opencode-plugin-langfuse</span>
+          </div>
+        </div>
+
+        <!-- Capabilities -->
+        <div class="detail-section animate-in delay-4">
+          <h3>Capabilities</h3>
+          <div class="capabilities-grid">
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              event
+            </span>
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              config
+            </span>
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              chat.message
+            </span>
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              chat.params
+            </span>
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              tool.execute.before
+            </span>
+            <span class="capability-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              tool.execute.after
+            </span>
+          </div>
+        </div>
+
+        <!-- README-style content -->
+        <div class="card card--flat readme-section animate-in delay-5">
+          <h4>Getting Started</h4>
+          <p>After installation, configure your Langfuse credentials in your agent config:</p>
+
+          <div class="code-block" style="margin-bottom: var(--space-lg);">
+            <span class="comment"># .env</span><br/>
+            <span class="flag">LANGFUSE_PUBLIC_KEY</span>=pk-lf-...<br/>
+            <span class="flag">LANGFUSE_SECRET_KEY</span>=sk-lf-...<br/>
+            <span class="flag">LANGFUSE_HOST</span>=<span class="string">https://cloud.langfuse.com</span>
+          </div>
+
+          <h4>Features</h4>
+          <ul>
+            <li>Automatic tracing of all LLM calls with latency, tokens, and cost</li>
+            <li>Tool execution tracking with input/output capture</li>
+            <li>Session-based grouping for multi-turn conversations</li>
+            <li>Custom metadata and tags for filtering traces</li>
+            <li>Real-time cost dashboard with per-model breakdowns</li>
+          </ul>
+
+          <h4>Configuration</h4>
+          <div class="code-block">
+            <span class="comment">// paperclip.config.ts</span><br/>
+            {<br/>
+            &nbsp;&nbsp;<span class="flag">plugins</span>: [<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"opencode-plugin-langfuse"</span>, {<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">traceAllTools</span>: <span class="string">true</span>,<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">sessionTracking</span>: <span class="string">true</span>,<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">costTracking</span>: <span class="string">true</span><br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;}]<br/>
+            &nbsp;&nbsp;]<br/>
+            }
+          </div>
+        </div>
+
+        <!-- Related plugins -->
+        <div class="detail-section">
+          <h3>Related plugins</h3>
+          <div class="related-grid">
+            <a href="#" class="card related-card">
+              <div class="related-card__icon" style="background: rgba(244,63,94,0.12);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div>
+                <div class="related-card__name">Braintrust Trace</div>
+                <div class="related-card__desc">Agent eval framework</div>
+              </div>
+            </a>
+            <a href="#" class="card related-card">
+              <div class="related-card__icon" style="background: rgba(16,185,129,0.12);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <div>
+                <div class="related-card__name">OpenTelemetry</div>
+                <div class="related-card__desc">OTEL export for agents</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Sidebar -->
+      <div class="detail-sidebar">
+        <div class="card sidebar-card animate-in delay-2">
+          <a href="#" class="btn btn--primary" target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View Source
+          </a>
+
+          <a href="#" class="btn btn--teal" style="margin-bottom: 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            Install Plugin
+          </a>
+
+          <div class="sidebar-divider" style="margin: var(--space-lg) 0;"></div>
+
+          <div class="detail-stat">
+            <span class="detail-stat__label">Weekly downloads</span>
+            <span class="detail-stat__value" style="font-family: var(--font-mono); color: var(--teal-400);">8,241</span>
+          </div>
+
+          <div class="detail-stat">
+            <span class="detail-stat__label">Version</span>
+            <span class="detail-stat__value font-mono">v2.1.0</span>
+          </div>
+
+          <div class="detail-stat">
+            <span class="detail-stat__label">npm</span>
+            <span class="detail-stat__value">
+              <a href="#" class="font-mono" style="font-size: 0.8125rem;">opencode-plugin-langfuse</a>
+            </span>
+          </div>
+
+          <div class="detail-stat">
+            <span class="detail-stat__label">License</span>
+            <span class="detail-stat__value">MIT</span>
+          </div>
+
+          <div class="detail-stat">
+            <span class="detail-stat__label">Category</span>
+            <span class="detail-stat__value">
+              <span class="badge badge--observability">observability</span>
+            </span>
+          </div>
+
+          <div class="sidebar-divider"></div>
+
+          <div class="detail-stat" style="border-bottom: none;">
+            <span class="detail-stat__label">Added</span>
+            <span class="detail-stat__value">Mar 15, 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === FOOTER === -->
+  <footer class="footer">
+    <div class="container flex justify-between items-center" style="flex-wrap: wrap; gap: var(--space-md);">
+      <div class="flex items-center gap-sm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z"/>
+          <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8"/>
+          <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4"/>
+          <line x1="12" y1="20" x2="12" y2="22"/>
+        </svg>
+        <span>Paperclip Hub &copy; 2025</span>
+      </div>
+      <div class="flex gap-xl">
+        <a href="#">GitHub</a>
+        <a href="#">Docs</a>
+        <a href="#">Discord</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

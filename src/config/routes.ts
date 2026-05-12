@@ -32,9 +32,6 @@ export const routes = {
   eula: "/eula",
   legal: "/legal",
 
-  // App routes
-  tasks: "/tasks",
-
   checkoutSuccess: "/checkout/success",
 
   // CMS routes
@@ -54,39 +51,6 @@ export const routes = {
     signInPage: "/api/auth/signin",
     signOutPage: "/api/auth/signout",
     error: "/error",
-  },
-
-  // App routes
-  app: {
-    dashboard: "/dashboard",
-    deployments: "/deployments",
-    apiKeys: "/api-keys",
-    logs: "/logs",
-    network: "/network",
-    live: "/live",
-    tools: "/tools",
-    downloads: "/downloads",
-    activity: "/activity",
-    projects: "/projects",
-    teams: "/teams",
-  },
-
-  // Admin routes
-  admin: {
-    index: "/admin",
-    users: "/admin/users",
-    github: "/admin/github",
-    integrations: "/admin/integrations",
-    feedback: "/admin/feedback",
-    payments: "/admin/payments",
-  },
-
-  settings: {
-    index: "/settings",
-    account: "/settings/account",
-    profile: "/settings/profile",
-    appearance: "/settings/appearance",
-    security: "/settings/security",
   },
 
   // API routes

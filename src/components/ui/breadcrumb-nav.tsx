@@ -13,7 +13,7 @@ interface BreadcrumbNavProps {
   homeLabel?: string;
   /**
    * Custom labels for specific paths
-   * e.g. { [routes.app.projects]: "All Projects" }
+   * e.g. { [routes.home]: "All Projects" }
    */
   pathLabels?: Record<string, string>;
   items?: { title: string; href: string }[];
@@ -24,7 +24,7 @@ export const BreadcrumbNav = ({ homeLabel = "Home", items = [] }: BreadcrumbNavP
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={routes.app.dashboard}>{homeLabel}</BreadcrumbLink>
+          <BreadcrumbLink href={routes.home}>{homeLabel}</BreadcrumbLink>
         </BreadcrumbItem>
         {items.map((item, index) => {
           const isLastItem = index === items.length - 1;

@@ -126,7 +126,7 @@ export function UserMenuDropdown({
         <DropdownMenuGroup>
           {isAdmin && (
             <DropdownMenuItem asChild>
-              <Link href={routes.admin.index}>
+              <Link href={routes.home}>
                 <PersonIcon className="mr-2 size-4" />
                 Admin
                 <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
@@ -134,14 +134,14 @@ export function UserMenuDropdown({
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild>
-            <Link href={routes.app.dashboard}>
+            <Link href={routes.home}>
               <RocketIcon className="mr-2 size-4" />
               Dashboard
               <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={routes.settings.index}>
+            <Link href={routes.home}>
               <GearIcon className="mr-2 size-4" />
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>

@@ -59,7 +59,7 @@ export async function createApiKey(data: z.infer<typeof schemas.createApiKey>) {
     });
 
     // Revalidate the API keys page
-    revalidatePath(routes.app.apiKeys);
+    revalidatePath("/home");
 
     // Return the API key - this is the only time it will be shown in full
     return { key: apiKey?.key };
@@ -109,7 +109,7 @@ export async function deleteApiKey(apiKeyId: string) {
     const success = await apiKeyService.delete(apiKeyId);
 
     // Revalidate the API keys page
-    revalidatePath(routes.app.apiKeys);
+    revalidatePath("/home");
 
     return success;
   } catch (error) {

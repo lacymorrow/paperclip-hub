@@ -159,12 +159,12 @@ export const docsConfig: DocsConfig = {
       items: [
         {
           title: "Dashboard",
-          href: routes.app.dashboard,
+          href: routes.home,
           items: [],
         },
         {
           title: "Deployments",
-          href: routes.app.deployments,
+          href: routes.home,
           items: [],
         },
       ],

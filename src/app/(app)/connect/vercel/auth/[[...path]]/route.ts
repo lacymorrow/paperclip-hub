@@ -39,7 +39,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const resolvedParams = await context.params;
     // Determine the base path for redirection from the dynamic route parameter
     const pathSegments = resolvedParams.path;
-    let redirectBasePath = routes.settings.account; // Default
+    let redirectBasePath = routes.home; // Default
 
     if (pathSegments && pathSegments.length > 0) {
       const decodedPath = pathSegments.map(decodeURIComponent).join("/");
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     try {
       if (!db) {
         console.error("Database not initialized - cannot save Vercel connection");
-        return routeRedirect(routes.settings.account, {
+        return routeRedirect(routes.home, {
           code: STATUS_CODES.CONNECT_VERCEL_ERROR.code,
           nextUrl: request.url,
           request: request,
@@ -284,7 +284,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const resolvedParams = await context.params;
     // Determine the base path for redirection even in the catch block
     const pathSegments = resolvedParams.path;
-    let redirectBasePath = routes.settings.account; // Default
+    let redirectBasePath = routes.home; // Default
     if (pathSegments && pathSegments.length > 0) {
       const decodedPath = pathSegments.map(decodeURIComponent).join("/");
       redirectBasePath = decodedPath.startsWith("/") ? decodedPath : `/${decodedPath}`;

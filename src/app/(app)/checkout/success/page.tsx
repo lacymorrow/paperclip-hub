@@ -220,7 +220,7 @@ export default async function CheckoutSuccessPage({
                 Your account is ready to go! Head to the dashboard to get started.
               </p>
               <Button asChild size="lg" className="w-full">
-                <Link href={routes.app.dashboard}>Go to Dashboard</Link>
+                <Link href={routes.home}>Go to Home</Link>
               </Button>
             </Card>
           ) : (

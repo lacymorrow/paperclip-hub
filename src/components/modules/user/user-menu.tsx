@@ -143,10 +143,10 @@ export const UserMenu = ({
           handleThemeChange("system");
           break;
         case ShortcutAction.GOTO_ADMIN:
-          if (isAdmin) router.push(routes.admin.index);
+          if (isAdmin) router.push(routes.home);
           break;
         case ShortcutAction.GOTO_SETTINGS:
-          router.push(routes.settings.index);
+          router.push(routes.home);
           break;
         case ShortcutAction.LOGOUT_USER:
           void signOut({ callbackUrl: routes.home });

@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 const data = [
   {
     title: "Dashboard",
-    url: routes.app.dashboard,
+    url: routes.home,
     icon: SquareTerminal,
   },
   // {
@@ -39,15 +39,15 @@ const data = [
     title: "Management",
     icon: Settings2,
     items: [
-      { title: "Projects", url: routes.app.projects },
-      { title: "Teams", url: routes.app.teams },
-      { title: "Deployments", url: routes.app.deployments },
-      { title: "API Keys", url: routes.app.apiKeys },
+      { title: "Projects", url: routes.home },
+      { title: "Teams", url: routes.home },
+      { title: "Deployments", url: routes.home },
+      { title: "API Keys", url: routes.home },
     ],
   },
   {
     title: "Tools",
-    url: routes.app.tools,
+    url: routes.home,
     icon: Wrench,
   },
 ];

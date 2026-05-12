@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
     if (!isUserAdmin && !hasPurchased) {
       logger.warn("User has not purchased product", { userId, email: userEmail });
-      return NextResponse.redirect(new URL(routes.app.dashboard, siteConfig.url));
+      return NextResponse.redirect(new URL(routes.home, siteConfig.url));
     }
   }
 

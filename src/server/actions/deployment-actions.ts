@@ -65,7 +65,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
       status: "deploying",
     });
 
-    revalidatePath("/home");
+    revalidatePath("/");
 
     // Trigger deployment in background
     void (async () => {
@@ -124,7 +124,7 @@ export async function createDeployment(
   }
 
   const result = await deploymentService.createDeployment(session.user.id, data);
-  revalidatePath("/home");
+  revalidatePath("/");
   return result;
 }
 
@@ -151,7 +151,7 @@ export async function updateDeployment(
 
   // Only revalidate when called from a request context (not from background tasks)
   if (result && !userId) {
-    revalidatePath("/home");
+    revalidatePath("/");
   }
 
   return result;
@@ -167,7 +167,7 @@ export async function deleteDeployment(id: string): Promise<boolean> {
   }
 
   const result = await deploymentService.deleteDeployment(id, session.user.id);
-  revalidatePath("/home");
+  revalidatePath("/");
   return result;
 }
 
@@ -182,7 +182,7 @@ export async function cancelDeployment(id: string): Promise<Deployment | null> {
 
   const result = await deploymentService.cancelDeployment(id, session.user.id);
   if (result) {
-    revalidatePath("/home");
+    revalidatePath("/");
   }
   return result;
 }

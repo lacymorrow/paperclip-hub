@@ -302,7 +302,7 @@ export async function importPayments(
         const result = await PaymentService.importAllPayments();
 
         // Revalidate the admin users page to reflect the new imported data
-        revalidatePath("/home");
+        revalidatePath("/");
 
         return result;
       }
@@ -323,7 +323,7 @@ export async function importPayments(
       const stats: ImportStats = await specificProvider.importPayments();
 
       // Revalidate the admin users page to reflect the new imported data
-      revalidatePath("/home");
+      revalidatePath("/");
 
       return stats;
     };
@@ -408,9 +408,7 @@ export async function deleteAllPayments(): Promise<{
       deletedCount: countBefore,
     });
 
-    // Revalidate the admin payments and users pages
-    revalidatePath("/home");
-    revalidatePath("/home");
+    revalidatePath("/");
 
     return {
       success: true,
@@ -469,9 +467,7 @@ export async function refreshAllPayments(): Promise<{
       importResults,
     });
 
-    // Revalidate the admin payments and users pages
-    revalidatePath("/home");
-    revalidatePath("/home");
+    revalidatePath("/");
 
     return {
       success: true,

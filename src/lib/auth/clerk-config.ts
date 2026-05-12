@@ -72,14 +72,7 @@ export const clerkConfig = {
 /**
  * Protected routes that require authentication when using Clerk
  */
-export const clerkProtectedRoutes = [
-  routes.home,
-  routes.home,
-  routes.home,
-  routes.home,
-  routes.home,
-  routes.home,
-] as const;
+export const clerkProtectedRoutes = [] as const;
 
 /**
  * Public routes that should be accessible without authentication

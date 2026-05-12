@@ -1,5 +1,3 @@
-// import { routes } from "@/config/routes"; // No longer needed directly
-
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site-config";
 
@@ -99,53 +97,6 @@ export default function manifest(): MetadataRoute.Manifest {
         label: `Mobile view of ${siteConfig.title}`,
       },
     ],
-
-    /* App Shortcuts (currently commented out)
-     * Provides quick access to key features from the app icon
-     * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/shortcuts
-     */
-    // shortcuts: [
-    // 	{
-    // 		name: "Documentation",
-    // 		short_name: "Docs",
-    // 		description: `View ${siteConfig.title} documentation`,
-    // 		url: routes.docs,
-    // 		icons: [{ src: "/icons/docs.png", sizes: "192x192" }],
-    // 	},
-    // 	{
-    // 		name: "Examples",
-    // 		short_name: "Examples",
-    // 		description: `View ${siteConfig.title} examples`,
-    // 		url: routes.examples.index,
-    // 		icons: [{ src: "/icons/examples.png", sizes: "192x192" }],
-    // 	},
-    // ],
-
-    /* Web Share Target
-     * Allows the app to receive shared content from other apps
-     * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/share_target
-     */
-    // share_target: {
-    // 	action: "/share",
-    // 	method: "POST", // Changed from GET to POST
-    // 	enctype: "application/x-www-form-urlencoded", // Added enctype for POST
-    // 	params: {
-    // 		title: "title",
-    // 		text: "text",
-    // 		url: "url",
-    // 	},
-    // },
-
-    /* Custom Protocol Handlers
-     * Allows the app to handle custom URL schemes
-     * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/protocol_handlers
-     */
-    // protocol_handlers: [
-    // 	{
-    // 		protocol: siteConfig.branding.protocol, // Custom protocol scheme
-    // 		url: "/protocol?type=%s", // URL that handles the protocol
-    // 	},
-    // ],
 
     /* Related Applications
      * Links to related native applications

@@ -64,30 +64,30 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
     if ((env.RESEND_API_KEY || env.RESEND_API_KEY) && resend) {
       try {
         await resend.emails.send({
-          from: env.RESEND_FROM_EMAIL || "Shipkit <noreply@shipkit.io>",
+          from: env.RESEND_FROM_EMAIL || "Paperclip Hub <noreply@cliphub.fyi>",
           to: formData.email,
-          subject: "Welcome to the Shipkit Waitlist! 🚀",
+          subject: "Welcome to the Paperclip Hub Waitlist! 🚀",
           html: `
 						<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-							<h1 style="color: #2563eb;">Welcome to Shipkit, ${formData.name.split(" ")[0]}!</h1>
-							<p>Thanks for joining our waitlist. You're now part of an exclusive group of developers who will get early access to Shipkit.</p>
+							<h1 style="color: #2563eb;">Welcome to Paperclip Hub, ${formData.name.split(" ")[0]}!</h1>
+							<p>Thanks for joining our waitlist. You're now part of an exclusive group who will get early access to Paperclip Hub.</p>
 
 							<h2>What's Next?</h2>
 							<ul>
-								<li>🎯 <strong>Early Access:</strong> You'll be among the first to try Shipkit</li>
+								<li>🎯 <strong>Early Access:</strong> You'll be among the first to try Paperclip Hub</li>
 								<li>💰 <strong>50% Launch Discount:</strong> Exclusive pricing locked in forever</li>
-								<li>🚀 <strong>Bonus Content:</strong> Tutorials and deployment guides</li>
+								<li>🚀 <strong>Bonus Content:</strong> Tutorials and guides</li>
 							</ul>
 
 							<p>We'll keep you updated on our progress and notify you as soon as early access is available.</p>
 
 							<p>In the meantime, follow us on <a href="https://twitter.com/lacybuilds">Twitter</a> for the latest updates!</p>
 
-							<p>Best regards,<br>The Shipkit Team</p>
+							<p>Best regards,<br>The Paperclip Hub Team</p>
 
 							<hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
 							<p style="font-size: 12px; color: #6b7280;">
-								You're receiving this email because you joined the Shipkit waitlist.
+								You're receiving this email because you joined the Paperclip Hub waitlist.
 								<a href="{{unsubscribe_url}}">Unsubscribe</a>
 							</p>
 						</div>

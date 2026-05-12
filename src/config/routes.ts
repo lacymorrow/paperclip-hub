@@ -89,10 +89,7 @@ export const routes = {
 
   // External links
   external: {
-    shipkit: "https://shipkit.io",
     bones: "https://bones.sh",
-    log: "https://log.bones.sh",
-    ui: "https://ui.bones.sh",
     buy: "https://shipkit.lemonsqueezy.com/checkout/buy/20b5b59e-b4c4-43b0-9979-545f90c76f28",
     discord: "https://discord.gg/XxKrKNvEje",
     twitter: siteConfig.links?.twitter ?? "",
@@ -156,10 +153,5 @@ export const routes = {
       url.searchParams.set("envLink", `${siteConfig.url}/docs/env`);
       return url.toString();
     },
-    // &integration-ids=oac_KkY2TcPxIWTDtL46WGqwZ4BF
-    vercelImportShipkit:
-      "https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&hasTrialAvailable=1&project-name=shipkit&framework=nextjs&buildCommand=bun%20run%20build&installCommand=bun%20install%20--frozen-lockfile&env=ADMIN_EMAIL&integration-ids=oac_KkY2TcPxIWTDtL46WGqwZ4BF&envDescription=Set%20administrator%20access%20for%20your%20deployment&envLink=https%3A%2F%2Fshipkit.io%2Fdocs%2Fenv&redirect-url=https://shipkit.io/connect/vercel/deploy&demo-title=Shipkit&demo-description=Shipkit.%20The%20complete%20site%20building%20toolkit%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=//assets.vercel.com%2Fimage%2Fupload%2Fcontentful%2Fimage%2Fe5382hct74si%2F4JmubmYDJnFtstwHbaZPev%2F0c3576832aae5b1a4d98c8c9f98863c3%2FVercel_Home_OG.png&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy",
-    vercelDeployBones:
-      "https://vercel.com/new/clone?repository-url=https://github.com/shipkit-io/bones&env=ADMIN_EMAIL&envDescription=Set%20administrator%20access%20for%20your%20deployment&envLink=https%3A%2F%2Fshipkit.io%2Fdocs%2Fenv&project-name=bones-app&repository-name=bones-app&redirect-url=https://shipkit.io/connect/vercel/deploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards,%20AI%20tools,%20and%20integrations%20with%20Docs,%20Payload,%20and%20Builder.io&demo-url=https://shipkit.io/demo&demo-image=//assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png",
   },
 };

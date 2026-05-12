@@ -142,7 +142,7 @@ export function InstallSection() {
           </p>
           <p className="text-lg text-muted-foreground [&>a]:text-blue-400 [&>a]:underline [&>a]:font-medium">
             Get more components and ship even faster with{" "}
-            <Link href={routes.external.shipkit}>Shipkit</Link>.
+            <Link href="https://shipkit.io">Shipkit</Link>.
           </p>
         </div>
       </div>

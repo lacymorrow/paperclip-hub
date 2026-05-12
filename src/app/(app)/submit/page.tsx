@@ -1,8 +1,12 @@
-import { BookOpen, Github, Package, Terminal } from "lucide-react";
+import { Github } from "lucide-react";
 import type { Metadata } from "next";
-import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
+import Link from "next/link";
+
 import { GitHubSignInButton } from "@/components/buttons/github-sign-in-button";
+import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
 import { auth } from "@/server/auth";
+
+import "../plugins/hub.css";
 
 export const metadata: Metadata = {
   title: "Submit a Plugin — Paperclip Hub",
@@ -10,134 +14,344 @@ export const metadata: Metadata = {
     "Submit your plugin to the Paperclip Hub registry. Open a pull request directly from your browser.",
 };
 
-const PREREQS = [
-  {
-    icon: BookOpen,
-    title: "Read the Plugin SDK docs",
-    description: "Understand the manifest format, capabilities, and plugin lifecycle.",
-  },
-  {
-    icon: Terminal,
-    title: "Build and publish to npm",
-    description:
-      "Package your plugin as an npm module and publish it so we can verify it exists.",
-  },
-  {
-    icon: Package,
-    title: "Submit below",
-    description:
-      "Fill out the form. We'll open a pull request to the registry on your behalf.",
-  },
-] as const;
-
-const CLI_EXAMPLE = `# registry/plugins/your-plugin.json
-{
-  "$schema": "../schema.json",
-  "name": "Your Plugin",
-  "npmPackage": "your-plugin",
-  "description": "What it does.",
-  "category": "tools",
-  "capabilities": ["tool"],
-  "author": "your-github-handle",
-  "submittedAt": "2026-05-07T00:00:00Z"
-}`;
-
 export default async function SubmitPage() {
   const session = await auth();
   const user = session?.user;
   const githubUsername = user?.githubUsername ?? null;
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-16">
-      <div className="mb-12">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Submit a Plugin</h1>
-        <p className="mt-3 text-lg text-muted-foreground">
-          Add your plugin to the Paperclip Hub registry. Submissions create a pull request — no
-          account required beyond GitHub.
-        </p>
-      </div>
+    <div className="hub-c1">
+      {/* Header */}
+      <header className="hc-header">
+        <Link href="/" className="hc-brand">
+          <span className="hc-brand-wm">
+            <b>Paper</b>clip
+          </span>
+          <span className="hc-brand-sub">Hub · est. 2026</span>
+        </Link>
+        <nav className="hc-nav">
+          <Link href="/">Browse</Link>
+          <Link href="/?sort=newest">Collections</Link>
+          <Link href="/?category=provider">Publishers</Link>
+          <Link href="/submit" className="is-active">
+            Submit
+          </Link>
+          <Link href="/docs">Docs</Link>
+        </nav>
+        <div className="hc-header-actions">
+          <Link href="/sign-in" className="hc-link-muted">
+            Sign in
+          </Link>
+          <Link href="/" className="hc-btn">
+            Get Paperclip →
+          </Link>
+        </div>
+      </header>
 
-      <div className="mb-10 space-y-4">
-        {PREREQS.map((step, i) => (
-          <div key={step.title} className="flex gap-4 rounded-xl border bg-card p-5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary text-sm font-bold">
-              {i + 1}
-            </div>
-            <div>
-              <h3 className="font-semibold flex items-center gap-2">
-                <step.icon className="h-4 w-4" />
-                {step.title}
-              </h3>
-              <p className="mt-0.5 text-sm text-muted-foreground">{step.description}</p>
-            </div>
+      {/* Submit content */}
+      <div
+        style={{
+          maxWidth: 720,
+          margin: "0 auto",
+          padding: "120px 24px 96px",
+        }}
+      >
+        {/* Header */}
+        <div style={{ marginBottom: 48 }}>
+          <span className="eyebrow" style={{ display: "block", marginBottom: 12 }}>
+            § submit — share your work
+          </span>
+          <h1
+            style={{
+              fontFamily: "var(--hub-font-serif)",
+              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+              fontWeight: 400,
+              fontStyle: "italic",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15,
+              color: "var(--ink)",
+              marginBottom: 8,
+            }}
+          >
+            Submit a <em>plugin.</em>
+          </h1>
+          <p
+            style={{
+              fontSize: "1.0625rem",
+              color: "var(--ink-2)",
+              maxWidth: 520,
+              lineHeight: 1.6,
+            }}
+          >
+            Share your plugin with the Paperclip community. We&apos;ll open a pull request to the
+            registry on your behalf.
+          </p>
+        </div>
+
+        {/* Steps */}
+        <div style={{ marginBottom: 36 }}>
+          <span
+            className="eyebrow"
+            style={{
+              display: "block",
+              marginBottom: 12,
+              fontSize: "0.6875rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            How it works
+          </span>
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            {[
+              {
+                num: "01",
+                title: "Build your plugin",
+                desc: "Follow the Plugin SDK docs to create and publish your npm package.",
+              },
+              {
+                num: "02",
+                title: "Fill out the form",
+                desc: "Tell us about your plugin — name, capabilities, and npm package.",
+              },
+              {
+                num: "03",
+                title: "We open a PR",
+                desc: "A pull request is created automatically for review and merge.",
+              },
+            ].map((step) => (
+              <div
+                key={step.num}
+                style={{
+                  flex: "1 1 200px",
+                  display: "flex",
+                  gap: 12,
+                  padding: 18,
+                  background: "var(--paper)",
+                  border: "1px solid var(--bd-1)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--hub-font-mono)",
+                    fontSize: "0.75rem",
+                    color: "var(--accent)",
+                    fontWeight: 600,
+                    minWidth: 24,
+                  }}
+                >
+                  {step.num}
+                </span>
+                <div>
+                  <b
+                    style={{
+                      display: "block",
+                      fontSize: "0.9375rem",
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {step.title}
+                  </b>
+                  <span
+                    style={{
+                      fontSize: "0.8125rem",
+                      color: "var(--ink-2)",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {step.desc}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="rounded-xl border bg-card p-6 sm:p-8">
-        {!user ? (
-          <div className="text-center py-4">
-            <Github className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
-            <h2 className="text-xl font-semibold">Sign in with GitHub to continue</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We use your GitHub account to open the pull request on your behalf.
-            </p>
-            <div className="mt-6 flex justify-center">
+        {/* Form card */}
+        <div
+          style={{
+            background: "var(--paper)",
+            border: "1px solid var(--bd-1)",
+            padding: "32px 36px",
+          }}
+        >
+          {!user ? (
+            <div style={{ textAlign: "center", padding: "36px 0" }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  background: "var(--bg)",
+                  border: "1px solid var(--bd-1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 20px",
+                }}
+              >
+                <Github style={{ width: 28, height: 28, color: "var(--ink)" }} />
+              </div>
+              <h2
+                style={{
+                  fontFamily: "var(--hub-font-serif)",
+                  fontWeight: 400,
+                  fontStyle: "italic",
+                  fontSize: "1.25rem",
+                  color: "var(--ink)",
+                  marginBottom: 8,
+                }}
+              >
+                Sign in with GitHub
+              </h2>
+              <p
+                style={{
+                  fontSize: "0.9375rem",
+                  color: "var(--ink-2)",
+                  maxWidth: 380,
+                  margin: "0 auto 24px",
+                }}
+              >
+                We use your GitHub account to open the pull request on your behalf.
+              </p>
               <GitHubSignInButton callbackUrl="/submit" />
             </div>
-          </div>
-        ) : !githubUsername ? (
-          <div className="text-center py-4">
-            <Github className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
-            <h2 className="text-xl font-semibold">Connect your GitHub account</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Your account isn&apos;t linked to GitHub yet. Connect it so we can open the PR on
-              your behalf.
-            </p>
-            <div className="mt-6 flex justify-center">
+          ) : !githubUsername ? (
+            <div style={{ textAlign: "center", padding: "36px 0" }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  background: "var(--bg)",
+                  border: "1px solid var(--bd-1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 20px",
+                }}
+              >
+                <Github style={{ width: 28, height: 28, color: "var(--ink)" }} />
+              </div>
+              <h2
+                style={{
+                  fontFamily: "var(--hub-font-serif)",
+                  fontWeight: 400,
+                  fontStyle: "italic",
+                  fontSize: "1.25rem",
+                  color: "var(--ink)",
+                  marginBottom: 8,
+                }}
+              >
+                Connect your GitHub account
+              </h2>
+              <p
+                style={{
+                  fontSize: "0.9375rem",
+                  color: "var(--ink-2)",
+                  maxWidth: 380,
+                  margin: "0 auto 24px",
+                }}
+              >
+                Your account isn&apos;t linked to GitHub yet. Connect it so we can open the PR on
+                your behalf.
+              </p>
               <GitHubSignInButton callbackUrl="/submit" />
             </div>
-          </div>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold mb-6">Plugin details</h2>
-            <PluginSubmissionForm githubUsername={githubUsername} />
-          </>
-        )}
+          ) : (
+            <>
+              <div
+                style={{
+                  fontFamily: "var(--hub-font-serif)",
+                  fontStyle: "italic",
+                  fontSize: "1.125rem",
+                  color: "var(--ink)",
+                  marginBottom: 24,
+                  paddingBottom: 16,
+                  borderBottom: "1px solid var(--bd-1)",
+                }}
+              >
+                Plugin details
+              </div>
+              <PluginSubmissionForm githubUsername={githubUsername} />
+            </>
+          )}
+        </div>
+
+        {/* CLI alternative */}
+        <div
+          style={{
+            marginTop: 36,
+            background: "var(--ink)",
+            color: "var(--paper)",
+            padding: "24px 28px",
+          }}
+        >
+          <span
+            style={{
+              display: "block",
+              fontFamily: "var(--hub-font-mono)",
+              fontSize: "0.6875rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              opacity: 0.6,
+              marginBottom: 10,
+            }}
+          >
+            Prefer the CLI?
+          </span>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              opacity: 0.8,
+              lineHeight: 1.6,
+              marginBottom: 14,
+            }}
+          >
+            You can also submit a plugin by manually opening a pull request to{" "}
+            <a
+              href="https://github.com/lacymorrow/paperclip-hub"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--paper)", textDecoration: "underline" }}
+            >
+              lacymorrow/paperclip-hub
+            </a>
+            .
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--hub-font-mono)",
+              fontSize: "0.8125rem",
+              lineHeight: 1.7,
+              opacity: 0.75,
+              overflow: "auto",
+            }}
+          >
+            <span style={{ color: "#b13a2a" }}>$</span> paperclip plugin submit \{"\n"}
+            {"  "}--name &quot;My Plugin&quot; \{"\n"}
+            {"  "}--package my-plugin-npm \{"\n"}
+            {"  "}--category tools \{"\n"}
+            {"  "}--capabilities event,tool
+          </pre>
+        </div>
       </div>
 
-      <div className="mt-10 rounded-xl border bg-muted/40 p-6">
-        <h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-3">
-          Prefer the CLI?
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          You can also submit a plugin by manually opening a pull request to{" "}
-          <a
-            href="https://github.com/lacymorrow/paperclip-hub"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-foreground underline underline-offset-2"
-          >
-            lacymorrow/paperclip-hub
-          </a>
-          . Add a JSON file to <code className="rounded bg-muted px-1.5 py-0.5 text-xs">registry/plugins/</code> that follows the schema:
-        </p>
-        <pre className="overflow-x-auto rounded-lg bg-muted p-4 text-xs leading-relaxed">
-          {CLI_EXAMPLE}
-        </pre>
-        <p className="mt-3 text-xs text-muted-foreground">
-          The full schema is at{" "}
-          <a
-            href="https://github.com/lacymorrow/paperclip-hub/blob/main/registry/schema.json"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2"
-          >
-            registry/schema.json
-          </a>
-          .
-        </p>
-      </div>
+      {/* Footer */}
+      <footer className="hc-foot">
+        <div className="l">
+          <b>Paperclip</b>
+          <span>The Hub · vol. 19 — May 2026</span>
+        </div>
+        <div className="r">
+          <Link href="/about">About</Link>
+          <Link href="/docs">Docs</Link>
+          <Link href="/docs/api">API</Link>
+          <Link href="/docs/cli">CLI</Link>
+          <Link href="https://github.com">GitHub</Link>
+          <Link href="/status">Status</Link>
+        </div>
+      </footer>
     </div>
   );
 }

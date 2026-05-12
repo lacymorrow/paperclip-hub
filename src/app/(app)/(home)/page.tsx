@@ -1,652 +1,522 @@
-import { Suspense } from "react";
-import { Activity, ArrowRight, BookOpen, Brain, Code2, KeyRound, Package2, Wrench } from "lucide-react";
 import type { Metadata } from "next";
-
-import { CategoryTabs } from "@/components/marketplace/category-tabs";
-import { PluginCard } from "@/components/marketplace/plugin-card";
-import { SearchBar } from "@/components/marketplace/search-bar";
-import { SortSelect } from "@/components/marketplace/sort-select";
-import { CATEGORIES } from "@/data/plugins";
-import { filterPlugins } from "@/data/plugins";
+import Link from "next/link";
+import type { Plugin } from "@/data/plugins";
+import { CATEGORIES, filterPlugins } from "@/data/plugins";
 import { getPlugins } from "@/lib/registry";
 
+import "../plugins/hub.css";
+
 export const metadata: Metadata = {
-  title: "Paperclip Hub — Plugin Marketplace for AI Agents",
+  title: "Paperclip Hub — A registry for autonomous teams",
   description:
-    "Discover, install, and share plugins that give your Paperclip agents new capabilities — from auth providers to observability hooks.",
+    "The Paperclip Hub is a curated directory of connectors, providers, tools and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.",
 };
-
-const PAPERCLIP_ICON = (
-  <svg
-    width="28"
-    height="28"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z" />
-    <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8" />
-    <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4" />
-    <line x1="12" y1="20" x2="12" y2="22" />
-  </svg>
-);
-
-const CATEGORY_META: Record<
-  string,
-  { icon: React.ElementType; bg: string; color: string; description: string }
-> = {
-  auth: {
-    icon: KeyRound,
-    bg: "rgba(99,102,241,0.12)",
-    color: "#818CF8",
-    description:
-      "Authentication providers for Claude, GitHub Copilot, Anthropic, Gemini, and GitLab.",
-  },
-  provider: {
-    icon: Package2,
-    bg: "rgba(236,72,153,0.12)",
-    color: "#F472B6",
-    description: "LLM and service provider integrations that extend agent capabilities.",
-  },
-  tools: {
-    icon: Wrench,
-    bg: "rgba(245,158,11,0.12)",
-    color: "#FBBF24",
-    description: "Extend your agent with new tools — shell commands, file operations, workflows.",
-  },
-  integration: {
-    icon: Code2,
-    bg: "rgba(16,185,129,0.12)",
-    color: "#34D399",
-    description:
-      "Connect agents to external services — CI/CD, version control, code review tools.",
-  },
-  observability: {
-    icon: Activity,
-    bg: "rgba(244,63,94,0.12)",
-    color: "#FB7185",
-    description: "Tracing, metrics, and logging with OpenTelemetry, Langfuse, and Braintrust.",
-  },
-  memory: {
-    icon: Brain,
-    bg: "rgba(6,182,212,0.12)",
-    color: "#22D3EE",
-    description: "Persistent memory and context management for long-running agent sessions.",
-  },
-};
-
-const QUICK_TAGS = ["auth", "opentelemetry", "langfuse", "anthropic", "memory", "gemini"];
 
 interface HomePageProps {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; verified?: string }>;
+}
+
+const SORT_LABELS: Record<string, string> = {
+  popular: "Most installed",
+  newest: "Newest",
+};
+
+const TRENDING_DELTAS = ["+14%", "+8%", "+21%", "−4%", "+6%"];
+
+const OFFICIAL_AUTHORS = new Set(["paperclipai", "paperclip-official", "paperclip"]);
+
+function fmtK(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;
+  return n.toString();
+}
+
+function shortDate(date: string): string {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function isVerified(p: Plugin): boolean {
+  return OFFICIAL_AUTHORS.has(p.author.name.toLowerCase());
+}
+
+function pickFeatured(all: Plugin[]): Plugin | undefined {
+  return [...all].sort((a, b) => b.installs - a.installs)[0];
+}
+
+function buildHref(
+  base: string,
+  params: { q?: string; category?: string; sort?: string; verified?: string },
+  patch: Record<string, string | undefined>
+): string {
+  const merged = { ...params, ...patch };
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(merged)) {
+    if (v) qs.set(k, v);
+  }
+  const s = qs.toString();
+  return s ? `${base}?${s}` : base;
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const [params, allPlugins] = await Promise.all([searchParams, getPlugins()]);
 
-  const isFiltered = !!(
-    params.q ||
-    (params.category && params.category !== "all") ||
-    params.sort
-  );
+  const sortKey = params.sort ?? "popular";
+  const activeCategory = params.category ?? "all";
+  const verifiedOnly = params.verified === "true";
 
-  const results = isFiltered
-    ? filterPlugins(allPlugins, {
-        search: params.q,
-        category: params.category,
-        sort: params.sort,
-      })
-    : allPlugins;
-
-  const topPlugins = [...allPlugins]
-    .sort((a, b) => b.installs - a.installs)
-    .slice(0, 6);
-
-  const recent = [...allPlugins]
-    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
-    .slice(0, 6);
-
-  const categoryCounts = allPlugins.reduce<Record<string, number>>((acc, p) => {
-    acc[p.category] = (acc[p.category] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  const totalInstalls = allPlugins.reduce((sum, p) => sum + p.installs, 0);
-
-  function formatNum(n: number): string {
-    if (n >= 1000) return `${Math.round(n / 1000)}k+`;
-    return n.toString();
+  let results = filterPlugins(allPlugins, {
+    search: params.q,
+    category: params.category,
+    sort: sortKey,
+  });
+  if (verifiedOnly) {
+    results = results.filter(isVerified);
   }
 
+  const featured = pickFeatured(allPlugins);
+  const grid = (featured ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, 8);
+
+  const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
+  const recent = [...allPlugins]
+    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+    .slice(0, 4);
+
+  const totalInstalls = allPlugins.reduce((s, p) => s + p.installs, 0);
+  const verifiedCount = allPlugins.filter(isVerified).length;
+  const publisherCount = new Set(allPlugins.map((p) => p.author.name)).size;
+  const totalInstallsLabel = totalInstalls > 0 ? `${fmtK(totalInstalls)}` : "—";
+
+  const cats = CATEGORIES.map((c) => ({
+    key: c.value,
+    label: c.value === "all" ? "All plugins" : c.label.toLowerCase(),
+    count:
+      c.value === "all"
+        ? allPlugins.length
+        : allPlugins.filter((p) => p.category === c.value).length,
+  }));
+
   return (
-    <div className="bg-[#06070B] min-h-screen text-[#E8ECF4] overflow-x-hidden">
-      {/* Noise overlay */}
-      <div
-        className="fixed inset-0 z-[9999] pointer-events-none"
-        style={{
-          opacity: 0.025,
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          backgroundRepeat: "repeat",
-          backgroundSize: "256px 256px",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* ===== DARK NAV ===== */}
-      <nav
-        className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between gap-4 px-6 border border-[#1E2335] rounded-2xl"
-        style={{
-          height: "60px",
-          background: "rgba(10,12,19,0.72)",
-          backdropFilter: "blur(20px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-        }}
-      >
-        <a href="/" className="flex items-center gap-2 font-bold text-[#E8ECF4] text-lg">
-          {PAPERCLIP_ICON}
-          <span>Paperclip Hub</span>
-        </a>
-
-        <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0 text-sm font-medium">
-          <li>
-            <a href="/" className="text-[#A78BFA] transition-colors">
-              Plugins
-            </a>
-          </li>
-          <li>
-            <a
-              href="/docs/plugins"
-              className="text-[#8891A5] hover:text-[#E8ECF4] transition-colors"
+    <div className="hub-c1">
+      {/* Header */}
+      <header className="hc-header">
+        <Link href="/" className="hc-brand">
+          <span className="hc-brand-wm">
+            <b>Paper</b>clip
+          </span>
+          <span className="hc-brand-sub">Hub · est. 2026</span>
+        </Link>
+        <nav className="hc-nav">
+          <Link href="/" className="is-active">
+            Browse
+          </Link>
+          <Link href="/?sort=newest">Collections</Link>
+          <Link href="/?category=provider">Publishers</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="/docs">Docs</Link>
+        </nav>
+        <div className="hc-header-actions">
+          <div className="hc-sm-search" aria-hidden>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              Docs
-            </a>
-          </li>
-          <li>
-            <a
-              href="/submit"
-              className="text-[#8891A5] hover:text-[#E8ECF4] transition-colors"
-            >
-              Submit
-            </a>
-          </li>
-        </ul>
-
-        <a
-          href="/submit"
-          className="hidden md:inline-flex items-center text-sm font-semibold text-white px-3.5 py-1.5 rounded-[10px] transition-all hover:-translate-y-px bg-[#7C6BFF] hover:bg-[#A78BFA]"
-          style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
-        >
-          Submit Plugin
-        </a>
-      </nav>
-
-      {isFiltered ? (
-        /* ===== BROWSE MODE ===== */
-        <div className="pt-28">
-          {/* Grid bg */}
-          <div
-            className="absolute inset-0 z-0 pointer-events-none opacity-35 top-16"
-            style={{
-              backgroundImage:
-                "linear-gradient(#1E2335 1px, transparent 1px), linear-gradient(90deg, #1E2335 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
-              maskImage:
-                "radial-gradient(ellipse 60% 50% at 50% 20%, black 20%, transparent 70%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 60% 50% at 50% 20%, black 20%, transparent 70%)",
-            }}
-            aria-hidden="true"
-          />
-
-          <div className="container mx-auto max-w-6xl px-6 relative z-10">
-            <div className="mb-6">
-              <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-tight text-[#E8ECF4]">
-                Browse Plugins
-              </h1>
-              <p className="text-[#8891A5] text-sm mt-1">
-                {results.length} of {allPlugins.length} plugin
-                {allPlugins.length !== 1 ? "s" : ""} in registry
-              </p>
-            </div>
-
-            {/* Toolbar */}
-            <div className="flex flex-wrap items-center gap-4 py-5 border-b border-[#1E2335] mb-6">
-              <div className="flex-1 min-w-0">
-                <Suspense fallback={<div className="h-10" />}>
-                  <CategoryTabs />
-                </Suspense>
-              </div>
-              <div className="flex items-center gap-3">
-                <Suspense fallback={<div className="h-[44px] w-56" />}>
-                  <SearchBar className="w-56" dark />
-                </Suspense>
-                <Suspense fallback={<div className="h-[44px] w-36" />}>
-                  <SortSelect dark />
-                </Suspense>
-              </div>
-            </div>
-
-            {results.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-[#262D42] p-16 text-center">
-                <p className="text-[#E8ECF4] font-medium text-lg">No plugins found</p>
-                <p className="mt-1 text-sm text-[#565E73]">Try adjusting your search or filters</p>
-              </div>
-            ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {results.map((plugin) => (
-                  <PluginCard
-                    key={plugin.id}
-                    plugin={plugin}
-                    href={`/plugins/${plugin.slug}`}
-                    dark
-                  />
-                ))}
-              </div>
-            )}
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <span>Search the library…</span>
+            <span className="kbd">⌘K</span>
           </div>
+          <Link href="/sign-in" className="hc-link-muted">
+            Sign in
+          </Link>
+          <Link href="/" className="hc-btn">
+            Get Paperclip →
+          </Link>
         </div>
-      ) : (
-        /* ===== MARKETING MODE ===== */
-        <>
-          {/* ===== HERO ===== */}
-          <section
-            className="relative overflow-hidden"
-            style={{ paddingTop: "140px", paddingBottom: "96px" }}
-          >
-            {/* Grid background */}
-            <div
-              className="absolute inset-0 z-0 pointer-events-none opacity-35"
-              style={{
-                backgroundImage:
-                  "linear-gradient(#1E2335 1px, transparent 1px), linear-gradient(90deg, #1E2335 1px, transparent 1px)",
-                backgroundSize: "64px 64px",
-                maskImage:
-                  "radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%)",
-                WebkitMaskImage:
-                  "radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%)",
-              }}
-              aria-hidden="true"
-            />
+      </header>
 
-            {/* Glow blobs */}
-            <div
-              className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, #7C6BFF 0%, transparent 70%)",
-                opacity: 0.12,
-              }}
-              aria-hidden="true"
-            />
-            <div
-              className="absolute bottom-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, #FF6B4A 0%, transparent 70%)",
-                opacity: 0.08,
-              }}
-              aria-hidden="true"
-            />
-            <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, #2DD4BF 0%, transparent 70%)",
-                opacity: 0.06,
-              }}
-              aria-hidden="true"
-            />
-
-            {/* Constellation */}
-            <div
-              className="absolute inset-0 z-0 overflow-hidden pointer-events-none hidden md:block"
-              aria-hidden="true"
-            >
-              <svg viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1050" y1="120" x2="1180" y2="200" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1180" y1="200" x2="1250" y2="350" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1050" y1="120" x2="1100" y2="280" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1100" y1="280" x2="1250" y2="350" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1100" y1="280" x2="1180" y2="200" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1250" y1="350" x2="1320" y2="250" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1180" y1="200" x2="1320" y2="250" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1050" y1="120" x2="980" y2="220" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="980" y1="220" x2="1100" y2="280" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1250" y1="350" x2="1200" y2="450" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1100" y1="280" x2="1050" y2="400" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="1050" y1="400" x2="1200" y2="450" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="980" y1="220" x2="900" y2="320" />
-                <line stroke="#1E2335" strokeWidth="0.5" opacity="0.5" x1="900" y1="320" x2="1050" y2="400" />
-                <circle cx="1050" cy="120" r="4" fill="#A78BFA" />
-                <circle cx="1180" cy="200" r="3" fill="#262D42" />
-                <circle cx="1250" cy="350" r="3" fill="#FF8A70" />
-                <circle cx="1100" cy="280" r="3" fill="#262D42" />
-                <circle cx="1320" cy="250" r="3" fill="#5EEAD4" />
-                <circle cx="980" cy="220" r="3" fill="#262D42" />
-                <circle cx="1200" cy="450" r="3" fill="#262D42" />
-                <circle cx="1050" cy="400" r="3" fill="#262D42" />
-                <circle cx="900" cy="320" r="3" fill="#262D42" />
-                <circle cx="850" cy="150" r="1.5" fill="#262D42" opacity="0.4" />
-                <circle cx="1350" cy="180" r="1.5" fill="#262D42" opacity="0.3" />
-                <circle cx="920" cy="430" r="1.5" fill="#262D42" opacity="0.5" />
-              </svg>
-            </div>
-
-            {/* Hero content */}
-            <div className="container mx-auto max-w-6xl px-6 relative z-10">
-              {/* Badge */}
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono mb-6"
-                style={{
-                  background: "rgba(124,107,255,0.15)",
-                  color: "#A78BFA",
-                  border: "1px solid rgba(124,107,255,0.2)",
-                }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A78BFA] inline-block" />
-                Open plugin ecosystem
-              </div>
-
-              {/* Title */}
-              <h1
-                className="font-extrabold tracking-[-0.035em] leading-[1.05] max-w-[720px] mb-6 text-[#E8ECF4]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
-              >
-                Extend your agents
-                <br />
-                with{" "}
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #A78BFA 0%, #FF8A70 50%, #5EEAD4 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  community plugins
-                </span>
-              </h1>
-
-              {/* Subtitle */}
-              <p
-                className="text-[#8891A5] max-w-[540px] leading-[1.6] mb-8"
-                style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)" }}
-              >
-                Discover, install, and share plugins that give your Paperclip agents new
-                capabilities — from auth providers to observability hooks.
-              </p>
-
-              {/* Hero search */}
-              <div className="max-w-[520px] w-full relative">
-                <Suspense fallback={<div className="h-14" />}>
-                  <SearchBar dark heroSize />
-                </Suspense>
-              </div>
-
-              {/* Quick tags */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {QUICK_TAGS.map((tag) => (
-                  <a
-                    key={tag}
-                    href={`/?category=${tag}`}
-                    className="text-xs px-3 py-1 rounded-full border border-[#1E2335] text-[#565E73] transition-all hover:border-[#7C6BFF] hover:text-[#A78BFA]"
-                    style={{ background: "transparent" }}
-                  >
-                    {tag}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ===== STATS STRIP ===== */}
-          <div className="container mx-auto max-w-6xl px-6">
-            <div className="flex flex-wrap gap-8 py-8 border-t border-b border-[#1E2335]">
-              <div className="flex flex-col">
-                <span className="text-4xl font-extrabold leading-none text-[#A78BFA]">
-                  {allPlugins.length}
-                </span>
-                <span className="text-[#565E73] text-sm mt-1">Plugins</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-4xl font-extrabold leading-none text-[#FF8A70]">
-                  {CATEGORIES.filter((c) => c.value !== "all").length}
-                </span>
-                <span className="text-[#565E73] text-sm mt-1">Categories</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-4xl font-extrabold leading-none text-[#5EEAD4]">9</span>
-                <span className="text-[#565E73] text-sm mt-1">Hook types</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-4xl font-extrabold leading-none text-[#E8ECF4]">
-                  {formatNum(totalInstalls)}
-                </span>
-                <span className="text-[#565E73] text-sm mt-1">Weekly installs</span>
-              </div>
-            </div>
+      {/* Hero */}
+      <section className="hc-hero">
+        <div className="hc-hero-l">
+          <div className="hc-eyebrow">
+            <span className="vol">Volume 19 · May 2026</span>
+            <span className="live">
+              <span className="pulse" />
+              Live · {totalInstallsLabel} installs / wk
+            </span>
+            <span>A registry for autonomous teams.</span>
           </div>
-
-          {/* ===== CATEGORIES ===== */}
-          <section className="container mx-auto max-w-6xl px-6 py-24">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-[#E8ECF4]">
-                  Browse by category
-                </h2>
-                <p className="text-[#8891A5] mt-1 text-[0.9375rem]">
-                  Find the right plugin for your use case
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {CATEGORIES.filter((c) => c.value !== "all").map((cat) => {
-                const meta = CATEGORY_META[cat.value];
-                if (!meta) return null;
-                const Icon = meta.icon;
-                return (
-                  <a
-                    key={cat.value}
-                    href={`/?category=${cat.value}`}
-                    className="group flex flex-col gap-3 p-6 rounded-2xl border border-[#1E2335] bg-[#161922] transition-all hover:border-[#3A4260] hover:-translate-y-0.5"
-                    style={{
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      className="w-12 h-12 rounded-[10px] flex items-center justify-center"
-                      style={{ background: meta.bg }}
-                    >
-                      <Icon style={{ width: "24px", height: "24px", color: meta.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-[1.125rem] font-semibold text-[#E8ECF4]">{cat.label}</h3>
-                      <span
-                        className="text-xs font-mono"
-                        style={{ color: "#565E73" }}
-                      >
-                        {categoryCounts[cat.value] ?? 0} plugins
-                      </span>
-                    </div>
-                    <p className="text-sm text-[#8891A5] leading-[1.5]">{meta.description}</p>
-                  </a>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* ===== POPULAR PLUGINS ===== */}
-          <section className="container mx-auto max-w-6xl px-6 pb-24">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-[#E8ECF4]">
-                  Popular plugins
-                </h2>
-                <p className="text-sm text-[#8891A5] mt-1">Most downloaded this week</p>
-              </div>
-              <a
-                href="/?sort=popular"
-                className="flex items-center gap-1 text-sm font-medium text-[#A78BFA] hover:text-[#7C6BFF] transition-colors"
-              >
-                View all <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {topPlugins.map((plugin) => (
-                <PluginCard
-                  key={plugin.id}
-                  plugin={plugin}
-                  href={`/plugins/${plugin.slug}`}
-                  dark
-                />
-              ))}
-            </div>
-          </section>
-
-          {/* ===== RECENTLY ADDED ===== */}
-          <section className="container mx-auto max-w-6xl px-6 pb-24">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-[#E8ECF4]">
-                  Recently added
-                </h2>
-                <p className="text-sm text-[#8891A5] mt-1">New arrivals in the registry</p>
-              </div>
-              <a
-                href="/?sort=newest"
-                className="flex items-center gap-1 text-sm font-medium text-[#A78BFA] hover:text-[#7C6BFF] transition-colors"
-              >
-                View all <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {recent.map((plugin) => (
-                <PluginCard
-                  key={plugin.id}
-                  plugin={plugin}
-                  href={`/plugins/${plugin.slug}`}
-                  dark
-                />
-              ))}
-            </div>
-          </section>
-
-          {/* ===== CTA ===== */}
-          <section className="container mx-auto max-w-6xl px-6 pb-24">
-            {/* Glow line */}
-            <div
-              className="w-full h-px mb-16 opacity-40"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, #7C6BFF, #FF6B4A, transparent)",
-              }}
-            />
-
-            <div
-              className="relative overflow-hidden rounded-2xl border border-[#1E2335] px-8 py-16 text-center sm:px-12"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(124,107,255,0.08) 0%, rgba(255,107,74,0.06) 100%)",
-              }}
-            >
-              {/* Top glow line */}
-              <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-[400px] opacity-60"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent, #7C6BFF, transparent)",
-                }}
-                aria-hidden="true"
-              />
-
-              <h2
-                className="font-bold tracking-tight text-[#E8ECF4] mb-4"
-                style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)" }}
-              >
-                Built something useful?
-                <br />
-                Share it with the community.
-              </h2>
-              <p className="text-[#8891A5] max-w-[480px] mx-auto mb-8 text-[1.0625rem]">
-                Submit your plugin to the registry and let thousands of agent developers discover
-                it.
-              </p>
-
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <a
-                  href="/submit"
-                  className="inline-flex items-center gap-2 font-semibold text-white px-7 py-3.5 rounded-[10px] transition-all hover:-translate-y-px"
-                  style={{
-                    background: "#FF6B4A",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.3)",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Submit a plugin
-                </a>
-                <a
-                  href="/docs/plugins"
-                  className="inline-flex items-center gap-2 font-semibold text-[#8891A5] px-7 py-3.5 rounded-[10px] border border-[#262D42] transition-all hover:bg-[#1C2030] hover:text-[#E8ECF4] hover:border-[#3A4260]"
-                  style={{ fontSize: "1rem" }}
-                >
-                  Read the SDK docs
-                </a>
-              </div>
-
-              {/* Code block */}
-              <div
-                className="max-w-[480px] mx-auto mt-8 text-left rounded-[10px] border border-[#1E2335] px-[18px] py-[14px] font-mono text-[0.8125rem] leading-[1.7] overflow-x-auto"
-                style={{ background: "#0A0C13", color: "#8891A5" }}
-              >
-                <span style={{ color: "#5EEAD4" }}>$</span>{" "}
-                <span style={{ color: "#E8ECF4" }}>paperclip plugin create my-plugin</span>
-                <br />
-                <span style={{ color: "#565E73" }}># scaffold → build → publish → submit</span>
-              </div>
-            </div>
-          </section>
-        </>
-      )}
-
-      {/* ===== DARK FOOTER ===== */}
-      <footer
-        className="border-t border-[#1E2335] mt-24"
-        style={{ padding: "48px 0" }}
-      >
-        <div className="container mx-auto max-w-6xl px-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-[#565E73] text-sm">
+          <h1>
+            Plugins for <em>autonomous</em>
+            <span className="s">teams that build with agents.</span>
+          </h1>
+          <p>
+            The Paperclip Hub is a curated directory of connectors, providers, tools and memory
+            backends — published by the community, indexed nightly, installed in one line.
+          </p>
+          <form
+            action="/"
+            method="get"
+            className="hc-hero-search"
+            aria-label="Search plugins"
+          >
             <svg
               width="20"
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              stroke="var(--ink-2)"
+              strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
+              aria-hidden
             >
-              <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z" />
-              <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8" />
-              <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4" />
-              <line x1="12" y1="20" x2="12" y2="22" />
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
             </svg>
-            <span>Paperclip Hub &copy; 2025</span>
+            <input
+              name="q"
+              defaultValue={params.q ?? ""}
+              placeholder={'Try "opencode", "memory", "@paperclip/"…'}
+              aria-label="Search plugins"
+            />
+            <button type="submit">Search</button>
+          </form>
+          <div className="hc-hero-meta">
+            <div>
+              <b>{allPlugins.length}</b>
+              <small>plugins indexed</small>
+            </div>
+            <div>
+              <b>{publisherCount}</b>
+              <small>publishers</small>
+            </div>
+            <div>
+              <b>{totalInstallsLabel}</b>
+              <small>installs / wk</small>
+            </div>
+            <div>
+              <b>{verifiedCount}</b>
+              <small>verified · official</small>
+            </div>
           </div>
-          <div className="flex gap-8 text-sm">
-            <a href="https://github.com/paperclip-ai" className="text-[#8891A5] hover:text-[#E8ECF4] transition-colors">
-              GitHub
-            </a>
-            <a href="/docs/plugins" className="text-[#8891A5] hover:text-[#E8ECF4] transition-colors">
-              Docs
-            </a>
-            <a href="/contact" className="text-[#8891A5] hover:text-[#E8ECF4] transition-colors">
-              Discord
-            </a>
+        </div>
+
+        <div className="hc-hero-r">
+          {featured && (
+            <article className="hc-poster">
+              <div className="hc-poster-head">
+                <span>Featured plugin · vol. 19</span>
+                <span className="stamp">Staff Pick</span>
+              </div>
+              <div className="hc-poster-rule" />
+              <div className="hc-poster-cat">
+                <span className="d" />
+                {featured.category} · by @{featured.author.name.toLowerCase()}
+              </div>
+              <h2>
+                <Link href={`/plugins/${featured.slug}`}>
+                  {featured.name}.<em> Wired into Paperclip.</em>
+                </Link>
+              </h2>
+              <span className="hc-poster-pkg">$ {featured.installCommand}</span>
+              <p className="hc-poster-desc">{featured.description}</p>
+              <div className="hc-poster-foot">
+                <div>
+                  <b>{fmtK(featured.installs)}</b>
+                  <small>installs / wk</small>
+                </div>
+                <div>
+                  <b>v{featured.version}</b>
+                  <small>{shortDate(featured.submittedAt)}</small>
+                </div>
+                <Link href={`/plugins/${featured.slug}`} className="hc-poster-cta">
+                  Install
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+            </article>
+          )}
+        </div>
+      </section>
+
+      {/* Live ticker */}
+      <div className="hc-ticker">
+        <span>
+          <span className="star">●</span> Live wire
+        </span>
+        <span className="div" />
+        {recent[0] && (
+          <>
+            <span>
+              Latest install <b>· {recent[0].npmPackage}</b>
+            </span>
+            <span className="div" />
+          </>
+        )}
+        {trending[0] && (
+          <>
+            <span>
+              Hottest <b>· {trending[0].name}</b> +21%
+            </span>
+            <span className="div" />
+          </>
+        )}
+        <span>
+          New this week <b>· {recent.length} plugins</b>
+        </span>
+        <span className="div" />
+        <span>
+          SDK <b>· v2026.05</b>
+        </span>
+      </div>
+
+      {/* Section header */}
+      <div className="hc-section-hd">
+        <div className="l">
+          <span className="eyebrow">§ ii — the directory</span>
+          <h2>
+            Browse the <em>shelves.</em>
+          </h2>
+        </div>
+        <div className="r">
+          <b>{results.length}</b> plugins<span>·</span>refreshed 2 min ago
+        </div>
+      </div>
+
+      {/* Toolbar */}
+      <div className="hc-toolbar">
+        <div className="hc-pills">
+          {cats.map((c) => (
+            <Link
+              key={c.key}
+              href={buildHref("/", params, {
+                category: c.key === "all" ? undefined : c.key,
+              })}
+              className={`hc-pill${c.key === activeCategory ? " is-active" : ""}`}
+            >
+              {c.key !== "all" && <span className="pl-dot" />}
+              {c.label}
+              <small>·{c.count}</small>
+            </Link>
+          ))}
+        </div>
+        <div className="hc-toolbar-r">
+          <Link
+            href={buildHref("/", params, {
+              verified: verifiedOnly ? undefined : "true",
+            })}
+            className={`hc-toggle${verifiedOnly ? " is-on" : ""}`}
+            aria-pressed={verifiedOnly}
+          >
+            <span className="sw" />
+            Verified only
+          </Link>
+          <details className="hc-sort">
+            <summary>
+              <small>Sort</small>
+              <b>{SORT_LABELS[sortKey] ?? SORT_LABELS.popular}</b>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </summary>
+            <div className="hc-sort-menu" role="menu">
+              {Object.entries(SORT_LABELS).map(([key, label]) => (
+                <Link
+                  key={key}
+                  role="menuitem"
+                  href={buildHref("/", params, {
+                    sort: key === "popular" ? undefined : key,
+                  })}
+                  className={`hc-sort-item${key === sortKey ? " is-active" : ""}`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </details>
+        </div>
+      </div>
+
+      {/* Body — grid + sidebar */}
+      <div className="hc-body">
+        {grid.length === 0 ? (
+          <div
+            style={{
+              border: "1px dashed var(--bd-2)",
+              padding: "48px",
+              background: "var(--paper)",
+              fontFamily: "var(--hub-font-serif)",
+              fontStyle: "italic",
+              fontSize: 22,
+              color: "var(--ink-2)",
+              textAlign: "center",
+            }}
+          >
+            No plugins found. Try adjusting the filters.
           </div>
+        ) : (
+          <div className="hc-grid">
+            {grid.map((p) => {
+              const verified = isVerified(p);
+              return (
+                <Link key={p.id} href={`/plugins/${p.slug}`} className="hc-card">
+                  <div className="hc-card-cat">
+                    <span className="d" />
+                    {p.category}
+                    {verified && <span className="vfd">· verified</span>}
+                  </div>
+                  <h3>
+                    {p.name}{" "}
+                    <span className="ver">{p.version !== "unknown" ? `v${p.version}` : "—"}</span>
+                  </h3>
+                  <span className="hc-card-pkg">{p.npmPackage}</span>
+                  <p className="hc-card-desc">{p.description}</p>
+                  <div className="hc-card-foot">
+                    <div className="l">
+                      <span>
+                        <b>{fmtK(p.installs)}</b>/wk
+                      </span>
+                      <span>@{p.author.name.toLowerCase()}</span>
+                    </div>
+                    <span className="hc-btn-mock" aria-hidden>
+                      Install
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        <aside className="hc-side">
+          <div className="hc-side-card">
+            <div className="hc-side-hd">
+              <h3>
+                The <em>top five.</em>
+              </h3>
+              <Link href="/?sort=popular">see all</Link>
+            </div>
+            <div className="hc-trend">
+              {trending.map((p, i) => (
+                <Link
+                  key={p.id}
+                  href={`/plugins/${p.slug}`}
+                  className={`hc-trend-row${i === 0 ? " top" : ""}`}
+                >
+                  <span className="rk">{String(i + 1).padStart(2, "0")}</span>
+                  <div className="bd">
+                    <b>{p.name}</b>
+                    <small>
+                      {p.category} · {fmtK(p.installs)}/wk
+                    </small>
+                  </div>
+                  <span className={`delta${i === 3 ? " down" : ""}`}>{TRENDING_DELTAS[i]}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="hc-side-card dark hc-submit">
+            <h3>
+              Have a plugin? <em>Ship it.</em>
+            </h3>
+            <p>
+              The Hub is fully open. Any npm package that exposes a Paperclip manifest gets indexed
+              nightly — no review queue, no waitlist. Publish to npm, tag{" "}
+              <code>paperclip-plugin</code>, we do the rest.
+            </p>
+            <Link href="/submit" className="hc-submit-cta">
+              Submit a plugin →
+            </Link>
+          </div>
+        </aside>
+      </div>
+
+      {/* Recently shipped */}
+      <section className="hc-recent">
+        <div className="hc-recent-hd">
+          <div>
+            <span className="eyebrow">§ iii — freshly shipped</span>
+            <h2>
+              Just <em>off the press.</em>
+            </h2>
+          </div>
+          <Link href="/changelog">full changelog →</Link>
+        </div>
+        <div className="hc-recent-row">
+          {recent.map((p) => (
+            <Link key={p.id} href={`/plugins/${p.slug}`} className="hc-recent-card">
+              <span className="stamp">
+                New · {p.version !== "unknown" ? `v${p.version}` : "fresh"}
+              </span>
+              <b>{p.name}</b>
+              <p>{p.description.split(".")[0]}.</p>
+              <div className="meta">
+                <span>@{p.author.name.toLowerCase()}</span>
+                <span className="ver">{shortDate(p.submittedAt)}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="hc-foot">
+        <div className="l">
+          <b>Paperclip</b>
+          <span>The Hub · vol. 19 — May 2026</span>
+        </div>
+        <div className="r">
+          <Link href="/about">About</Link>
+          <Link href="/docs">Docs</Link>
+          <Link href="/docs/api">API</Link>
+          <Link href="/docs/cli">CLI</Link>
+          <Link href="https://github.com">GitHub</Link>
+          <Link href="/status">Status</Link>
         </div>
       </footer>
     </div>

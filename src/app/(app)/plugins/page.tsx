@@ -45,17 +45,35 @@ function pickFeatured(all: Plugin[]): Plugin | undefined {
   return [...all].sort((a, b) => b.installs - a.installs)[0];
 }
 
+function buildHref(
+  base: string,
+  params: { q?: string; category?: string; sort?: string; verified?: string },
+  patch: Record<string, string | undefined>
+): string {
+  const merged = { ...params, ...patch };
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(merged)) {
+    if (v) qs.set(k, v);
+  }
+  const s = qs.toString();
+  return s ? `${base}?${s}` : base;
+}
+
 export default async function PluginsPage({ searchParams }: PluginsPageProps) {
   const [params, allPlugins] = await Promise.all([searchParams, getPlugins()]);
 
   const sortKey = params.sort ?? "popular";
   const activeCategory = params.category ?? "all";
+  const verifiedOnly = params.verified === "true";
 
-  const results = filterPlugins(allPlugins, {
+  let results = filterPlugins(allPlugins, {
     search: params.q,
     category: params.category,
     sort: sortKey,
   });
+  if (verifiedOnly) {
+    results = results.filter(isVerified);
+  }
 
   const featured = pickFeatured(allPlugins);
   const grid = (featured ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, 8);
@@ -293,7 +311,9 @@ export default async function PluginsPage({ searchParams }: PluginsPageProps) {
           {cats.map((c) => (
             <Link
               key={c.key}
-              href={c.key === "all" ? "/plugins" : `/plugins?category=${c.key}`}
+              href={buildHref("/plugins", params, {
+                category: c.key === "all" ? undefined : c.key,
+              })}
               className={`hc-pill${c.key === activeCategory ? " is-active" : ""}`}
             >
               {c.key !== "all" && <span className="pl-dot" />}
@@ -303,26 +323,49 @@ export default async function PluginsPage({ searchParams }: PluginsPageProps) {
           ))}
         </div>
         <div className="hc-toolbar-r">
-          <div className="hc-toggle" aria-hidden>
+          <Link
+            href={buildHref("/plugins", params, {
+              verified: verifiedOnly ? undefined : "true",
+            })}
+            className={`hc-toggle${verifiedOnly ? " is-on" : ""}`}
+            aria-pressed={verifiedOnly}
+          >
             <span className="sw" />
             Verified only
-          </div>
-          <div className="hc-sort" aria-hidden>
-            <small>Sort</small>
-            <b>{SORT_LABELS[sortKey] ?? SORT_LABELS.popular}</b>
-            <svg
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </div>
+          </Link>
+          <details className="hc-sort">
+            <summary>
+              <small>Sort</small>
+              <b>{SORT_LABELS[sortKey] ?? SORT_LABELS.popular}</b>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </summary>
+            <div className="hc-sort-menu" role="menu">
+              {Object.entries(SORT_LABELS).map(([key, label]) => (
+                <Link
+                  key={key}
+                  role="menuitem"
+                  href={buildHref("/plugins", params, {
+                    sort: key === "popular" ? undefined : key,
+                  })}
+                  className={`hc-sort-item${key === sortKey ? " is-active" : ""}`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </details>
         </div>
       </div>
 

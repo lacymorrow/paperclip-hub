@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface InstallCardProps {
   cliCommand: string;
@@ -10,12 +10,24 @@ interface InstallCardProps {
 
 export function InstallCard({ cliCommand, npmCommand, pluginName }: InstallCardProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    },
+    []
+  );
 
   const copy = async (key: string, text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedKey(key);
-      setTimeout(() => setCopiedKey(null), 1400);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        setCopiedKey(null);
+        timeoutRef.current = null;
+      }, 1400);
     } catch {
       // ignored — clipboard not available
     }

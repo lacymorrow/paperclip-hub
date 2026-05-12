@@ -43,43 +43,8 @@ function longDate(date: string): string {
   });
 }
 
-function relativeAgo(date: string): string {
-  const ms = Date.now() - new Date(date).getTime();
-  const days = Math.floor(ms / 86_400_000);
-  if (days < 1) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 30) return `${days} days ago`;
-  const months = Math.floor(days / 30);
-  return months === 1 ? "1 month ago" : `${months} months ago`;
-}
-
-function spark(seed: number, n = 24): number[] {
-  return Array.from({ length: n }, (_, i) => Math.sin(seed * 9.3 + i * 2.1) * 0.5 + 0.5);
-}
-
 function isVerified(p: Plugin): boolean {
   return OFFICIAL_AUTHORS.has(p.author.name.toLowerCase());
-}
-
-function bumpPatch(v: string, delta: number): string {
-  if (v === "unknown") return v;
-  const parts = v.split(".").map((n) => Number.parseInt(n, 10));
-  parts[2] = Math.max(0, (parts[2] ?? 0) + delta);
-  return parts.join(".");
-}
-
-function bumpMinor(v: string, delta: number): string {
-  if (v === "unknown") return v;
-  const parts = v.split(".").map((n) => Number.parseInt(n, 10));
-  parts[1] = Math.max(0, (parts[1] ?? 0) + delta);
-  parts[2] = 0;
-  return parts.join(".");
-}
-
-function shiftDate(iso: string, days: number): string {
-  const d = new Date(iso);
-  d.setDate(d.getDate() + days);
-  return d.toISOString();
 }
 
 function describeCapability(cap: string): string {
@@ -125,48 +90,78 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
     .filter((p) => p.category === plugin.category && p.slug !== plugin.slug)
     .slice(0, 3);
 
-  const seed = plugin.slug.length + plugin.installs;
-  const bars = spark(seed, 24);
-  const max = Math.max(...bars);
-  const peakIdx = bars.indexOf(max);
-  const peakHourly = Math.max(plugin.installs, 100) / 7;
+  const sourceHost = plugin.sourceRepo
+    ? plugin.sourceRepo.replace(/^https?:\/\//, "").replace(/\/$/, "")
+    : null;
+  const releasesUrl = plugin.sourceRepo ? `${plugin.sourceRepo.replace(/\/$/, "")}/releases` : null;
 
-  const versionsList =
-    plugin.version === "unknown"
-      ? []
-      : [
-          {
-            v: `v${plugin.version}`,
-            d: longDate(plugin.submittedAt),
-            t: "Latest · stable",
-            latest: true,
-          },
-          {
-            v: `v${bumpPatch(plugin.version, -1)}`,
-            d: longDate(shiftDate(plugin.submittedAt, -22)),
-            t: "Bugfix · cache TTLs",
-          },
-          {
-            v: `v${bumpPatch(plugin.version, -2)}`,
-            d: longDate(shiftDate(plugin.submittedAt, -41)),
-            t: "Stable",
-          },
-          {
-            v: `v${bumpMinor(plugin.version, -1)}`,
-            d: longDate(shiftDate(plugin.submittedAt, -64)),
-            t: "Adds capability negotiation",
-          },
-          {
-            v: `v${bumpMinor(plugin.version, -2)}`,
-            d: longDate(shiftDate(plugin.submittedAt, -92)),
-            t: "Stable",
-          },
-          {
-            v: `v${bumpMinor(plugin.version, -3)}`,
-            d: longDate(shiftDate(plugin.submittedAt, -120)),
-            t: "Stable",
-          },
-        ];
+  const versionTab =
+    plugin.version === "unknown" ? (
+      <p className="hc-d-empty">npm registry hasn't responded yet — try again in a moment.</p>
+    ) : (
+      <>
+        <div className="hc-d-versions">
+          <div className="hc-d-version-row">
+            <span className="v">v{plugin.version}</span>
+            <span className="d">{longDate(plugin.submittedAt)}</span>
+            <span className="t latest">Latest · published</span>
+            {releasesUrl ? (
+              <a href={releasesUrl} target="_blank" rel="noreferrer">
+                view release →
+              </a>
+            ) : (
+              <span className="hc-d-version-diff" aria-hidden>
+                —
+              </span>
+            )}
+          </div>
+        </div>
+        <p className="hc-d-empty" style={{ marginTop: 18 }}>
+          Older versions live on{" "}
+          {releasesUrl ? (
+            <a href={releasesUrl} target="_blank" rel="noreferrer">
+              GitHub releases
+            </a>
+          ) : (
+            <a
+              href={`https://www.npmjs.com/package/${plugin.npmPackage}?activeTab=versions`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              the npm registry
+            </a>
+          )}
+          .
+        </p>
+      </>
+    );
+
+  const changelogTab = (
+    <p className="hc-d-empty">
+      The Hub doesn't ingest changelogs yet.{" "}
+      {releasesUrl ? (
+        <>
+          See{" "}
+          <a href={releasesUrl} target="_blank" rel="noreferrer">
+            {sourceHost}/releases
+          </a>{" "}
+          for the maintained changelog.
+        </>
+      ) : (
+        <>
+          Browse{" "}
+          <a
+            href={`https://www.npmjs.com/package/${plugin.npmPackage}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {plugin.npmPackage} on npm
+          </a>{" "}
+          for past releases.
+        </>
+      )}
+    </p>
+  );
 
   const tabs = [
     {
@@ -216,73 +211,17 @@ paperclip.use(${camelize(plugin.npmPackage)}({
     },
     {
       key: "versions",
-      label: `Versions · ${versionsList.length}`,
-      content:
-        versionsList.length === 0 ? (
-          <p
-            style={{
-              fontFamily: "var(--hub-font-serif)",
-              fontStyle: "italic",
-              color: "var(--ink-2)",
-              margin: 0,
-            }}
-          >
-            No version history available — npm registry hasn't responded yet.
-          </p>
-        ) : (
-          <div className="hc-d-versions">
-            {versionsList.map((row) => (
-              <div key={row.v} className="hc-d-version-row">
-                <span className="v">{row.v}</span>
-                <span className="d">{row.d}</span>
-                <span className={`t${row.latest ? " latest" : ""}`}>{row.t}</span>
-                <span className="hc-d-version-diff">view diff →</span>
-              </div>
-            ))}
-          </div>
-        ),
+      label: plugin.version === "unknown" ? "Versions" : "Versions · 1",
+      content: versionTab,
     },
     {
       key: "changelog",
       label: "Changelog",
-      content: (
-        <article className="hc-d-readme">
-          <h2>
-            v{plugin.version} — {longDate(plugin.submittedAt)}
-          </h2>
-          <ul>
-            <li>Hardened plugin manifest validation against malformed entries.</li>
-            <li>Doubled default streaming buffer for high-throughput agents.</li>
-            <li>Fixed a regression in capability registration order.</li>
-          </ul>
-          {plugin.version !== "unknown" && (
-            <>
-              <h2>
-                v{bumpPatch(plugin.version, -1)} — {longDate(shiftDate(plugin.submittedAt, -22))}
-              </h2>
-              <ul>
-                <li>Lowered cache TTLs on tool-result memos to 30s.</li>
-              </ul>
-              <h2>
-                v{bumpMinor(plugin.version, -1)} — {longDate(shiftDate(plugin.submittedAt, -64))}
-              </h2>
-              <ul>
-                <li>
-                  New <code>onCost</code> hook for per-call budget gating.
-                </li>
-                <li>Adds optional auto-routing across model tiers.</li>
-              </ul>
-            </>
-          )}
-        </article>
-      ),
+      content: changelogTab,
     },
   ];
 
-  const ownerPluginCount = allPlugins.filter((p) => p.author.name === plugin.author.name).length;
-  const githubPath = plugin.sourceRepo
-    ? plugin.sourceRepo.replace(/^https?:\/\//, "")
-    : `github.com/${plugin.author.name.toLowerCase()}/${plugin.slug}`;
+  const ownerPluginCount = allPlugins.filter((p) => p.category === plugin.category).length;
 
   return (
     <div className="hub-c1">
@@ -360,57 +299,11 @@ paperclip.use(${camelize(plugin.npmPackage)}({
         </div>
       </section>
 
-      {/* Install activity chart */}
-      <section className="hc-d-chart">
-        <div className="hc-d-chart-hd">
-          <span className="eyebrow">§ ii — install activity · last 24h</span>
-          <div className="hc-d-chart-meta">
-            <span>
-              <b className="up">↑ 14%</b> vs prior week
-            </span>
-            <span className="div" />
-            <span>
-              peak <b>{fmtK(Math.round(peakHourly))}/h</b> at 14:00 UTC
-            </span>
-            <span className="div" />
-            <span>steady · no incidents</span>
-          </div>
-        </div>
-        <div className="hc-d-chart-body">
-          <div className="hc-d-chart-axis">
-            <span>3k</span>
-            <span>2k</span>
-            <span>1k</span>
-            <span>0</span>
-          </div>
-          <div className="hc-d-chart-bars">
-            {bars.map((v, i) => (
-              <div
-                key={`bar-${seed}-${i}-${v.toFixed(4)}`}
-                className={`bar${i === peakIdx ? " peak" : ""}`}
-                style={{ height: `${(v / max) * 100}%` }}
-              >
-                {i === peakIdx && (
-                  <span className="peak-label">{fmtK(Math.round(peakHourly))}/h</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="hc-d-chart-x">
-          <span>00:00</span>
-          <span>06:00</span>
-          <span>12:00</span>
-          <span>18:00</span>
-          <span>now</span>
-        </div>
-      </section>
-
       {/* Tabs */}
       <section className="hc-d-tabs-wrap">
         <DetailTabs
           tabs={tabs}
-          lastUpdated={relativeAgo(plugin.submittedAt)}
+          lastUpdated={`shipped ${longDate(plugin.submittedAt)}`}
           sidebar={
             <aside className="hc-d-side">
               <div className="hc-d-side-card">
@@ -427,26 +320,24 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                   </div>
                 </div>
                 <div className="hc-d-provenance">
+                  {sourceHost && (
+                    <div className="row">
+                      <span>Published from</span>
+                      <b>{sourceHost}</b>
+                    </div>
+                  )}
                   <div className="row">
-                    <span>Published from</span>
-                    <b>{githubPath.replace(/^https?:\/\//, "")}</b>
+                    <span>Package</span>
+                    <b>{plugin.npmPackage}</b>
                   </div>
                   <div className="row">
-                    <span>Signed by</span>
-                    <b>0x9aE3…f24c{verified && <span className="vfd"> ✓</span>}</b>
-                  </div>
-                  <div className="row">
-                    <span>Built in</span>
-                    <b>GitHub Actions · #1842</b>
-                  </div>
-                  <div className="row">
-                    <span>Indexed</span>
-                    <b>{relativeAgo(plugin.submittedAt)}</b>
+                    <span>Submitted</span>
+                    <b>{longDate(plugin.submittedAt)}</b>
                   </div>
                 </div>
                 <Link href={`/plugins?category=${plugin.category}`} className="hc-d-author-link">
-                  View all {ownerPluginCount} plugin{ownerPluginCount === 1 ? "" : "s"} by{" "}
-                  {plugin.author.name.toLowerCase()} →
+                  View all {ownerPluginCount} plugin{ownerPluginCount === 1 ? "" : "s"} in{" "}
+                  {plugin.category} →
                 </Link>
               </div>
 
@@ -487,9 +378,9 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                   <span className="eyebrow">§ links</span>
                 </div>
                 <div className="hc-d-links">
-                  {plugin.sourceRepo && (
+                  {plugin.sourceRepo && sourceHost && (
                     <a href={plugin.sourceRepo} target="_blank" rel="noreferrer">
-                      ↗ {githubPath}
+                      ↗ {sourceHost}
                     </a>
                   )}
                   <a

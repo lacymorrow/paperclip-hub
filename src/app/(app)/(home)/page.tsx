@@ -177,17 +177,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
         <a
           href="/submit"
-          className="hidden md:inline-flex items-center text-sm font-semibold text-white px-3.5 py-1.5 rounded-[10px] transition-all hover:-translate-y-px"
-          style={{
-            background: "#7C6BFF",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.3)",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = "#A78BFA";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = "#7C6BFF";
-          }}
+          className="hidden md:inline-flex items-center text-sm font-semibold text-white px-3.5 py-1.5 rounded-[10px] transition-all hover:-translate-y-px bg-[#7C6BFF] hover:bg-[#A78BFA]"
+          style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
         >
           Submit Plugin
         </a>

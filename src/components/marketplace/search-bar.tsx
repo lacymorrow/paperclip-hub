@@ -46,7 +46,7 @@ export const SearchBar = ({ className, dark, heroSize }: SearchBarProps) => {
           placeholder="Search plugins, connectors, tools..."
           value={value}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full outline-none transition-all"
+          className="w-full outline-none transition-all border border-[#1E2335] focus:border-[#7C6BFF] focus:shadow-[0_0_0_3px_rgba(124,107,255,0.15)]"
           style={{
             height: heroSize ? "56px" : "44px",
             fontSize: heroSize ? "1rem" : "0.875rem",
@@ -54,17 +54,8 @@ export const SearchBar = ({ className, dark, heroSize }: SearchBarProps) => {
             paddingRight: heroSize ? "120px" : "16px",
             borderRadius: heroSize ? "16px" : "10px",
             background: "#0F1117",
-            border: "1px solid #1E2335",
             color: "#E8ECF4",
             fontFamily: "inherit",
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = "#7C6BFF";
-            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(124,107,255,0.15)";
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = "#1E2335";
-            e.currentTarget.style.boxShadow = "none";
           }}
         />
         {heroSize && (

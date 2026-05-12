@@ -33,6 +33,7 @@ export const SortSelect = ({ className, dark }: SortSelectProps) => {
       <select
         value={active}
         onChange={(e) => handleSort(e.target.value)}
+        aria-label="Sort plugins"
         className={`outline-none cursor-pointer transition-all ${className ?? ""}`}
         style={{
           fontFamily: "inherit",
@@ -64,6 +65,7 @@ export const SortSelect = ({ className, dark }: SortSelectProps) => {
     <select
       value={active}
       onChange={(e) => handleSort(e.target.value)}
+      aria-label="Sort plugins"
       className={`rounded-md border bg-background px-3 py-2 text-sm ${className ?? ""}`}
     >
       {SORT_OPTIONS.map((opt) => (

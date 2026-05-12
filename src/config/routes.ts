@@ -209,7 +209,7 @@ export const routes = {
 
   // External links
   external: {
-    shipkit: "https://shipkit.io",
+    shipkit: "https://paperclip.ing",
     bones: "https://bones.sh",
     log: "https://log.bones.sh",
     ui: "https://ui.bones.sh",

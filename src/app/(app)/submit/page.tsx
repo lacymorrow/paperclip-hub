@@ -42,9 +42,9 @@ export default async function SubmitPage() {
           <Link href="/sign-in" className="hc-link-muted">
             Sign in
           </Link>
-          <Link href="/" className="hc-btn">
+          <a href="https://github.com/paperclipai/paperclip-hub" className="hc-btn" target="_blank" rel="noopener noreferrer">
             Get Paperclip →
-          </Link>
+          </a>
         </div>
       </header>
 

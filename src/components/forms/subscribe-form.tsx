@@ -59,7 +59,7 @@ export const SubscribeForm: React.FC = () => {
       <div className="relative flex items-center justify-center">
         <Input
           type="email"
-          placeholder="me@shipkit.io"
+          placeholder="you@example.com"
           className=""
           value={email}
           onChange={(e) => setEmail(e.target.value)}

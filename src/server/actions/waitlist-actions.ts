@@ -64,7 +64,7 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
     if ((env.RESEND_API_KEY || env.RESEND_API_KEY) && resend) {
       try {
         await resend.emails.send({
-          from: env.RESEND_FROM_EMAIL || "Shipkit <noreply@shipkit.io>",
+          from: env.RESEND_FROM_EMAIL || "Paperclip Hub <noreply@paperclip.ing>",
           to: formData.email,
           subject: "Welcome to the Shipkit Waitlist! 🚀",
           html: `

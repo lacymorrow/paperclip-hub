@@ -92,7 +92,7 @@ export function WaitlistFAQ() {
                 No sales pressure, just honest answers from developers who've been there.
               </p>
               <a
-                href="mailto:hey@shipkit.io"
+                href="mailto:feedback@paperclip.ing"
                 className="text-violet-600 dark:text-violet-400 hover:underline font-medium"
               >
                 Email us →

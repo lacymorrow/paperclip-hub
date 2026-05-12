@@ -137,9 +137,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <Link href="/sign-in" className="hc-link-muted">
             Sign in
           </Link>
-          <Link href="/" className="hc-btn">
+          <a href="https://github.com/paperclipai/paperclip-hub" className="hc-btn" target="_blank" rel="noopener noreferrer">
             Get Paperclip →
-          </Link>
+          </a>
         </div>
       </header>
 
@@ -511,12 +511,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <span>The Hub · vol. 19 — May 2026</span>
         </div>
         <div className="r">
-          <Link href="/about">About</Link>
           <Link href="/docs">Docs</Link>
-          <Link href="/docs/api">API</Link>
-          <Link href="/docs/cli">CLI</Link>
-          <Link href="https://github.com">GitHub</Link>
-          <Link href="/status">Status</Link>
+          <Link href="/changelog">Changelog</Link>
+          <Link href="/contact">Contact</Link>
+          <a href="https://github.com/paperclipai/paperclip-hub" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://discord.gg/XxKrKNvEje" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
       </footer>
     </div>

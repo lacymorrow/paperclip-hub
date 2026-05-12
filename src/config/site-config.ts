@@ -243,19 +243,19 @@ export const siteConfig: SiteConfig = {
   },
 
   email: {
-    support: "feedback@shipkit.io",
-    team: "team@shipkit.io",
-    noreply: "noreply@shipkit.io",
-    domain: "shipkit.io",
-    legal: "legal@shipkit.io",
-    privacy: "privacy@shipkit.io",
+    support: "feedback@paperclip.ing",
+    team: "team@paperclip.ing",
+    noreply: "noreply@paperclip.ing",
+    domain: "paperclip.ing",
+    legal: "legal@paperclip.ing",
+    privacy: "privacy@paperclip.ing",
     // Placeholder format function - assigned below
     format: (_type) => "",
   },
 
   creator: {
     name: "lacymorrow",
-    email: "lacy@shipkit.io",
+    email: "lacy@paperclip.ing",
     url: "https://lacymorrow.com",
     twitter: "@lacybuilds",
     twitter_handle: "lacybuilds",
@@ -268,14 +268,9 @@ export const siteConfig: SiteConfig = {
   },
 
   store: {
-    id: "shipkit",
+    id: "cliphub",
     products: {
-      // LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)
-      // Format: variant UUID from LemonSqueezy dashboard
-      shipkit: "411883",
-      // Examples:
-      bones: "411883",
-      brains: "411883",
+      cliphub: "411883",
     },
   },
 
@@ -294,7 +289,7 @@ export const siteConfig: SiteConfig = {
       dark: "black",
     },
     locale: "en-US",
-    generator: "Next.js, shipkit.io",
+    generator: "Next.js, cliphub.fyi",
     referrer: "origin-when-cross-origin",
     category: "technology", // Use technology as category
     classification: "Business Software",

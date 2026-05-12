@@ -39,6 +39,7 @@ const createRedirects = (sources: Route[], destination: Route, permanent = false
 /* eslint-disable-next-line @typescript-eslint/require-await */
 export const redirects = async (): Promise<Redirect[]> => {
   return [
+    ...createRedirects(["/plugins"], "/", true),
     ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
     ...createRedirects(
       ["/account", "/accounts", "/settings/accounts"],

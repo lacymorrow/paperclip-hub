@@ -227,18 +227,18 @@ paperclip.use(${camelize(plugin.npmPackage)}({
     <div className="hub-c1">
       {/* Header */}
       <header className="hc-header">
-        <Link href="/plugins" className="hc-brand">
+        <Link href="/" className="hc-brand">
           <span className="hc-brand-wm">
             <b>Paper</b>clip
           </span>
           <span className="hc-brand-sub">Hub · est. 2026</span>
         </Link>
         <nav className="hc-nav">
-          <Link href="/plugins" className="is-active">
+          <Link href="/" className="is-active">
             Browse
           </Link>
-          <Link href="/plugins?sort=newest">Collections</Link>
-          <Link href="/plugins?category=provider">Publishers</Link>
+          <Link href="/?sort=newest">Collections</Link>
+          <Link href="/?category=provider">Publishers</Link>
           <Link href="/submit">Submit</Link>
           <Link href="/docs">Docs</Link>
         </nav>
@@ -254,11 +254,11 @@ paperclip.use(${camelize(plugin.npmPackage)}({
 
       {/* Breadcrumb */}
       <div className="hc-d-crumb">
-        <Link href="/plugins">← back to the library</Link>
+        <Link href="/">← back to the library</Link>
         <span>·</span>
-        <Link href="/plugins">Browse</Link>
+        <Link href="/">Browse</Link>
         <span>/</span>
-        <Link href={`/plugins?category=${plugin.category}`}>{plugin.category}</Link>
+        <Link href={`/?category=${plugin.category}`}>{plugin.category}</Link>
         <span>/</span>
         <b>{plugin.name}</b>
       </div>
@@ -335,7 +335,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                     <b>{longDate(plugin.submittedAt)}</b>
                   </div>
                 </div>
-                <Link href={`/plugins?category=${plugin.category}`} className="hc-d-author-link">
+                <Link href={`/?category=${plugin.category}`} className="hc-d-author-link">
                   View all {ownerPluginCount} plugin{ownerPluginCount === 1 ? "" : "s"} in{" "}
                   {plugin.category} →
                 </Link>
@@ -367,7 +367,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                       </Link>
                     ))
                   )}
-                  <Link href={`/plugins?category=${plugin.category}`} className="hc-d-related-more">
+                  <Link href={`/?category=${plugin.category}`} className="hc-d-related-more">
                     All in {plugin.category} →
                   </Link>
                 </div>

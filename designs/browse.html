@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Plugins — Paperclip Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .browse-header {
+      padding-top: 120px;
+      padding-bottom: var(--space-xl);
+      position: relative;
+    }
+
+    .browse-header h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      margin-bottom: 4px;
+    }
+
+    .browse-header p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .browse-toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-xl);
+    }
+
+    .browse-toolbar__search {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+
+    .browse-toolbar__search .input {
+      height: 44px;
+      padding-left: 40px;
+      font-size: 0.875rem;
+    }
+
+    .browse-toolbar__search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      pointer-events: none;
+    }
+
+    .browse-toolbar__right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .results-info {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .results-info strong {
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 640px) {
+      .browse-toolbar__search { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- === NAVBAR === -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z"/>
+        <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8"/>
+        <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4"/>
+        <line x1="12" y1="20" x2="12" y2="22"/>
+      </svg>
+      <span>Paperclip Hub</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="browse.html" class="active">Plugins</a></li>
+      <li><a href="detail.html">Docs</a></li>
+      <li><a href="submit.html">Submit</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="submit.html" class="btn btn--primary btn--sm">Submit Plugin</a>
+    </div>
+  </nav>
+
+  <!-- === PAGE HEADER === -->
+  <div class="browse-header">
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+      <h1 class="animate-in">Browse Plugins</h1>
+      <p class="animate-in delay-1">17 plugins in the registry</p>
+    </div>
+  </div>
+
+  <!-- === TOOLBAR === -->
+  <div class="container">
+    <div class="browse-toolbar animate-in delay-2">
+      <!-- Category chips -->
+      <div class="category-nav" style="flex: 1;">
+        <span class="category-chip active">All</span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-auth);"></span>
+          Auth
+        </span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-provider);"></span>
+          Providers
+        </span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-tools);"></span>
+          Tools
+        </span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-integration);"></span>
+          Integrations
+        </span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-observability);"></span>
+          Observability
+        </span>
+        <span class="category-chip">
+          <span class="category-chip__dot" style="background: var(--cat-memory);"></span>
+          Memory
+        </span>
+      </div>
+
+      <div class="browse-toolbar__right">
+        <div class="browse-toolbar__search">
+          <span class="browse-toolbar__search-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <input type="text" class="input" placeholder="Search plugins..." />
+        </div>
+        <select class="select">
+          <option>Most Downloads</option>
+          <option>Newest</option>
+          <option>Name A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="results-info animate-in delay-3">
+      Showing <strong>17</strong> of <strong>17</strong> plugins
+    </div>
+
+    <!-- === PLUGIN GRID === -->
+    <div class="grid grid--3 animate-in delay-3">
+
+      <!-- Plugin: Anthropic Auth -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--auth">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="plugin-card__name">Anthropic Auth</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--auth" style="align-self: flex-start;">auth</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Authenticate agents with Anthropic API keys. Supports key rotation and scoped access.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            5.4k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.3.2</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Claude Auth -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--auth">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="plugin-card__name">Claude Auth</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--auth" style="align-self: flex-start;">auth</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Native Claude authentication with session management and automatic token refresh.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            4.8k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.2.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Copilot Auth -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--auth">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="plugin-card__name">Copilot Auth</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--auth" style="align-self: flex-start;">auth</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">GitHub Copilot authentication provider with device flow and OAuth support.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            3.9k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.1.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Gemini Auth -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--auth">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="plugin-card__name">Gemini Auth</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--auth" style="align-self: flex-start;">auth</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Google Gemini API authentication with service account and API key support.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            2.1k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.0.1</span>
+        </div>
+      </a>
+
+      <!-- Plugin: GitLab Auth -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--auth">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="plugin-card__name">GitLab Auth</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--auth" style="align-self: flex-start;">auth</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">GitLab OAuth2 and personal access token authentication for self-hosted and cloud.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            1.8k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.0.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Langfuse Tracing -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--observability">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="plugin-card__name">Langfuse Tracing</div>
+        <div class="plugin-card__author">by langfuse</div>
+        <span class="badge badge--observability" style="align-self: flex-start;">observability</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Full observability with distributed tracing, cost tracking, and prompt management.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            8.2k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v2.1.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Braintrust Trace -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--observability">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="plugin-card__name">Braintrust Trace</div>
+        <div class="plugin-card__author">by braintrust</div>
+        <span class="badge badge--observability" style="align-self: flex-start;">observability</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Trace and evaluate agent performance with Braintrust's eval framework.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            2.7k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.4.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: OpenTelemetry -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--integration">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="plugin-card__name">OpenTelemetry</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--integration" style="align-self: flex-start;">integration</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Export traces, metrics, and logs to any OpenTelemetry-compatible backend.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            6.1k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.5.0</span>
+        </div>
+      </a>
+
+      <!-- Plugin: CodeMCP Workflows -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--tools">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="plugin-card__name">CodeMCP Workflows</div>
+        <div class="plugin-card__author">by codemcp</div>
+        <span class="badge badge--tools" style="align-self: flex-start;">tools</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Multi-step workflow execution. Chain tool calls, manage state, and build automations.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            3.1k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v0.9.4</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Agent Memory -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--memory">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="plugin-card__name">Agent Memory</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--memory" style="align-self: flex-start;">memory</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Persistent memory with vector storage for long-running agent sessions and context.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            4.3k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v1.0.2</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Sentry Integration -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--integration">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="plugin-card__name">Sentry Integration</div>
+        <div class="plugin-card__author">by sentry</div>
+        <span class="badge badge--integration" style="align-self: flex-start;">integration</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Error tracking and performance monitoring for agent workloads with Sentry.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            1.9k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v0.8.1</span>
+        </div>
+      </a>
+
+      <!-- Plugin: Prompt Cache -->
+      <a href="detail.html" class="card plugin-card">
+        <div class="plugin-card__icon plugin-card__icon--memory">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="plugin-card__name">Prompt Cache</div>
+        <div class="plugin-card__author">by opencode</div>
+        <span class="badge badge--memory" style="align-self: flex-start;">memory</span>
+        <p class="plugin-card__desc" style="margin-top: var(--space-sm);">Intelligent prompt caching with deduplication and TTL-based invalidation.</p>
+        <div class="plugin-card__footer">
+          <span class="plugin-card__stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            2.5k/wk
+          </span>
+          <span class="plugin-card__stat font-mono">v0.6.0</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- === FOOTER === -->
+  <footer class="footer">
+    <div class="container flex justify-between items-center" style="flex-wrap: wrap; gap: var(--space-md);">
+      <div class="flex items-center gap-sm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z"/>
+          <path d="M16 8v4a4 4 0 0 1-4 4 4 4 0 0 1-4-4V8"/>
+          <path d="M8 12v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4"/>
+          <line x1="12" y1="20" x2="12" y2="22"/>
+        </svg>
+        <span>Paperclip Hub &copy; 2025</span>
+      </div>
+      <div class="flex gap-xl">
+        <a href="#">GitHub</a>
+        <a href="#">Docs</a>
+        <a href="#">Discord</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

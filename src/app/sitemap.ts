@@ -68,18 +68,6 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
       changeFrequency: "daily" as const,
       priority: 1,
     },
-    {
-      url: `${siteConfig.url}${routes.features}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${siteConfig.url}${routes.pricing}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.9,
-    },
   ];
 
   // Documentation pages (high priority)
@@ -92,26 +80,8 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
     },
   ];
 
-  // Example pages (medium priority)
-  const exampleRoutes = Object.values(routes.examples)
-    .filter(
-      (route): route is string => typeof route === "string" && route !== routes.examples.index
-    )
-    .map((route) => ({
-      url: `${siteConfig.url}${route}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
-
   // Support pages (lower priority)
   const supportRoutes = [
-    {
-      url: `${siteConfig.url}${routes.faq}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    },
     {
       url: `${siteConfig.url}${routes.terms}`,
       lastModified: new Date(),
@@ -131,7 +101,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
   switch (id) {
     case 0:
       // Main sitemap with static routes
-      return [...marketingRoutes, ...docRoutes, ...exampleRoutes, ...supportRoutes];
+      return [...marketingRoutes, ...docRoutes, ...supportRoutes];
     case 1: {
       // Blog posts sitemap (only when blog is enabled)
       if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") {

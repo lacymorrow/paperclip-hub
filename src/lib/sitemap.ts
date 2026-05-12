@@ -13,21 +13,11 @@ export async function generateSitemapEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [];
 
   // High priority static routes
-  const highPriorityRoutes = [routes.home, routes.docs, routes.features, routes.pricing].map(
-    (route) => ({
-      url: `${siteConfig.url}${route}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    })
-  );
-
-  // Medium priority static routes
-  const mediumPriorityRoutes = [routes.faq, routes.download].map((route) => ({
+  const highPriorityRoutes = [routes.home, routes.docs].map((route) => ({
     url: `${siteConfig.url}${route}`,
     lastModified: new Date().toISOString(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
+    changeFrequency: "daily" as const,
+    priority: 1,
   }));
 
   // Low priority static routes
@@ -38,25 +28,8 @@ export async function generateSitemapEntries(): Promise<SitemapEntry[]> {
     priority: 0.5,
   }));
 
-  // Example routes
-  const exampleRoutes = Object.values(routes.examples)
-    .filter(
-      (route): route is string => typeof route === "string" && route !== routes.examples.index
-    )
-    .map((route) => ({
-      url: `${siteConfig.url}${route}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
-
   // Add all entries
-  entries.push(
-    ...highPriorityRoutes,
-    ...mediumPriorityRoutes,
-    ...lowPriorityRoutes,
-    ...exampleRoutes
-  );
+  entries.push(...highPriorityRoutes, ...lowPriorityRoutes);
 
   return entries;
 }

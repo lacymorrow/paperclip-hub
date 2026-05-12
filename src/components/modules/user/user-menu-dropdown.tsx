@@ -113,7 +113,7 @@ export function UserMenuDropdown({
           <>
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href={routes.pricing}>
+                <Link href={routes.contact}>
                   <Sparkles className="mr-2 size-4" />
                   Upgrade to Pro
                 </Link>

@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {!isLoggedIn && (
                     <>
                       <Link
-                        href={routes.launch}
+                        href={routes.home}
                         className={cn(
                           buttonVariants({ variant: "default" }),
                           "w-full justify-center"

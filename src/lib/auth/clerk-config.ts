@@ -86,8 +86,6 @@ export const clerkProtectedRoutes = [
  */
 export const clerkPublicRoutes = [
   routes.home,
-  routes.features,
-  routes.pricing,
   routes.docs,
   routes.blog,
   routes.contact,

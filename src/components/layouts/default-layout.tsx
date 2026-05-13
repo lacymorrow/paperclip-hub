@@ -35,9 +35,6 @@ export const DefaultLayout = async ({
             <React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
           ))}
 
-          {/* TODO: Uncomment this when we have this working */}
-          {/* Lacy Morrow vanity plate */}
-          {/* <BrickMarquee /> */}
         </AppRouterLayout>
 
         {/* Add FontSelector only in development */}

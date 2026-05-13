@@ -19,7 +19,6 @@ import * as React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -79,11 +78,9 @@ export function SettingsDialog() {
                   <SidebarMenu>
                     {data.nav.map((item) => (
                       <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton asChild isActive={item.name === "Messages & media"}>
-                          <a href="#">
-                            <item.icon />
-                            <span>{item.name}</span>
-                          </a>
+                        <SidebarMenuButton isActive={item.name === "Messages & media"}>
+                          <item.icon />
+                          <span>{item.name}</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
@@ -98,7 +95,7 @@ export function SettingsDialog() {
                 <Breadcrumb>
                   <BreadcrumbList>
                     <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">Settings</BreadcrumbLink>
+                      <BreadcrumbPage>Settings</BreadcrumbPage>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>

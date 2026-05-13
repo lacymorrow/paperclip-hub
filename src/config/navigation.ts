@@ -16,5 +16,5 @@ export const defaultNavLinks: NavLink[] = [
   { href: "/", label: "Plugins" },
   { href: "/?category=auth", label: "Auth" },
   { href: "/?category=tools", label: "Tools" },
-  { href: "/docs/plugins", label: "Docs" },
+  { href: "/docs", label: "Docs" },
 ];

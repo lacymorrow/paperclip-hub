@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 // Define the list of links
 const links = [
-  { name: "shipkit.io", href: "https://shipkit.io" },
+  { name: "cliphub.fyi", href: "https://cliphub.fyi" },
   { name: "bones.sh", href: "https://bones.sh" },
   { name: "uibrary.com", href: "https://uibrary.com" },
   { name: "cloud0.dev", href: "https://cloud0.dev" },

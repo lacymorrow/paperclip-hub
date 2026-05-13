@@ -120,9 +120,6 @@ export default async function Layout({
             </Suspense>
           ))}
 
-          {/* TODO: Uncomment this when we have this working */}
-          {/* Lacy Morrow vanity plate */}
-          {/*<BrickMarquee />*/}
         </AppRouterLayout>
 
         {/* Add devtools only in development */}

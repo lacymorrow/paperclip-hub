@@ -27,7 +27,7 @@ export default async function SubmitPage() {
           <span className="hc-brand-wm">
             <b>Paper</b>clip
           </span>
-          <span className="hc-brand-sub">Hub · est. 2026</span>
+          <span className="hc-brand-sub">Hub</span>
         </Link>
         <nav className="hc-nav">
           <Link href="/">Browse</Link>

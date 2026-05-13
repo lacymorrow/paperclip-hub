@@ -4,8 +4,6 @@ import { ChevronRightIcon } from "@radix-ui/react-icons";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeftFromLineIcon,
-  FileTerminalIcon,
-  Rocket,
   Settings2,
   SquareTerminal,
   Wrench,
@@ -24,13 +22,12 @@ import {
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
 const data = [
   {
     title: "Dashboard",
-    url: routes.app.dashboard,
+    url: routes.home,
     icon: SquareTerminal,
   },
   // {
@@ -42,81 +39,15 @@ const data = [
     title: "Management",
     icon: Settings2,
     items: [
-      { title: "Projects", url: routes.app.projects },
-      { title: "Teams", url: routes.app.teams },
-      { title: "Deployments", url: routes.app.deployments },
-      { title: "API Keys", url: routes.app.apiKeys },
-    ],
-  },
-  {
-    title: "Demos",
-    icon: FileTerminalIcon,
-    items: [
-      { title: "UI Demo", url: routes.examples.index },
-      ...(env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED
-        ? [{ title: "Builder.io", url: routes.demo.builderio }]
-        : []),
-      ...(env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED
-        ? [{ title: "Payload CMS", url: routes.demo.payloadCms }]
-        : []),
-      ...(env.NEXT_PUBLIC_FEATURE_MDX_ENABLED
-        ? [{ title: "Markdown Content", url: routes.pages.markdown }]
-        : []),
-      { title: "Pages Router", url: routes.pages.index },
-      { title: "TRPC Example", url: routes.demo.trpc },
-
-      // {
-      // 	title: "AI",
-      // 	items: [
-      // 		// Core AI Features
-      // 		{ title: "Code Completion", url: routes.ai.codeCompletion },
-      // 		{ title: "Spam Detection", url: routes.ai.spam },
-      // 		{ title: "Cross-Encoder", url: routes.ai.crossEncoder },
-      // 		{ title: "Report Generation", url: routes.ai.reportGen },
-      // 		{ title: "Zero-Shot Classification", url: routes.ai.zeroShotClassification },
-
-      // 		// Language Models
-      // 		{ title: "Llama 3.2", url: routes.ai.llama32Webgpu },
-      // 		{ title: "Llama 3.2 Reasoning", url: routes.ai.llama32ReasoningWebgpu },
-      // 		{ title: "Phi 3.5", url: routes.ai.phi35Webgpu },
-      // 		{ title: "Gemma 2 2B", url: routes.ai.gemma22bJpnWebgpu },
-      // 		{ title: "DeepSeek", url: routes.ai.deepseekWeb },
-      // 		{ title: "SmolLM", url: routes.ai.smollmWeb },
-      // 		{ title: "SmolVM", url: routes.ai.smolvmWeb },
-
-      // 		// Speech & Audio
-      // 		{ title: "Whisper", url: routes.ai.whisper },
-      // 		{ title: "Whisper Timestamped", url: routes.ai.whisperTimestamped },
-      // 		{ title: "SpeechT5", url: routes.ai.speecht5Web },
-      // 		{ title: "Text to Speech", url: routes.ai.textToSpeechWebgpu },
-      // 		{ title: "MusicGen", url: routes.ai.musicgenWeb },
-
-      // 		// Vision & Image
-      // 		{ title: "Video Object Detection", url: routes.ai.videoObjectDetection },
-      // 		{ title: "Video Background Removal", url: routes.ai.videoBackgroundRemoval },
-      // 		{ title: "Remove Background", url: routes.ai.removeBackground },
-      // 		{ title: "Remove Background (Web)", url: routes.ai.removeBackgroundWeb },
-      // 		{ title: "WebGPU CLIP", url: routes.ai.webgpuClip },
-      // 		{ title: "Florence2", url: routes.ai.florence2Web },
-
-      // 		// Embeddings & Search
-      // 		{ title: "Semantic Search", url: routes.ai.semanticSearch },
-      // 		{ title: "Semantic Image Search", url: routes.ai.semanticImageSearchWeb },
-      // 		{ title: "WebGPU Nomic Embed", url: routes.ai.webgpuNomicEmbed },
-      // 		{ title: "WebGPU Embedding Benchmark", url: routes.ai.webgpuEmbeddingBenchmark },
-
-      // 		// Other AI Tools
-      // 		{ title: "Type Ahead", url: routes.ai.typeAhead },
-      // 		{ title: "Janus", url: routes.ai.janusWebgpu },
-      // 		{ title: "Janus Pro", url: routes.ai.janusProWebgpu },
-      // 		{ title: "Moonshine Web", url: routes.ai.moonshineWeb },
-      // 	],
-      // },
+      { title: "Projects", url: routes.home },
+      { title: "Teams", url: routes.home },
+      { title: "Deployments", url: routes.home },
+      { title: "API Keys", url: routes.home },
     ],
   },
   {
     title: "Tools",
-    url: routes.app.tools,
+    url: routes.home,
     icon: Wrench,
   },
 ];

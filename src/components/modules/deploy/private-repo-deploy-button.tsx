@@ -176,7 +176,7 @@ export const PrivateRepoDeployButton = () => {
               {needsGitHubAuth && (
                 <div className="mt-3">
                   <LinkWithTransition
-                    href={routes.settings.account}
+                    href={routes.home}
                     className={cn(
                       buttonVariants({ variant: "default", size: "sm" }),
                       "inline-flex items-center gap-2"
@@ -331,7 +331,7 @@ export const PrivateRepoDeployButton = () => {
               <p className="text-xs text-center text-muted-foreground">
                 Make sure you've connected your GitHub and Vercel accounts in{" "}
                 <LinkWithTransition
-                  href={routes.settings.account}
+                  href={routes.home}
                   className="text-primary hover:underline"
                 >
                   Settings

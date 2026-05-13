@@ -32,16 +32,6 @@ export const routes = {
   eula: "/eula",
   legal: "/legal",
 
-  // Marketing routes
-  faq: "/faq",
-  features: "/features",
-  pricing: "/pricing",
-  launch: "/launch",
-
-  // App routes
-  download: "/download",
-  tasks: "/tasks",
-
   checkoutSuccess: "/checkout/success",
 
   // CMS routes
@@ -61,39 +51,6 @@ export const routes = {
     signInPage: "/api/auth/signin",
     signOutPage: "/api/auth/signout",
     error: "/error",
-  },
-
-  // App routes
-  app: {
-    dashboard: "/dashboard",
-    deployments: "/deployments",
-    apiKeys: "/api-keys",
-    logs: "/logs",
-    network: "/network",
-    live: "/live",
-    tools: "/tools",
-    downloads: "/downloads",
-    activity: "/activity",
-    projects: "/projects",
-    teams: "/teams",
-  },
-
-  // Admin routes
-  admin: {
-    index: "/admin",
-    users: "/admin/users",
-    github: "/admin/github",
-    integrations: "/admin/integrations",
-    feedback: "/admin/feedback",
-    payments: "/admin/payments",
-  },
-
-  settings: {
-    index: "/settings",
-    account: "/settings/account",
-    profile: "/settings/profile",
-    appearance: "/settings/appearance",
-    security: "/settings/security",
   },
 
   // API routes
@@ -125,86 +82,9 @@ export const routes = {
   vercelDeploy: "/connect/vercel/deploy",
   vercelDeployWebhook: "/connect/vercel/deploy/webhook",
 
-  // Example routes
-  examples: {
-    index: "/examples",
-    mail: "/examples/mail",
-    dashboard: "/examples/dashboard",
-    cards: "/examples/cards",
-    tasks: "/examples/tasks",
-    playground: "/examples/playground",
-    forms: "/examples/forms",
-    formsAccount: "/examples/forms/account",
-    formsAppearance: "/examples/forms/appearance",
-    formsNotifications: "/examples/forms/notifications",
-    formsDisplay: "/examples/forms/display",
-    music: "/examples/music",
-    authentication: "/examples/authentication",
-    notifications: "/examples/forms/notifications",
-    profile: "/examples/forms/profile",
-  },
-
-  // Pages Router demo routes
-  pages: {
-    index: "/pages",
-    static: "/pages/static",
-    dynamic: "/pages/dynamic",
-    apiExample: "/pages/api-example",
-    markdown: "/pages/markdown",
-  },
-
-  ai: {
-    index: "/ai",
-    codeCompletion: "/ai/code-completion",
-    crossEncoder: "/ai/cross-encoder",
-    spam: "/ai/spam",
-    reportGen: "/ai/report-gen",
-    moonshineWeb: "/ai/moonshine-web",
-    zeroShotClassification: "/ai/zero-shot-classification",
-    whisper: "/ai/whisper",
-    wwjhd: "/ai/wwjhd",
-    whisperTimestamped: "/ai/whisper-timestamped",
-    webgpuNomicEmbed: "/ai/webgpu-nomic-embed",
-    webgpuEmbeddingBenchmark: "/ai/webgpu-embedding-benchmark",
-    webgpuClip: "/ai/webgpu-clip",
-    videoObjectDetection: "/ai/video-object-detection",
-    videoBackgroundRemoval: "/ai/video-background-removal",
-    typeAhead: "/ai/type-ahead",
-    textToSpeechWebgpu: "/ai/text-to-speech-webgpu",
-    speecht5Web: "/ai/speecht5-web",
-    smolvmWeb: "/ai/smolvm-web",
-    smollmWeb: "/ai/smollm-web",
-    semanticSearch: "/ai/semantic-search",
-    semanticImageSearchWeb: "/ai/semantic-image-search-web",
-    removeBackground: "/ai/remove-background",
-    removeBackgroundWeb: "/ai/remove-background-web",
-    phi35Webgpu: "/ai/phi-3.5-webgpu",
-    musicgenWeb: "/ai/musicgen-web",
-    llama32Webgpu: "/ai/llama-3.2-webgpu",
-    llama32ReasoningWebgpu: "/ai/llama-3.2-reasoning-webgpu",
-    janusWebgpu: "/ai/janus-webgpu",
-    janusProWebgpu: "/ai/janus-pro-webgpu",
-    isSpam: "/ai/is-spam",
-    gemma22bJpnWebgpu: "/ai/gemma-2-2b-jpn-webgpu",
-    florence2Web: "/ai/florence2-web",
-    deepseekWeb: "/ai/deepseek-web",
-  },
-
   // Worker routes
   workers: {
     logger: "/workers/workers/logger-worker.js",
-  },
-
-  // Demo routes
-  demo: {
-    // CMS Demo routes
-    builderio: "/builder",
-    payloadCms: "/payload",
-
-    network: "/network",
-
-    // TRPC example from T3.gg
-    trpc: "/trpc",
   },
 
   // External links

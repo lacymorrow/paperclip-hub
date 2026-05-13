@@ -66,7 +66,7 @@ export default function GitHubConnectPage() {
         // Redirect to settings after a short delay
         setTimeout(() => {
           const nextUrl = searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
-          router.push(nextUrl ?? routes.settings.account);
+          router.push(nextUrl ?? routes.home);
         }, 3000);
       } catch (error) {
         console.error("Error connecting GitHub:", error);
@@ -164,7 +164,7 @@ export default function GitHubConnectPage() {
           </CardContent>
           <CardFooter className="flex justify-center">
             <Link
-              href={routes.settings.profile}
+              href={routes.home}
               className={cn(buttonVariants({ variant: "outline" }))}
             >
               Back to Settings

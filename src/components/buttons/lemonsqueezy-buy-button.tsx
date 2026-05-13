@@ -164,7 +164,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
             });
 
             toast.success("Payment processed! Redirecting to dashboard...");
-            router.push(routes.app.dashboard);
+            router.push(routes.home);
           } catch (error) {
             logger.error("Error creating payment record", {
               checkoutId,

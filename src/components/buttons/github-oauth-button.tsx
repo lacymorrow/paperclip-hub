@@ -42,7 +42,7 @@ export const GitHubOAuthButton = ({
       setIsLoading(true);
 
       // Get the callback URL - return to settings page with success param
-      const callbackUrl = createRedirectUrl(routes.settings.account, {
+      const callbackUrl = createRedirectUrl(routes.home, {
         code: STATUS_CODES.CONNECT_GITHUB.code,
       });
 

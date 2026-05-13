@@ -94,7 +94,7 @@ export async function connectGitHub(data?: GitHubConnectionData) {
       }
     }
 
-    revalidatePath(routes.settings.index);
+    revalidatePath("/");
     return { success: true };
   } catch (error) {
     console.error("Failed to connect GitHub:", error);
@@ -188,7 +188,7 @@ export async function disconnectGitHub() {
       },
     });
 
-    revalidatePath(routes.settings.index);
+    revalidatePath("/");
     revalidatePath("/");
 
     return { success: true };
@@ -233,7 +233,7 @@ export async function verifyGitHubUsername(username: string) {
       },
     });
 
-    revalidatePath(routes.settings.index);
+    revalidatePath("/");
     return { success: true, githubUsername: username };
   } catch (error) {
     console.error("Failed to verify GitHub username:", error);
@@ -288,7 +288,7 @@ export async function updateGitHubUsername(username: string) {
       },
     });
 
-    revalidatePath(routes.settings.index); // Or relevant path
+    revalidatePath("/"); // Or relevant path
 
     return { success: true, githubUsername: username };
   } catch (error) {

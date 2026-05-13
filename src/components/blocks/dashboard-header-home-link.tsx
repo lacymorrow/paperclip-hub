@@ -16,7 +16,7 @@ export const DashboardHeaderHomeLink = ({ className }: DashboardHeaderHomeLinkPr
 
   return (
     <Link
-      href={routes.app.dashboard}
+      href={routes.home}
       aria-label="Dashboard home"
       className={cn(
         "flex items-center justify-center",

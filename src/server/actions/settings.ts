@@ -48,7 +48,7 @@ export async function updateProfile(data: ProfileData) {
       })
       .where(eq(users.id, session.user.id));
 
-    void revalidatePath(routes.settings.index);
+    void revalidatePath("/");
     return { success: true, message: "Profile updated successfully" };
   } catch (error) {
     console.error("Failed to update profile:", error);
@@ -72,7 +72,7 @@ export async function updateSettings(data: SettingsData) {
       })
       .where(eq(users.id, session.user.id));
 
-    void revalidatePath(routes.settings.index);
+    void revalidatePath("/");
     return { success: true, message: "Settings updated successfully" };
   } catch (error) {
     console.error("Failed to update settings:", error);
@@ -113,7 +113,7 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
       })
       .where(eq(users.id, session.user.id));
 
-    void revalidatePath(routes.settings.index);
+    void revalidatePath("/");
     return { success: true, message: "Theme updated successfully" };
   } catch (error) {
     console.error("Failed to update theme:", error);
@@ -148,7 +148,7 @@ export async function disconnectAccount(
       },
     });
 
-    revalidatePath(routes.settings.index);
+    revalidatePath("/");
     return {
       success: true,
       message: `${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`,

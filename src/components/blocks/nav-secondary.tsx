@@ -32,7 +32,7 @@ const data = [
   {
     title: "Settings",
     Icon: Settings2,
-    href: routes.settings.index,
+    href: routes.home,
   },
 ];
 

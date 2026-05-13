@@ -130,7 +130,7 @@ export default async function VercelDeployPage({
               Visit Site <ArrowUpRight className="w-4 h-4" />
             </Link>
             <Button asChild variant="outline">
-              <Link href={routes.app.dashboard}>Shipkit Dashboard</Link>
+              <Link href={routes.home}>Shipkit Dashboard</Link>
             </Button>
           </CardFooter>
         </Card>

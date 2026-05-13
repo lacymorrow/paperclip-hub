@@ -33,57 +33,6 @@ describe("Routes Configuration", () => {
     validateRoutes(routes);
   });
 
-  describe("AI Routes Validation", () => {
-    it("should have all required AI route properties", () => {
-      expect(routes.ai).toBeDefined();
-      expect(routes.ai.index).toBe("/ai");
-
-      // Test specific AI routes
-      const requiredAiRoutes = [
-        "codeCompletion",
-        "crossEncoder",
-        "spam",
-        "reportGen",
-        "moonshineWeb",
-        "zeroShotClassification",
-        "whisper",
-        "wwjhd",
-        "whisperTimestamped",
-        "webgpuNomicEmbed",
-        "webgpuEmbeddingBenchmark",
-        "webgpuClip",
-        "videoObjectDetection",
-        "videoBackgroundRemoval",
-        "typeAhead",
-        "textToSpeechWebgpu",
-        "speecht5Web",
-        "smolvmWeb",
-        "smollmWeb",
-        "semanticSearch",
-        "semanticImageSearchWeb",
-        "removeBackground",
-        "removeBackgroundWeb",
-        "phi35Webgpu",
-        "musicgenWeb",
-        "llama32Webgpu",
-        "llama32ReasoningWebgpu",
-        "janusWebgpu",
-        "janusProWebgpu",
-        "isSpam",
-        "gemma22bJpnWebgpu",
-        "florence2Web",
-        "deepseekWeb",
-      ] as const;
-
-      type AiRouteKey = (typeof requiredAiRoutes)[number];
-
-      for (const route of requiredAiRoutes) {
-        expect(routes.ai[route]).toBeDefined();
-        expect(routes.ai[route]).toMatch(/^\/ai\//);
-      }
-    });
-  });
-
   describe("Route Uniqueness", () => {
     it("should have unique route paths", () => {
       const paths = new Set<string>();

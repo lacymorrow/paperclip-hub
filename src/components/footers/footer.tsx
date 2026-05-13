@@ -39,9 +39,7 @@ const defaultGroups: FooterElement[] = [
       header: { label: "Product" },
       items: [
         { href: routes.home, label: "Home" },
-        { href: routes.features, label: "Features" },
-        { href: routes.pricing, label: "Pricing" },
-        { href: routes.external.bones, label: "Bones" },
+        { href: routes.docs, label: "Documentation" },
       ],
     },
   },

@@ -16,14 +16,6 @@ export const docsConfig: DocsConfig = {
     // Only include blog link when blog is enabled
     ...(process.env.NEXT_PUBLIC_HAS_BLOG === "true" ? [{ title: "Blog", href: routes.blog }] : []),
     {
-      title: "Examples",
-      href: routes.examples.index,
-    },
-    {
-      title: "Pricing",
-      href: routes.pricing,
-    },
-    {
       title: "Contact",
       href: routes.contact,
     },
@@ -69,11 +61,6 @@ export const docsConfig: DocsConfig = {
           label: "Updated",
         },
         {
-          title: "FAQ",
-          href: routes.faq,
-          items: [],
-        },
-        {
           title: "Changelog",
           href: `${routes.docs}/changelog`,
           items: [],
@@ -99,16 +86,6 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
-          title: "Builder.io",
-          href: `${routes.docs}/features/builder`,
-          items: [],
-        },
-        {
-          title: "Payload CMS",
-          href: `${routes.docs}/features/payload`,
-          items: [],
-        },
-        {
           title: "API Keys",
           href: `${routes.docs}/features/api-keys`,
           items: [],
@@ -116,11 +93,6 @@ export const docsConfig: DocsConfig = {
         {
           title: "Activity Logging",
           href: `${routes.docs}/features/activity`,
-          items: [],
-        },
-        {
-          title: "Network Monitoring",
-          href: `${routes.docs}/features/network`,
           items: [],
         },
         {
@@ -186,73 +158,13 @@ export const docsConfig: DocsConfig = {
       title: "Core Features",
       items: [
         {
-          title: "Authentication",
-          href: routes.examples.authentication,
-          items: [],
-        },
-        {
           title: "Dashboard",
-          href: routes.examples.dashboard,
-          items: [],
-        },
-        {
-          title: "Forms",
-          href: routes.examples.forms,
+          href: routes.home,
           items: [],
         },
         {
           title: "Deployments",
-          href: routes.app.deployments,
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "Integrations",
-      items: [
-        {
-          title: "Payload CMS",
-          href: routes.demo.payloadCms,
-          items: [],
-        },
-        {
-          title: "Builder.io",
-          href: routes.demo.builderio,
-          items: [],
-        },
-        {
-          title: "TRPC",
-          href: routes.demo.trpc,
-          items: [],
-        },
-        {
-          title: "Network Monitoring",
-          href: routes.demo.network,
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "AI Features",
-      items: [
-        {
-          title: "AI Overview",
-          href: routes.ai.index,
-          items: [],
-        },
-        {
-          title: "Code Completion",
-          href: routes.ai.codeCompletion,
-          items: [],
-        },
-        {
-          title: "Semantic Search",
-          href: routes.ai.semanticSearch,
-          items: [],
-        },
-        {
-          title: "Report Generation",
-          href: routes.ai.reportGen,
+          href: routes.home,
           items: [],
         },
       ],

@@ -63,31 +63,22 @@ export const clerkConfig = {
   // Sign-in and sign-up URLs that match Shipkit's routing
   signInUrl: routes.auth.signIn,
   signUpUrl: routes.auth.signUp,
-  afterSignInUrl: routes.app.dashboard,
-  afterSignUpUrl: routes.app.dashboard,
+  afterSignInUrl: routes.home,
+  afterSignUpUrl: routes.home,
   // Clerk dashboard redirect for user management
-  userProfileUrl: routes.settings.profile,
+  userProfileUrl: routes.home,
 } as const;
 
 /**
  * Protected routes that require authentication when using Clerk
  */
-export const clerkProtectedRoutes = [
-  routes.app.dashboard,
-  routes.settings.index,
-  routes.app.projects,
-  routes.app.teams,
-  routes.app.apiKeys,
-  routes.admin.index,
-] as const;
+export const clerkProtectedRoutes = [] as const;
 
 /**
  * Public routes that should be accessible without authentication
  */
 export const clerkPublicRoutes = [
   routes.home,
-  routes.features,
-  routes.pricing,
   routes.docs,
   routes.blog,
   routes.contact,

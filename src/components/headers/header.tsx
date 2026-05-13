@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {!isLoggedIn && (
                     <>
                       <Link
-                        href={routes.launch}
+                        href={routes.home}
                         className={cn(
                           buttonVariants({ variant: "default" }),
                           "w-full justify-center"
@@ -226,7 +226,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {isLoggedIn && (
                     <>
                       <Link
-                        href={routes.app.dashboard}
+                        href={routes.home}
                         className={cn(
                           buttonVariants({ variant: "default" }),
                           "w-full justify-center"
@@ -314,7 +314,7 @@ export const Header: React.FC<HeaderProps> = ({
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.1 }}
                       >
-                        <LoginButton variant="outline" nextUrl={routes.app.dashboard}>
+                        <LoginButton variant="outline" nextUrl={routes.home}>
                           Dashboard
                         </LoginButton>
                       </motion.div>

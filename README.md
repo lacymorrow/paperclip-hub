@@ -1,70 +1,57 @@
-# Shipkit 🚀
+<div align="center">
+  <img src="public/logo.png" alt="Paperclip Hub" width="80" />
+  <h1>Paperclip Hub</h1>
+  <p><strong>A curated registry for autonomous teams.</strong></p>
+  <p>Connectors, providers, tools, and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.</p>
+</div>
 
-Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.
+---
 
-Made with ❤️ by [Lacy](https://lacy.sh)
+![Paperclip Hub — home page](public/app/screenshots/screenshot-desktop.png)
 
-## Deploy in 30 Seconds
+## What is Paperclip Hub?
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fshipkit&project-name=shipkit-app&repository-name=shipkit-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fx%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fdemo.png)
+The Paperclip Hub is the official plugin directory for [Paperclip](https://paperclip.ing) — the agent orchestration platform for autonomous teams. Browse and install community-published plugins directly from the registry.
 
-[![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/lacymorrow/shipkit)
+### Features
 
-No environment variables needed to start! The setup wizard guides you through configuration after deployment.
+- **Browse & Search** — Filter plugins by category, sort by installs or date, and search by name or keyword
+- **One-line Install** — `paperclip plugin add <name>` wires any plugin into your team in seconds
+- **Plugin Detail Pages** — README, capabilities, versions, and changelog for every plugin
 
-## What's Included
+![Plugin detail page](public/app/screenshots/screenshot-plugin.png)
 
-- 🔐 **Authentication** - Auth.js, Better Auth, Clerk, Supabase, Stack ([details](docs/features/authentication.mdx))
-- 💳 **Payments** - Lemon Squeezy, Stripe, Polar ([details](docs/features/payments.mdx))
-- 📝 **CMS** - Payload CMS v3 ([details](docs/features/cms.mdx))
-- 🎨 **Visual Editor** - Builder.io ([details](docs/features/visual-builder.mdx))
-- 📧 **Email** - Resend + magic links ([details](docs/features/email.mdx))
-- 🤖 **AI** - Browser-based SmolLM + OpenAI/Anthropic ([details](docs/features/ai.mdx))
-- 🎯 **Analytics** - PostHog, Umami, Google, Statsig ([details](docs/features/analytics.mdx))
-- 💾 **Database** - PostgreSQL + Drizzle ORM ([details](docs/features/database.mdx))
-- 📦 **Storage** - AWS S3, Vercel Blob ([details](docs/features/storage.mdx))
-- 🚀 **Performance** - Edge-optimized with caching ([details](docs/guides/caching.mdx))
+- **Submit a Plugin** — Any npm package with a Paperclip manifest is indexed nightly — no review queue, no waitlist
+- **Mobile-ready** — Full responsive UI across devices
+
+<div align="center">
+  <img src="public/app/screenshots/screenshot-mobile.png" alt="Paperclip Hub on mobile" width="320" />
+</div>
 
 ## Stack
 
-- ⚡️ [Next.js 15](https://nextjs.org) - App Router
+- ⚡️ [Next.js 15](https://nextjs.org) with App Router
 - 🎨 [Tailwind CSS](https://tailwindcss.com) + [Shadcn/UI](https://ui.shadcn.com)
-- 🛠 [Drizzle ORM](https://orm.drizzle.team) - Type-safe database
-- 📝 [Payload CMS v3](https://payloadcms.com) - Content management
-- 🎨 [Builder.io](https://builder.io) - Visual editing
-- 📧 [Resend](https://resend.com) - Email
+- 📦 [Bun](https://bun.sh) as the package manager
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/shipkit-io/shipkit
-cd shipkit
-bun install --frozen-lockfile
+git clone https://github.com/lacymorrow/paperclip-hub
+cd paperclip-hub
+bun install
 bun dev
 ```
 
+## Deploy in 30 Seconds
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fpaperclip-hub)
+
 ## Documentation
 
-- 📚 [Full Documentation](docs/index.mdx)
-- 🚀 [Deploy Guide](docs/getting-started/deploy.mdx)
-- 🔧 [Development Guide](docs/development/index.mdx)
-- 🤖 [AI Assistant Guide](CLAUDE.md)
-
-## Support
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa?style=for-the-badge&logo=github)](https://github.com/sponsors/lacymorrow)
-
-ShipKit is built and maintained full-time. Your sponsorship directly funds new features and faster releases.
-
-- 💬 [GitHub Discussions](https://github.com/shipkit-io/shipkit/discussions)
-- 🐦 [Follow Updates](https://twitter.com/lacybuilds)
-- 📧 [Contact](https://shipkit.io/contact)
-- 🌐 [Website](https://shipkit.io)
-
-## Found a bug?
-
-[GitHub Issues](https://github.com/shipkit-io/shipkit/issues)
+- 📚 [Paperclip Docs](https://paperclip.ing/docs)
+- 🌐 [Paperclip.ing](https://paperclip.ing)
 
 ## License
 
-MIT - see [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE)

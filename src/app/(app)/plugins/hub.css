@@ -29,7 +29,7 @@
   font-family: var(--hub-font-sans);
   min-height: 100vh;
   overflow-x: hidden;
-  max-width: 100vw;
+  max-width: 100%;
 }
 
 .hub-c1 *,

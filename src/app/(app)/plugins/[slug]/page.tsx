@@ -243,12 +243,9 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <Link href="/docs">Docs</Link>
         </nav>
         <div className="hc-header-actions">
-          <Link href="/sign-in" className="hc-link-muted">
-            Sign in
-          </Link>
-          <Link href="/" className="hc-btn">
+          <a href="https://github.com/paperclipai/paperclip-hub" className="hc-btn" target="_blank" rel="noopener noreferrer">
             Get Paperclip →
-          </Link>
+          </a>
         </div>
       </header>
 

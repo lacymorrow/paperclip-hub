@@ -243,9 +243,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <Link href="/docs">Docs</Link>
         </nav>
         <div className="hc-header-actions">
-          <Link href="/sign-in" className="hc-link-muted">
-            Sign in
-          </Link>
           <Link href="/" className="hc-btn">
             Get Paperclip →
           </Link>
@@ -278,7 +275,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <div className="hc-d-meta">
             <div>
               <b>{fmtK(plugin.installs)}</b>
-              <small>installs / week</small>
+              <small>npm downloads / wk</small>
             </div>
             <div>
               <b>{plugin.version !== "unknown" ? `v${plugin.version}` : "—"}</b>
@@ -363,7 +360,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                           <b>{r.name}</b>
                           <small>{r.npmPackage}</small>
                         </div>
-                        <span className="m">{fmtK(r.installs)}/wk</span>
+                        <span className="m">{fmtK(r.installs)} dl/wk</span>
                       </Link>
                     ))
                   )}
@@ -413,15 +410,12 @@ paperclip.use(${camelize(plugin.npmPackage)}({
       <footer className="hc-foot">
         <div className="l">
           <b>Paperclip</b>
-          <span>The Hub · vol. 19 — May 2026</span>
+          <span>The Hub — May 2026</span>
         </div>
         <div className="r">
-          <Link href="/about">About</Link>
           <Link href="/docs">Docs</Link>
-          <Link href="/docs/api">API</Link>
-          <Link href="/docs/cli">CLI</Link>
-          <Link href="https://github.com">GitHub</Link>
-          <Link href="/status">Status</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
         </div>
       </footer>
     </div>

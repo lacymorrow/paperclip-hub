@@ -25,7 +25,7 @@ export const CATEGORIES = [
 ] as const;
 
 export const SORT_OPTIONS = [
-  { value: "popular", label: "Most Downloads" },
+  { value: "popular", label: "Most downloaded" },
   { value: "newest", label: "Newest" },
 ] as const;
 

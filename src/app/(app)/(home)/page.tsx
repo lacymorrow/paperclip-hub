@@ -17,11 +17,9 @@ interface HomePageProps {
 }
 
 const SORT_LABELS: Record<string, string> = {
-  popular: "Most installed",
+  popular: "Most downloaded",
   newest: "Newest",
 };
-
-const TRENDING_DELTAS = ["+14%", "+8%", "+21%", "−4%", "+6%"];
 
 const OFFICIAL_AUTHORS = new Set(["paperclipai", "paperclip-official", "paperclip"]);
 
@@ -144,11 +142,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section className="hc-hero">
         <div className="hc-hero-l">
           <div className="hc-eyebrow">
-            <span className="vol">Volume 19 · May 2026</span>
-            <span className="live">
-              <span className="pulse" />
-              Live · {totalInstallsLabel} installs / wk
-            </span>
+            <span className="vol">May 2026</span>
             <span>A registry for autonomous teams.</span>
           </div>
           <h1>
@@ -198,7 +192,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </div>
             <div>
               <b>{totalInstallsLabel}</b>
-              <small>installs / wk</small>
+              <small>npm downloads / wk</small>
             </div>
             <div>
               <b>{verifiedCount}</b>
@@ -211,8 +205,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           {featured && (
             <article className="hc-poster">
               <div className="hc-poster-head">
-                <span>Featured plugin · vol. 19</span>
-                <span className="stamp">Staff Pick</span>
+                <span>Featured plugin</span>
+                <span className="stamp">Top Plugin</span>
               </div>
               <div className="hc-poster-rule" />
               <div className="hc-poster-cat">
@@ -229,7 +223,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <div className="hc-poster-foot">
                 <div>
                   <b>{fmtK(featured.installs)}</b>
-                  <small>installs / wk</small>
+                  <small>downloads / wk</small>
                 </div>
                 <div>
                   <b>v{featured.version}</b>
@@ -258,34 +252,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      {/* Live ticker */}
+      {/* Ticker */}
       <div className="hc-ticker">
         <span>
-          <span className="star">●</span> Live wire
-        </span>
-        <span className="div" />
-        {recent[0] && (
-          <>
-            <span>
-              Latest install <b>· {recent[0].npmPackage}</b>
-            </span>
-            <span className="div" />
-          </>
-        )}
-        {trending[0] && (
-          <>
-            <span>
-              Hottest <b>· {trending[0].name}</b> +21%
-            </span>
-            <span className="div" />
-          </>
-        )}
-        <span>
-          New this week <b>· {recent.length} plugins</b>
+          <span className="star">●</span> Registry
         </span>
         <span className="div" />
         <span>
-          SDK <b>· v2026.05</b>
+          <b>{allPlugins.length}</b> plugins indexed
+        </span>
+        <span className="div" />
+        <span>
+          <b>{publisherCount}</b> publishers
         </span>
       </div>
 
@@ -298,7 +276,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </h2>
         </div>
         <div className="r">
-          <b>{results.length}</b> plugins<span>·</span>refreshed 2 min ago
+          <b>{results.length}</b> plugins
         </div>
       </div>
 
@@ -450,10 +428,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   <div className="bd">
                     <b>{p.name}</b>
                     <small>
-                      {p.category} · {fmtK(p.installs)}/wk
+                      {p.category} · {fmtK(p.installs)} dl/wk
                     </small>
                   </div>
-                  <span className={`delta${i === 3 ? " down" : ""}`}>{TRENDING_DELTAS[i]}</span>
                 </Link>
               ))}
             </div>
@@ -506,15 +483,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <footer className="hc-foot">
         <div className="l">
           <b>Paperclip</b>
-          <span>The Hub · vol. 19 — May 2026</span>
+          <span>The Hub — May 2026</span>
         </div>
         <div className="r">
-          <Link href="/about">About</Link>
           <Link href="/docs">Docs</Link>
-          <Link href="/docs/api">API</Link>
-          <Link href="/docs/cli">CLI</Link>
-          <Link href="https://github.com">GitHub</Link>
-          <Link href="/status">Status</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
         </div>
       </footer>
     </div>

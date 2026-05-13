@@ -246,15 +246,12 @@ export default function SubmitPage() {
       <footer className="hc-foot">
         <div className="l">
           <b>Paperclip</b>
-          <span>The Hub · vol. 19 — May 2026</span>
+          <span>The Hub — May 2026</span>
         </div>
         <div className="r">
-          <Link href="/about">About</Link>
           <Link href="/docs">Docs</Link>
-          <Link href="/docs/api">API</Link>
-          <Link href="/docs/cli">CLI</Link>
-          <Link href="https://github.com">GitHub</Link>
-          <Link href="/status">Status</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
         </div>
       </footer>
     </div>

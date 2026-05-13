@@ -1,5 +1,5 @@
 /**
- * Supabase Integration for Shipkit
+ * Supabase Integration for Paperclip Hub
  *
  * This module provides a complete Supabase integration that works alongside
  * the existing Auth.js implementation. It includes:

@@ -497,7 +497,7 @@ export const DashboardVercelDeploy = ({
             {/* Avatar section */}
             <div className="flex items-center justify-center gap-2">
               <Avatar className="h-12 w-12 border">
-                <AvatarImage src="https://github.com/shipkit-io.png?size=80" alt="Shipkit" />
+                <AvatarImage src="https://github.com/paperclip-ing.png?size=80" alt="Paperclip Hub" />
                 <AvatarFallback>
                   <AvatarImage
                     src={`https://github.com/${siteConfig.repo.owner}.png?size=80`}

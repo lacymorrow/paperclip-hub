@@ -30,9 +30,9 @@ export interface LocalUser {
 }
 
 const STORAGE_KEYS = {
-  teams: "shipkit-teams",
-  teamMembers: "shipkit-team-members",
-  users: "shipkit-users",
+  teams: "paperclip-teams",
+  teamMembers: "paperclip-team-members",
+  users: "paperclip-users",
 } as const;
 
 // Local storage utility functions

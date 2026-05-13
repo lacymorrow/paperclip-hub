@@ -38,7 +38,7 @@ export const Settings: GlobalConfig = {
     {
       name: "siteTitle",
       type: "text",
-      defaultValue: "Shipkit",
+      defaultValue: "Paperclip Hub",
       admin: {
         description: "The title of the site used in various places",
       },

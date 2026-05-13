@@ -10,7 +10,7 @@ import { rateLimitService, rateLimits } from "@/server/services/rate-limit-servi
 import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
 // Constants
-const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
+const PAPERCLIP_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 const POLLING_INTERVAL_MS = 10000; // 10 seconds
 const MAX_DEPLOYMENT_POLL_ATTEMPTS = 18; // Poll for up to ~3 minutes
 const STALE_DEPLOYMENT_MS = 10 * 60 * 1000; // 10 minutes — deployments older than this are considered stale
@@ -107,7 +107,7 @@ class DeploymentService {
    * Get the default template repository
    */
   getDefaultTemplateRepo(): string {
-    return SHIPKIT_REPO;
+    return PAPERCLIP_REPO;
   }
 
   // =============================================================================
@@ -801,27 +801,27 @@ class DeploymentService {
     const demoDeployments: Omit<NewDeployment, "id" | "createdAt" | "updatedAt">[] = [
       {
         userId,
-        projectName: "my-shipkit-app",
+        projectName: "my-paperclip-app",
         description: "Production deployment",
-        githubRepoUrl: "https://github.com/demo/my-shipkit-app",
-        githubRepoName: "demo/my-shipkit-app",
-        vercelProjectUrl: "https://vercel.com/demo/my-shipkit-app",
-        vercelDeploymentUrl: "https://my-shipkit-app.vercel.app",
+        githubRepoUrl: "https://github.com/demo/my-paperclip-app",
+        githubRepoName: "demo/my-paperclip-app",
+        vercelProjectUrl: "https://vercel.com/demo/my-paperclip-app",
+        vercelDeploymentUrl: "https://my-paperclip-app.vercel.app",
         status: "completed",
       },
       {
         userId,
-        projectName: "shipkit-staging",
+        projectName: "paperclip-staging",
         description: "Staging environment",
-        githubRepoUrl: "https://github.com/demo/shipkit-staging",
-        githubRepoName: "demo/shipkit-staging",
-        vercelProjectUrl: "https://vercel.com/demo/shipkit-staging",
-        vercelDeploymentUrl: "https://shipkit-staging.vercel.app",
+        githubRepoUrl: "https://github.com/demo/paperclip-staging",
+        githubRepoName: "demo/paperclip-staging",
+        vercelProjectUrl: "https://vercel.com/demo/paperclip-staging",
+        vercelDeploymentUrl: "https://paperclip-staging.vercel.app",
         status: "completed",
       },
       {
         userId,
-        projectName: "shipkit-dev",
+        projectName: "paperclip-dev",
         description: "Development environment",
         status: "failed",
         error: "Build failed: Module not found",

@@ -17,7 +17,7 @@ import { logger } from "@/lib/logger";
 
 // Use a writable cache directory on serverless (e.g. Vercel) and a local dir in dev
 const DEFAULT_CACHE_DIR = join(process.cwd(), ".cache", "downloads");
-const RUNTIME_CACHE_DIR = join(tmpdir(), "shipkit", "downloads");
+const RUNTIME_CACHE_DIR = join(tmpdir(), "paperclip", "downloads");
 const CACHE_DIR = process.env.VERCEL ? RUNTIME_CACHE_DIR : DEFAULT_CACHE_DIR;
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
@@ -38,7 +38,7 @@ async function makeGitHubRequest(url: string): Promise<{
   return new Promise((resolve, reject) => {
     const makeRequest = (requestUrl: string) => {
       const headers: Record<string, string> = {
-        "User-Agent": "Shipkit-Downloader",
+        "User-Agent": "Paperclip-Downloader",
         Accept: "application/vnd.github.v3+json",
       };
       if (env?.GITHUB_ACCESS_TOKEN) {
@@ -143,7 +143,7 @@ async function ensureCacheDir() {
  * Gets the cached file path for a given version
  */
 function getCacheFilePath(version: string) {
-  return join(CACHE_DIR, `shipkit-${version}.zip`);
+  return join(CACHE_DIR, `paperclip-${version}.zip`);
 }
 
 /**
@@ -181,7 +181,7 @@ async function downloadFile(url: string, filePath: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const makeRequest = (requestUrl: string) => {
       const headers: Record<string, string> = {
-        "User-Agent": "Shipkit-Downloader",
+        "User-Agent": "Paperclip-Downloader",
         Accept: "application/vnd.github.v3+json",
       };
       if (env?.GITHUB_ACCESS_TOKEN) {
@@ -333,7 +333,7 @@ async function downloadLatestRelease(): Promise<{
     logger.info("Starting download", { url: downloadUrl });
     await downloadFile(downloadUrl, filePath);
 
-    // Repackage to use clean directory name instead of "lacymorrow-shipkit-<sha>"
+    // Repackage to use clean directory name instead of the default GitHub zipball format
     await repackageZip(filePath);
 
     // Update metadata

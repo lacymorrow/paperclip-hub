@@ -137,7 +137,7 @@ export const Footer: FC<FooterProps> = ({
             <Link href={routes.home}>
               <h1 className="text-4xl font-bold">{siteConfig.title}</h1>
             </Link>
-            <GithubVersionBadge owner="lacymorrow" repo="shipkit" />
+            <GithubVersionBadge owner="lacymorrow" repo="paperclip-hub" />
             <SocialLinks labelled className="" />
           </div>
           {/* Desktop Layout */}

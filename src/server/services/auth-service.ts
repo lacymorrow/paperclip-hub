@@ -86,12 +86,12 @@ async function verifyPassword(password: string, storedHash: string): Promise<boo
 /**
  * Authentication service for handling user authentication and authorization
  *
- * This service ensures synchronization between Payload CMS and Shipkit databases
+ * This service ensures synchronization between Payload CMS and Paperclip Hub databases
  * for user-related operations (create, update, delete).
  */
 export const AuthService = {
   /**
-   * Generate a consistent ID for use in both Payload CMS and Shipkit databases
+   * Generate a consistent ID for use in both Payload CMS and Paperclip Hub databases
    * @returns A UUID string
    */
   generateConsistentId(): string {
@@ -99,7 +99,7 @@ export const AuthService = {
   },
 
   /**
-   * Ensure a user exists in both Payload CMS and Shipkit databases
+   * Ensure a user exists in both Payload CMS and Paperclip Hub databases
    * @param userData User data to ensure exists in both databases
    * @returns The user object if successful
    */
@@ -154,14 +154,14 @@ export const AuthService = {
         }
       }
 
-      // Ensure user exists in Shipkit database
+      // Ensure user exists in Paperclip Hub database
       await userService.ensureUserExists({
         id,
         email,
         name: name || email,
         image,
       });
-      // logger.info(`Ensured user ${id} exists in Shipkit database`);
+      // logger.info(`Ensured user ${id} exists in Paperclip Hub database`);
 
       return { id, email };
     } catch (error) {
@@ -195,18 +195,18 @@ export const AuthService = {
         }
       }
 
-      // Try to delete from Shipkit
+      // Try to delete from Paperclip Hub
       try {
         if (db) {
           await db.delete(users).where(eq(users.id, userId));
-          // logger.info(`Cleaned up user ${userId} from Shipkit database`);
+          // logger.info(`Cleaned up user ${userId} from Paperclip Hub database`);
         }
       } catch (error) {
         // Ignore if user doesn't exist
         if (!(error instanceof Error && error.message.includes("Record to delete not found"))) {
-          logger.warn(`Error cleaning up user ${userId} from Shipkit database:`, error);
+          logger.warn(`Error cleaning up user ${userId} from Paperclip Hub database:`, error);
         } else {
-          logger.debug(`User ${userId} not found in Shipkit database during cleanup`);
+          logger.debug(`User ${userId} not found in Paperclip Hub database during cleanup`);
         }
       }
     } catch (error) {
@@ -215,7 +215,7 @@ export const AuthService = {
   },
 
   /**
-   * Update a user in both Payload CMS and Shipkit databases
+   * Update a user in both Payload CMS and Paperclip Hub databases
    * @param userId The ID of the user to update
    * @param userData The user data to update
    * @returns The updated user object
@@ -247,25 +247,25 @@ export const AuthService = {
         }
       }
 
-      // Update in Shipkit
-      const shipkitUpdateData: Record<string, any> = {};
-      if (userData.email) shipkitUpdateData.email = userData.email;
-      if (userData.name) shipkitUpdateData.name = userData.name;
-      if (userData.image) shipkitUpdateData.image = userData.image;
+      // Update in Paperclip Hub
+      const paperclipUpdateData: Record<string, any> = {};
+      if (userData.email) paperclipUpdateData.email = userData.email;
+      if (userData.name) paperclipUpdateData.name = userData.name;
+      if (userData.image) paperclipUpdateData.image = userData.image;
 
-      if (Object.keys(shipkitUpdateData).length > 0 && db) {
+      if (Object.keys(paperclipUpdateData).length > 0 && db) {
         try {
           await db
             .update(users)
             .set({
-              ...shipkitUpdateData,
+              ...paperclipUpdateData,
               updatedAt: new Date(),
             })
             .where(eq(users.id, userId));
-          // logger.info(`Updated user ${userId} in Shipkit database`);
+          // logger.info(`Updated user ${userId} in Paperclip Hub database`);
         } catch (error) {
-          logger.error(`Failed to update user ${userId} in Shipkit database:`, error);
-          throw new Error("Failed to update user in Shipkit database");
+          logger.error(`Failed to update user ${userId} in Paperclip Hub database:`, error);
+          throw new Error("Failed to update user in Paperclip Hub database");
         }
       }
 
@@ -277,13 +277,13 @@ export const AuthService = {
   },
 
   /**
-   * Delete a user from both Payload CMS and Shipkit databases
+   * Delete a user from both Payload CMS and Paperclip Hub databases
    * @param userId The ID of the user to delete
    */
   async deleteUserSynchronized(userId: string): Promise<void> {
     try {
       // Delete from Payload CMS
-      // This should cascade to Shipkit due to the relationship defined in payload.config.ts
+      // This should cascade to Paperclip Hub due to the relationship defined in payload.config.ts
       const payload = await getPayloadClient();
       if (payload) {
         try {
@@ -297,16 +297,16 @@ export const AuthService = {
         }
       }
 
-      // Verify deletion from Shipkit
+      // Verify deletion from Paperclip Hub
       // This should happen automatically due to CASCADE, but we check to be sure
       if (db) {
-        const shipkitUser = await db.query.users.findFirst({
+        const paperclipUser = await db.query.users.findFirst({
           where: eq(users.id, userId),
         });
 
-        if (shipkitUser) {
+        if (paperclipUser) {
           logger.warn(
-            `User ${userId} still exists in Shipkit after Payload deletion, forcing delete`
+            `User ${userId} still exists in Paperclip Hub after Payload deletion, forcing delete`
           );
           await db.delete(users).where(eq(users.id, userId));
         }
@@ -405,7 +405,7 @@ export const AuthService = {
 
   /**
    * Sign up with email and password using Payload CMS
-   * This method ensures the user is created in both Payload CMS and Shipkit databases
+   * This method ensures the user is created in both Payload CMS and Paperclip Hub databases
    */
   async signUpWithCredentials({
     email,
@@ -460,7 +460,7 @@ export const AuthService = {
 
       logger.debug(`Created user in Payload CMS with ID ${userId}`);
 
-      // Create the user in the Shipkit database with the same ID
+      // Create the user in the Paperclip Hub database with the same ID
       await userService.ensureUserExists({
         id: userId, // Use the consistent ID
         email: newUser.email,
@@ -468,7 +468,7 @@ export const AuthService = {
         image: null,
       });
 
-      logger.debug(`Created user in Shipkit database with ID ${userId}`);
+      logger.debug(`Created user in Paperclip Hub database with ID ${userId}`);
 
       // Sign in the user
       if (redirect) {
@@ -627,7 +627,7 @@ export const AuthService = {
 
   /**
    * Validate user credentials against Payload CMS
-   * This method ensures the user exists in the Shipkit database after successful authentication
+   * This method ensures the user exists in the Paperclip Hub database after successful authentication
    */
   async validateCredentials(credentials: unknown) {
     try {
@@ -698,7 +698,7 @@ export const AuthService = {
             payloadToken: result.token,
           };
 
-          // Ensure the user exists in the Shipkit database
+          // Ensure the user exists in the Paperclip Hub database
           await userService.ensureUserExists({
             id: user.id,
             email: user.email,
@@ -818,16 +818,16 @@ export const AuthService = {
         }
       }
 
-      // Update user in Shipkit database
+      // Update user in Paperclip Hub database
       if (db) {
-        const shipkitUpdateData = { ...updates };
-        delete shipkitUpdateData.id; // Don't update the ID
-        delete shipkitUpdateData.createdAt; // Don't update creation timestamp
+        const paperclipUpdateData = { ...updates };
+        delete paperclipUpdateData.id; // Don't update the ID
+        delete paperclipUpdateData.createdAt; // Don't update creation timestamp
 
         await db
           .update(users)
           .set({
-            ...shipkitUpdateData,
+            ...paperclipUpdateData,
             updatedAt: new Date(),
           })
           .where(eq(users.id, userId));
@@ -873,7 +873,7 @@ export const AuthService = {
         }
       }
 
-      // Delete from Shipkit database
+      // Delete from Paperclip Hub database
       if (db) {
         await db.delete(users).where(eq(users.id, userId));
       }
@@ -923,7 +923,7 @@ export const AuthService = {
         return { error: "Failed to create user" };
       }
 
-      // Create user in Shipkit database
+      // Create user in Paperclip Hub database
       await userService.ensureUserExists({
         id: userId,
         email: userData.email,
@@ -1033,7 +1033,7 @@ export const AuthService = {
           token: result.token,
         };
 
-        // Ensure the user exists in the Shipkit database
+        // Ensure the user exists in the Paperclip Hub database
         await userService.ensureUserExists({
           id: user.id,
           email: user.email,

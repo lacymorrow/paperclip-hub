@@ -130,11 +130,7 @@ export const OnboardingWizard = ({
               />
             ) : (
               <p className="text-sm text-muted-foreground">
-                Vercel integration is not configured yet. You can set it up later in{" "}
-                <Link href="/settings/account" className="underline">
-                  Settings
-                </Link>
-                .
+                Vercel integration is not configured yet. You can set it up later.
               </p>
             )}
           </div>

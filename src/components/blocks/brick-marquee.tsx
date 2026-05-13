@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 // Define the list of links
 const links = [
   { name: "cliphub.fyi", href: "https://cliphub.fyi" },
-  { name: "bones.sh", href: "https://bones.sh" },
+  { name: "paperclip.ing", href: "https://paperclip.ing" },
   { name: "uibrary.com", href: "https://uibrary.com" },
   { name: "cloud0.dev", href: "https://cloud0.dev" },
   { name: "junebug.ai", href: "https://junebug.ai" },

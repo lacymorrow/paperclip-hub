@@ -114,11 +114,11 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
         await resend.emails.send({
           from: RESEND_FROM_EMAIL,
           to: parsed.data.email,
-          subject: "Welcome to Our App - Verify Your Email",
+          subject: "Welcome to Paperclip Hub - Verify Your Email",
           html: `
 							<p>Welcome! Your account has been created.</p>
 							<p>You can now sign in and start using the app:</p>
-							<a href="${BASE_URL}/sign-in">Sign In</a>
+							<a href="${BASE_URL}">Go to Paperclip Hub</a>
 						`,
         });
       }

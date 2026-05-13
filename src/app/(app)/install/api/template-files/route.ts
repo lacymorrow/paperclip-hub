@@ -6,7 +6,7 @@ import { directoryCache, sanitizePath, TEMPLATE_BASE_DIR } from "../utils";
 
 // Use a more specific template directory path that only includes necessary files
 // This prevents including the entire codebase in the serverless function
-const TEMPLATE_SPECIFIC_DIR = path.join("packages", "create-shipkit-app", "templates", "minimal");
+const TEMPLATE_SPECIFIC_DIR = path.join("packages", "create-paperclip-app", "templates", "minimal");
 
 /**
  * Get all files in a directory with caching

@@ -1,8 +1,8 @@
 /**
- * @fileoverview Database schema definitions for Shipkit using Drizzle ORM
+ * @fileoverview Database schema definitions for Paperclip Hub using Drizzle ORM
  * @module server/db/schema
  *
- * This file defines all database tables, relationships, and enums for the Shipkit application.
+ * This file defines all database tables, relationships, and enums for the Paperclip Hub application.
  * It uses Drizzle ORM with PostgreSQL and supports multi-tenant architecture via table prefixing.
  *
  * Key entities:

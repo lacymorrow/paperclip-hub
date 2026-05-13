@@ -23,8 +23,8 @@ export function webhookHasMeta(data: any): data is LemonSqueezyWebhookMeta {
  * Lemon Squeezy API Types and Interfaces
  *
  * Key Concepts:
- * - Products: Main items in your store (e.g., "Shipkit Pro")
- * - Variants: Specific pricing/billing versions of products (e.g., "Shipkit Pro - Monthly")
+ * - Products: Main items in your store (e.g., "Paperclip Hub Pro")
+ * - Variants: Specific pricing/billing versions of products (e.g., "Paperclip Hub Pro - Monthly")
  * - Orders: Customer purchases
  *
  * For checkout and payment verification, always use Variant IDs, not Product IDs.
@@ -71,7 +71,7 @@ export interface LemonSqueezyProduct {
  */
 export interface ConfiguredLemonSqueezyProduct {
   id: string; // Variant ID (for checkout)
-  productKey?: string; // Key from site config (e.g., 'shipkit', 'bones')
+  productKey?: string; // Key from site config (e.g., 'paperclip', 'bones')
   attributes: {
     name: string;
     description: string;
@@ -162,7 +162,7 @@ export interface PaymentVerificationResult {
 /**
  * Product key type - these are the keys defined in site config
  */
-export type ProductKey = "shipkit" | "bones" | "brains";
+export type ProductKey = "paperclip" | "bones" | "brains";
 
 /**
  * Variant ID type - UUID strings from Lemon Squeezy

@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const API_URL = process.env.NEXT_PUBLIC_LOGGER_URL || "https://log.bones.sh/v1";
+const API_URL = process.env.NEXT_PUBLIC_LOGGER_URL || "https://log.cliphub.fyi/v1";
 
 interface LogData {
   level: "info" | "warn" | "error";

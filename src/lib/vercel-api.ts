@@ -506,7 +506,7 @@ export class VercelAPIService {
       return explicitFramework;
     }
 
-    // For Shipkit, we know it's Next.js
+    // For Paperclip Hub, we know it's Next.js
     return "nextjs";
   }
 
@@ -600,7 +600,7 @@ export const COMMON_ENV_VARIABLES = {
     { key: "NEXTAUTH_URL", value: "", target: ["production", "preview"] as const },
     { key: "NEXTAUTH_SECRET", value: "", target: ["production", "preview"] as const },
   ],
-  shipkit: [
+  paperclip: [
     { key: "DATABASE_URL", value: "", target: ["production", "preview"] as const },
     { key: "NEXTAUTH_URL", value: "", target: ["production", "preview"] as const },
     { key: "NEXTAUTH_SECRET", value: "", target: ["production", "preview"] as const },

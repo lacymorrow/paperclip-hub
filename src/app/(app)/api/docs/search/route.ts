@@ -133,7 +133,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: `You are a helpful documentation assistant for Shipkit.
+          content: `You are a helpful documentation assistant for Paperclip Hub.
           Your responses should be clear, concise, and focused on answering the user's question.
           Include relevant code examples when appropriate.
           Format your responses in markdown.

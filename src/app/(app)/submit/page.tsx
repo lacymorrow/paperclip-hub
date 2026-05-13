@@ -1,10 +1,7 @@
-import { Github } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { GitHubSignInButton } from "@/components/buttons/github-sign-in-button";
 import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
-import { auth } from "@/server/auth";
 
 import "../plugins/hub.css";
 
@@ -14,11 +11,7 @@ export const metadata: Metadata = {
     "Submit your plugin to the Paperclip Hub registry. Open a pull request directly from your browser.",
 };
 
-export default async function SubmitPage() {
-  const session = await auth();
-  const user = session?.user;
-  const githubUsername = user?.githubUsername ?? null;
-
+export default function SubmitPage() {
   return (
     <div className="hub-c1">
       {/* Header */}
@@ -39,10 +32,7 @@ export default async function SubmitPage() {
           <Link href="/docs">Docs</Link>
         </nav>
         <div className="hc-header-actions">
-          <Link href="/sign-in" className="hc-link-muted">
-            Sign in
-          </Link>
-          <Link href="/" className="hc-btn">
+          <Link href="https://paperclip.ing" className="hc-btn">
             Get Paperclip →
           </Link>
         </div>
@@ -177,105 +167,20 @@ export default async function SubmitPage() {
             padding: "32px 36px",
           }}
         >
-          {!user ? (
-            <div style={{ textAlign: "center", padding: "36px 0" }}>
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  background: "var(--bg)",
-                  border: "1px solid var(--bd-1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 20px",
-                }}
-              >
-                <Github style={{ width: 28, height: 28, color: "var(--ink)" }} />
-              </div>
-              <h2
-                style={{
-                  fontFamily: "var(--hub-font-serif)",
-                  fontWeight: 400,
-                  fontStyle: "italic",
-                  fontSize: "1.25rem",
-                  color: "var(--ink)",
-                  marginBottom: 8,
-                }}
-              >
-                Sign in with GitHub
-              </h2>
-              <p
-                style={{
-                  fontSize: "0.9375rem",
-                  color: "var(--ink-2)",
-                  maxWidth: 380,
-                  margin: "0 auto 24px",
-                }}
-              >
-                We use your GitHub account to open the pull request on your behalf.
-              </p>
-              <GitHubSignInButton callbackUrl="/submit" />
-            </div>
-          ) : !githubUsername ? (
-            <div style={{ textAlign: "center", padding: "36px 0" }}>
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  background: "var(--bg)",
-                  border: "1px solid var(--bd-1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 20px",
-                }}
-              >
-                <Github style={{ width: 28, height: 28, color: "var(--ink)" }} />
-              </div>
-              <h2
-                style={{
-                  fontFamily: "var(--hub-font-serif)",
-                  fontWeight: 400,
-                  fontStyle: "italic",
-                  fontSize: "1.25rem",
-                  color: "var(--ink)",
-                  marginBottom: 8,
-                }}
-              >
-                Connect your GitHub account
-              </h2>
-              <p
-                style={{
-                  fontSize: "0.9375rem",
-                  color: "var(--ink-2)",
-                  maxWidth: 380,
-                  margin: "0 auto 24px",
-                }}
-              >
-                Your account isn&apos;t linked to GitHub yet. Connect it so we can open the PR on
-                your behalf.
-              </p>
-              <GitHubSignInButton callbackUrl="/submit" />
-            </div>
-          ) : (
-            <>
-              <div
-                style={{
-                  fontFamily: "var(--hub-font-serif)",
-                  fontStyle: "italic",
-                  fontSize: "1.125rem",
-                  color: "var(--ink)",
-                  marginBottom: 24,
-                  paddingBottom: 16,
-                  borderBottom: "1px solid var(--bd-1)",
-                }}
-              >
-                Plugin details
-              </div>
-              <PluginSubmissionForm githubUsername={githubUsername} />
-            </>
-          )}
+          <div
+            style={{
+              fontFamily: "var(--hub-font-serif)",
+              fontStyle: "italic",
+              fontSize: "1.125rem",
+              color: "var(--ink)",
+              marginBottom: 24,
+              paddingBottom: 16,
+              borderBottom: "1px solid var(--bd-1)",
+            }}
+          >
+            Plugin details
+          </div>
+          <PluginSubmissionForm />
         </div>
 
         {/* CLI alternative */}

@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/primitives/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { HapticsProvider } from "@/components/providers/haptics-provider";
 import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
-import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
+import { ThemeProvider as PaperclipThemeProvider } from "@/components/ui/shipkit/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as LegacyToaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -55,7 +55,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
         height={"4px"}
         color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
       />
-      <ShipkitThemeProvider>
+      <PaperclipThemeProvider>
         <SessionProvider {...(sessionProviderProps as any)}>
           <TRPCReactProvider {...pageProps}>
             <TooltipProvider delayDuration={100}>
@@ -85,7 +85,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
             </TooltipProvider>
           </TRPCReactProvider>
         </SessionProvider>
-      </ShipkitThemeProvider>
+      </PaperclipThemeProvider>
     </>
   );
 }

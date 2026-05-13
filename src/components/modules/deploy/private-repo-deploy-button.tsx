@@ -37,8 +37,8 @@ interface DeploymentStatus {
   error?: string;
 }
 
-// Get Shipkit repository from site config
-const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
+// Get Paperclip Hub repository from site config
+const PAPERCLIP_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 
 export const PrivateRepoDeployButton = () => {
   const [formData, setFormData] = useState({
@@ -67,9 +67,9 @@ export const PrivateRepoDeployButton = () => {
 
     try {
       const result = await deployPrivateRepository({
-        templateRepo: SHIPKIT_REPO,
+        templateRepo: PAPERCLIP_REPO,
         projectName: formData.projectName,
-        description: formData.description || `Deployed from ${SHIPKIT_REPO}`,
+        description: formData.description || `Deployed from ${PAPERCLIP_REPO}`,
       });
 
       if (result.success && result.data) {
@@ -154,10 +154,10 @@ export const PrivateRepoDeployButton = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Github className="h-5 w-5" />
-          Deploy Shipkit
+          Deploy Paperclip Hub
         </CardTitle>
         <CardDescription>
-          Deploy your own instance of Shipkit to GitHub and Vercel. Make sure you have connected
+          Deploy your own instance of Paperclip Hub to GitHub and Vercel. Make sure you have connected
           both your GitHub and Vercel accounts in Settings first.
         </CardDescription>
       </CardHeader>
@@ -294,7 +294,7 @@ export const PrivateRepoDeployButton = () => {
             <Alert>
               <Github className="h-4 w-4" />
               <AlertDescription>
-                This will create a copy of the Shipkit repository ({SHIPKIT_REPO}) in your GitHub
+                This will create a copy of the Paperclip Hub repository ({PAPERCLIP_REPO}) in your GitHub
                 account and deploy it to Vercel.
               </AlertDescription>
             </Alert>
@@ -303,13 +303,13 @@ export const PrivateRepoDeployButton = () => {
               <Label htmlFor="projectName">Project Name *</Label>
               <Input
                 id="projectName"
-                placeholder="my-shipkit-instance"
+                placeholder="my-paperclip-instance"
                 value={formData.projectName}
                 onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
                 onKeyDown={handleKeyDown}
               />
               <p className="text-xs text-muted-foreground">
-                Name for your Shipkit instance (lowercase, numbers, hyphens only)
+                Name for your Paperclip Hub instance (lowercase, numbers, hyphens only)
               </p>
             </div>
 
@@ -317,7 +317,7 @@ export const PrivateRepoDeployButton = () => {
               <Label htmlFor="description">Description</Label>
               <Input
                 id="description"
-                placeholder="My custom Shipkit deployment"
+                placeholder="My custom Paperclip Hub deployment"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 onKeyDown={handleKeyDown}
@@ -326,7 +326,7 @@ export const PrivateRepoDeployButton = () => {
 
             <div className="pt-4 space-y-3">
               <Button onClick={handleDeploy} disabled={isDeploying} className="w-full">
-                {isDeploying ? "Deploying..." : "Deploy Shipkit"}
+                {isDeploying ? "Deploying..." : "Deploy Paperclip Hub"}
               </Button>
               <p className="text-xs text-center text-muted-foreground">
                 Make sure you've connected your GitHub and Vercel accounts in{" "}

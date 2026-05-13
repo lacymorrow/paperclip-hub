@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     const owner = env.GITHUB_REPO_OWNER || "lacymorrow";
-    const repo = env.GITHUB_REPO_NAME || "shipkit";
+    const repo = env.GITHUB_REPO_NAME || "paperclip-hub";
 
     // Sanitize and validate all file paths
     const sanitizedFiles = files.map((file) => ({

@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) {
     return constructMetadata({
-      title: "Post Not Found | Shipkit Blog",
+      title: "Post Not Found | Paperclip Hub Blog",
       description:
         "The blog post you're looking for could not be found. Browse our other articles for app development insights and guides.",
     });
@@ -56,10 +56,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   ogUrl.searchParams.set("url", siteConfig.url.replace(/https?:\/\//, ""));
 
   return constructMetadata({
-    title: `${post.title} | Shipkit Blog`,
+    title: `${post.title} | Paperclip Hub Blog`,
     description:
       post.description ||
-      "Read this comprehensive guide on app development best practices, tips, and insights from the Shipkit team.",
+      "Read this comprehensive guide on plugin development best practices, tips, and insights from the Paperclip team.",
     images: [
       {
         url: ogUrl.toString(),

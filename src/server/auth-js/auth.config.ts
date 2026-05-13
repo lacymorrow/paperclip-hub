@@ -201,7 +201,7 @@ export const authOptions: NextAuthConfig = {
             image: profile.image || profile.picture || user.image, // Use profile image if available
           });
         } catch (error) {
-          console.error("Error ensuring user exists in Shipkit database:", error);
+          console.error("Error ensuring user exists in Paperclip Hub database:", error);
           // Don't fail the sign-in if this fails, just log the error
         }
       } else {
@@ -214,7 +214,7 @@ export const authOptions: NextAuthConfig = {
             image: user.image,
           });
         } catch (error) {
-          console.error("Error ensuring user exists in Shipkit database:", error);
+          console.error("Error ensuring user exists in Paperclip Hub database:", error);
           // Don't fail the sign-in if this fails, just log the error
         }
       }

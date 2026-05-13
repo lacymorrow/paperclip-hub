@@ -27,7 +27,7 @@ import type { UserRole } from "@/types/user";
 /**
  * Using database session strategy with credentials provider requires special handling:
  * 1. The credentials provider must create a user in the database
- * 2. The user must be properly linked between Payload CMS and Shipkit
+ * 2. The user must be properly linked between Payload CMS and Paperclip Hub
  * 3. The session must be created in the database
  *
  * This is handled in:
@@ -52,7 +52,7 @@ const {
   ? NextAuth({
       ...authOptions,
       trustHost: true,
-      secret: env.AUTH_SECRET ?? "supersecretshipkit",
+      secret: env.AUTH_SECRET ?? "supersecretpaperclip",
       // Override session strategy based on adapter usage
       session: {
         ...authOptions.session,

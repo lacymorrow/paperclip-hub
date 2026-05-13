@@ -6,7 +6,7 @@ export const content: Testimonial[] = [
     role: "Senior Developer",
     company: "Vercel",
     testimonial:
-      "Shipkit saved us months of setup time. The authentication and API routes are production-ready out of the box.",
+      "Paperclip Hub saved us months of setup time. The authentication and API routes are production-ready out of the box.",
     username: "@sarahchen",
     verified: true,
     featured: true,

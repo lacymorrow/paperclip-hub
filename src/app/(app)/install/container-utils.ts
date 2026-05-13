@@ -19,7 +19,7 @@
  *
  * @file container-utils.ts
  * @version 1.0.0
- * @author Shipkit Development Team
+ * @author Paperclip Hub Development Team
  */
 
 import type { FileSystemTree } from "@webcontainer/api";

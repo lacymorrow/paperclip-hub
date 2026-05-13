@@ -61,18 +61,18 @@ export function PricingSectionSingle() {
                   "w-full bg-purple-500 text-lg text-white hover:bg-purple-600"
                 )}
               >
-                Get Shipkit Now
+                Get Paperclip Hub Now
               </Link>
             </div>
 
             <div className="mt-8 border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
               <p>
-                Want to see what Shipkit can do?{" "}
+                Want to see what Paperclip Hub can do?{" "}
                 <a
                   href={routes.external.bones}
                   className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300"
                 >
-                  Start with Shipkit Bones
+                  Start with Paperclip Bones
                   <ArrowRight className="h-3 w-3" />
                 </a>
               </p>

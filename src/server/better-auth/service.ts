@@ -5,7 +5,7 @@ import { auth } from "./config";
  * Better Auth Service Layer
  *
  * This service provides utilities for managing Better Auth users,
- * sessions, and integrating with the existing Shipkit architecture.
+ * sessions, and integrating with the existing Paperclip Hub architecture.
  */
 
 /**

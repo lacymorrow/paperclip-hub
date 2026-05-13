@@ -4,7 +4,7 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 
 const TEMPLATE_OWNER = "lacymorrow";
-const TEMPLATE_REPO = "shipkit";
+const TEMPLATE_REPO = "paperclip-hub";
 
 interface CreateRequestBody {
   projectName: string;
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       template_repo: templateRepo,
       name: projectName,
       private: true,
-      description: `ShipKit project: ${projectName}`,
+      description: `Paperclip Hub project: ${projectName}`,
     });
 
     const repoUrl = repoResponse.data.html_url;

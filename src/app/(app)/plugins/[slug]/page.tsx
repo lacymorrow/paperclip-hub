@@ -243,7 +243,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <Link href="/docs">Docs</Link>
         </nav>
         <div className="hc-header-actions">
-          <Link href="/" className="hc-btn">
+          <Link href="https://paperclip.ing" className="hc-btn">
             Get Paperclip →
           </Link>
         </div>

@@ -47,7 +47,7 @@ export function getClerkWebhookSecret(): string | undefined {
  * Clerk configuration options
  */
 export const clerkConfig = {
-  // Appearance customization to match Shipkit's design
+  // Appearance customization to match Paperclip Hub's design
   appearance: {
     elements: {
       // Customize Clerk components to match Tailwind/Shadcn styling
@@ -60,7 +60,7 @@ export const clerkConfig = {
       showOptionalFields: false,
     },
   },
-  // Sign-in and sign-up URLs that match Shipkit's routing
+  // Sign-in and sign-up URLs that match Paperclip Hub's routing
   signInUrl: routes.auth.signIn,
   signUpUrl: routes.auth.signUp,
   afterSignInUrl: routes.home,

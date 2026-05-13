@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
    */
   images: {
     remotePatterns: [
-      { hostname: "shipkit.io" }, // @dev: for testing
+      { hostname: "cliphub.fyi" }, // @dev: for testing
       { hostname: "picsum.photos" }, // @dev: for testing
       { hostname: "avatar.vercel.sh" }, // @dev: for testing
       { hostname: "github.com" }, // @dev: for testing
@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "shipkit.s3.**.amazonaws.com",
+        hostname: "paperclip.s3.**.amazonaws.com",
       },
       {
         protocol: "https",
@@ -133,7 +133,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "X-Powered-By",
-            value: "shipkit.io",
+            value: "cliphub.fyi",
           },
           {
             key: "X-Frame-Options",
@@ -163,7 +163,7 @@ const nextConfig: NextConfig = {
 
   // Production optimizations
   compress: true,
-  poweredByHeader: false, // Disable default "Next.js" — custom "shipkit.io" header set in headers()
+  poweredByHeader: false, // Disable default "Next.js" — custom "cliphub.fyi" header set in headers()
 
   /*
    * React configuration

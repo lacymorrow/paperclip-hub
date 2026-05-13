@@ -30,7 +30,7 @@ const POPULAR_DOCS = [
   {
     title: "Introduction",
     url: `${routes.docs}/introduction`,
-    description: "Get started with Shipkit",
+    description: "Get started with Paperclip Hub",
   },
   {
     title: "Quickstart Guide",

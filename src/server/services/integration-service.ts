@@ -233,7 +233,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
   // === Developer Tools & API ===
   const githubToken = !!env.GITHUB_ACCESS_TOKEN;
   const githubOwner = env.GITHUB_REPO_OWNER || "lacymorrow";
-  const githubRepo = env.GITHUB_REPO_NAME || "shipkit";
+  const githubRepo = env.GITHUB_REPO_NAME || "paperclip-hub";
   addStatus("Developer Tools & API", {
     name: "GitHub API",
     enabled: githubToken,

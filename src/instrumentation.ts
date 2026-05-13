@@ -24,7 +24,7 @@ export function register() {
 
   displayLaunchMessage();
   registerOTel({
-    serviceName: "shipkit",
+    serviceName: "cliphub",
     // Add any additional configuration options here
   });
 }

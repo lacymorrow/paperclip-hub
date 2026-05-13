@@ -1,4 +1,4 @@
-const SHIPKIT_URL = "https://shipkit.io";
+const PAPERCLIP_URL = "https://cliphub.fyi";
 
 const consoleScript = `
 (function() {
@@ -17,19 +17,19 @@ const consoleScript = `
     'font-size: 11px',
   ].join(';');
   console.log(
-    '%c\\u{1F680} Built with shipkit.io %c\\n${SHIPKIT_URL}',
+    '%c\\u{1F680} Built with cliphub.fyi %c\\n${PAPERCLIP_URL}',
     styles,
     subtleStyles
   );
 })();
 `;
 
-export const ShipkitBranding = () => {
+export const PaperclipBranding = () => {
   return (
     <>
       {/* HTML source attribution */}
-      {/* Built with shipkit.io */}
-      <meta name="made-with" content="shipkit.io" />
+      {/* Built with cliphub.fyi */}
+      <meta name="made-with" content="cliphub.fyi" />
       <link rel="author" href="/humans.txt" />
       {/* Styled console attribution — bypasses Next.js removeConsole since it's an inline script */}
       <script

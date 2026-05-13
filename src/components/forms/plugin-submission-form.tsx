@@ -58,12 +58,13 @@ const CAPABILITY_LABELS: Record<(typeof CAPABILITIES)[number], string> = {
 };
 
 interface PluginSubmissionFormProps {
-  githubUsername: string;
+  githubUsername?: string;
 }
 
-export function PluginSubmissionForm({ githubUsername }: PluginSubmissionFormProps) {
+export function PluginSubmissionForm({ githubUsername: initialUsername }: PluginSubmissionFormProps) {
   const { toast } = useToast();
   const [prUrl, setPrUrl] = useState<string | null>(null);
+  const [githubUsername, setGithubUsername] = useState(initialUsername ?? "");
 
   const form = useForm<PluginSubmissionData>({
     resolver: zodResolver(pluginSubmissionSchema),
@@ -285,17 +286,20 @@ export function PluginSubmissionForm({ githubUsername }: PluginSubmissionFormPro
           )}
         />
 
-        <div className="rounded-lg border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-          Submitting as{" "}
-          <a
-            href={`https://github.com/${githubUsername}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-foreground underline"
-          >
-            @{githubUsername}
-          </a>
-          . This will open a pull request on GitHub on your behalf.
+        <div>
+          <label className="text-sm font-medium leading-none" htmlFor="github-username">
+            GitHub username
+          </label>
+          <Input
+            id="github-username"
+            placeholder="your-github-username"
+            value={githubUsername}
+            onChange={(e) => setGithubUsername(e.target.value)}
+            className="mt-2"
+          />
+          <p className="mt-1.5 text-[0.8rem] text-muted-foreground">
+            The PR will be attributed to this GitHub account.
+          </p>
         </div>
 
         <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">

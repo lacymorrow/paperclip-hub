@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+- fix: strip non-MVP routes and pages ([LAC-1135])
+
 ## v0.2.1 - 2025-09-23
 
 - Maintenance: version bump to align internal `shipkit.bones`

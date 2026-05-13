@@ -231,7 +231,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <span className="hc-brand-wm">
             <b>Paper</b>clip
           </span>
-          <span className="hc-brand-sub">Hub · est. 2026</span>
+          <span className="hc-brand-sub">Hub</span>
         </Link>
         <nav className="hc-nav">
           <Link href="/" className="is-active">

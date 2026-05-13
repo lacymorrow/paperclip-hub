@@ -1519,18 +1519,22 @@
   .hub-c1 .hc-d-tabs-wrap,
   .hub-c1 .hc-foot,
   .hub-c1 .hc-ticker { margin-left: 24px; margin-right: 24px; }
-  .hub-c1 .hc-header { padding: 0 24px; }
+  .hub-c1 .hc-header { padding: 0 24px; gap: 16px; }
   .hub-c1 .hc-body { grid-template-columns: 1fr; }
   .hub-c1 .hc-grid { grid-template-columns: 1fr; }
   .hub-c1 .hc-recent-row { grid-template-columns: repeat(2, 1fr); }
   .hub-c1 .hc-d-title { grid-template-columns: 1fr; }
   .hub-c1 .hc-d-tabs-body { grid-template-columns: 1fr; }
   .hub-c1 .hc-d-title h1 { font-size: 64px; }
+
+  .hub-c1 .hc-nav,
+  .hub-c1 .hc-sm-search { display: none; }
+
+  .hub-c1 .hc-foot { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; }
+  .hub-c1 .hc-foot .r { flex-wrap: wrap; gap: 12px; }
 }
 
 @media (max-width: 640px) {
-  .hub-c1 .hc-nav,
-  .hub-c1 .hc-sm-search { display: none; }
   .hub-c1 .hc-hero h1,
   .hub-c1 .hc-d-title h1 { font-size: 40px; }
   .hub-c1 .hc-poster h2 { font-size: 32px; }
@@ -1561,9 +1565,6 @@
 
   .hub-c1 .hc-ticker { gap: 12px; padding: 10px 16px; font-size: 10px; }
 
-  .hub-c1 .hc-foot { flex-direction: column; gap: 16px; align-items: flex-start; }
-  .hub-c1 .hc-foot .r { flex-wrap: wrap; gap: 12px; }
-
   .hub-c1 .hc-poster { padding: 20px; box-shadow: 4px 4px 0 var(--ink); }
   .hub-c1 .hc-poster-foot { grid-template-columns: 1fr 1fr; gap: 10px; }
   .hub-c1 .hc-poster-foot button,
@@ -1591,5 +1592,4 @@
   .hub-c1 .hc-recent-hd h2 { font-size: 32px; }
 
   .hub-c1 .hc-brand-wm { font-size: 22px; }
-  .hub-c1 .hc-brand-sub { display: none; }
 }

@@ -505,7 +505,7 @@ export const getUserPurchasedProducts = async (userId: string): Promise<any[]> =
 
 /**
  * Gets the configured variant ID for a product key from site config
- * @param productKey The product key (e.g., 'shipkit', 'bones', etc.)
+ * @param productKey The product key (e.g., 'paperclip', 'bones', etc.)
  * @returns The variant ID or null if not found
  */
 export const getVariantIdForProduct = async (productKey: string): Promise<string | null> => {

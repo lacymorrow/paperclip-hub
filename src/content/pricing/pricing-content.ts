@@ -17,7 +17,7 @@ export interface PricingPlan {
 }
 
 export const singlePlan: PricingPlan = {
-  title: "Shipkit",
+  title: "Paperclip Hub",
   description: "$249 one-time. Lifetime updates. No recurring fees.",
   isBestValue: true,
   price: { oneTime: 249 },
@@ -38,7 +38,7 @@ export const singlePlan: PricingPlan = {
 
 export const oneTimePlans: PricingPlan[] = [
   {
-    title: "Shipkit Bones",
+    title: "Paperclip Bones",
     description: "Perfect for indie developers and small projects",
     price: { oneTime: 0 },
     href: routes.external.buy,

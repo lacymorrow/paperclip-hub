@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       isAdmin({ email: userEmail }),
       PaymentService.hasUserPurchasedVariant({
         userId,
-        variantId: siteConfig.store.products.shipkit || "",
+        variantId: siteConfig.store.products.paperclip || "",
         provider: "lemonsqueezy",
       }),
     ]);

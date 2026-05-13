@@ -1,5 +1,5 @@
 /**
- * @fileoverview User management service for Shipkit
+ * @fileoverview User management service for Paperclip Hub
  * @module server/services/user-service
  *
  * This service handles all user-related operations including:

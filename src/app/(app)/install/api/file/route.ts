@@ -6,7 +6,7 @@ import { BINARY_EXTENSIONS, fileContentCache, getContentType, sanitizePath } fro
 
 // Use a more specific template directory path that only includes necessary files
 // This prevents including the entire codebase in the serverless function
-const TEMPLATE_SPECIFIC_DIR = path.join("packages", "create-shipkit-app", "templates", "minimal");
+const TEMPLATE_SPECIFIC_DIR = path.join("packages", "create-paperclip-app", "templates", "minimal");
 
 /**
  * API route to get file content from the server filesystem

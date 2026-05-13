@@ -398,7 +398,7 @@ export interface Rbac {
   createdAt: string;
 }
 /**
- * Stores details of Vercel deployments initiated via Shipkit.
+ * Stores details of Vercel deployments initiated via Paperclip Hub.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vercel-deployments".

@@ -8,9 +8,9 @@ import { type BlogPost, getBlogPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils/format-date";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Blog - Latest Updates & Guides | Shipkit",
+  title: "Blog - Latest Updates & Guides | Paperclip Hub",
   description:
-    "Stay up to date with the latest app development trends, tutorials, and best practices. Learn how to build better apps faster with Shipkit's expert guides and tips.",
+    "Stay up to date with the latest plugin development trends, tutorials, and best practices. Learn how to build better plugins faster with Paperclip Hub's expert guides and tips.",
 });
 
 // Enhanced BlogPost type with LogSpot-style fields

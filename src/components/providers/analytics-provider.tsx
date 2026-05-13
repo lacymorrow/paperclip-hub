@@ -5,13 +5,13 @@ import { WebVitals } from "@/components/primitives/web-vitals";
 import { DataFastAnalytics } from "@/lib/datafast/datafast-analytics";
 import { GoogleAnalytics } from "@/lib/google-analytics/google-analytics";
 import { GoogleTagManager } from "@/lib/google-tag-manager/google-tag-manager";
-import { ShipkitStatsigProvider } from "@/lib/statsig/statsig-provider";
+import { PaperclipStatsigProvider } from "@/lib/statsig/statsig-provider";
 import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
 
 export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <ShipkitStatsigProvider>
+      <PaperclipStatsigProvider>
         {/* Web Vitals - Above children to track page metrics */}
         <WebVitals />
 
@@ -26,7 +26,7 @@ export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
         <UmamiAnalytics />
         <DataFastAnalytics />
         <VercelAnalytics />
-      </ShipkitStatsigProvider>
+      </PaperclipStatsigProvider>
     </>
   );
 };

@@ -134,10 +134,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span>Search the library…</span>
             <span className="kbd">⌘K</span>
           </div>
-          <Link href="/sign-in" className="hc-link-muted">
-            Sign in
-          </Link>
-          <Link href="/" className="hc-btn">
+          <Link href="https://paperclip.ing" className="hc-btn">
             Get Paperclip →
           </Link>
         </div>
@@ -328,6 +325,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               verified: verifiedOnly ? undefined : "true",
             })}
             className={`hc-toggle${verifiedOnly ? " is-on" : ""}`}
+            role="button"
             aria-pressed={verifiedOnly}
           >
             <span className="sw" />

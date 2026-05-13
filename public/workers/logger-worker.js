@@ -30,7 +30,7 @@ var __awaiter =
 			step((generator = generator.apply(thisArg, _arguments || [])).next());
 		});
 	});
-const API_URL = process.env.NEXT_PUBLIC_LOGGER_URL || "https://log.bones.sh/v1";
+const API_URL = process.env.NEXT_PUBLIC_LOGGER_URL || "https://log.cliphub.fyi/v1";
 /**
  * Logger Worker
  * This worker handles logging operations in batches to reduce API calls.

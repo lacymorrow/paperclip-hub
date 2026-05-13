@@ -32,7 +32,7 @@ function StatsigProviderInner({ children }: ProviderProps) {
 }
 
 // Lightweight wrapper to conditionally render Statsig only when enabled and key present
-export function ShipkitStatsigProvider({ children }: ProviderProps) {
+export function PaperclipStatsigProvider({ children }: ProviderProps) {
   // Check conditions before rendering any hooks
   if (!env.NEXT_PUBLIC_FEATURE_STATSIG_ENABLED) {
     return <>{children}</>;

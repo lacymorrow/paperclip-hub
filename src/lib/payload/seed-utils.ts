@@ -369,7 +369,7 @@ export const seedDemoPageDirect = async (payload: Payload) => {
       blockType: "hero" as const,
       heading: "Welcome to Payload CMS Demo",
       subheading:
-        "This is a demonstration page showing the capabilities of Payload CMS in Shipkit. Payload CMS is a powerful headless CMS that allows you to create and manage content with ease.",
+        "This is a demonstration page showing the capabilities of Payload CMS in Paperclip Hub. Payload CMS is a powerful headless CMS that allows you to create and manage content with ease.",
       ctaText: "Explore Admin",
       ctaLink: "/cms",
       style: "default" as const,
@@ -418,8 +418,8 @@ You can edit this page in the Payload CMS admin panel at /cms
         title: "Payload CMS Demo",
         slug: "payload",
         meta: {
-          title: "Payload CMS Demo | Shipkit",
-          description: "A demonstration of Payload CMS capabilities in Shipkit",
+          title: "Payload CMS Demo | Paperclip Hub",
+          description: "A demonstration of Payload CMS capabilities in Paperclip Hub",
         },
         layout: [heroBlock, contentBlock, featuresBlock, testimonialsBlock],
         publishedAt: new Date().toISOString(),

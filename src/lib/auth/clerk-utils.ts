@@ -61,7 +61,7 @@ export async function getClerkUserId(): Promise<string | null> {
 }
 
 /**
- * Convert Clerk user to Shipkit user format
+ * Convert Clerk user to Paperclip Hub user format
  * This ensures compatibility with existing user interfaces
  */
 export function formatClerkUser(clerkUser: User) {

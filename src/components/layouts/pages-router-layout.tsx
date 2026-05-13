@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
+import { ThemeProvider as PaperclipThemeProvider } from "@/components/ui/shipkit/theme";
 
 /**
  * Simple layout wrapper for Pages Router pages
@@ -13,11 +13,11 @@ export const PagesRouterLayout = ({
 }) => {
   return (
     <>
-      <ShipkitThemeProvider>
+      <PaperclipThemeProvider>
         <div className="flex min-h-screen flex-col py-10">
           <main className="flex-1">{children}</main>
         </div>
-      </ShipkitThemeProvider>
+      </PaperclipThemeProvider>
     </>
   );
 };

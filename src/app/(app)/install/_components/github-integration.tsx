@@ -34,8 +34,8 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
   // Generate default values once
   const defaultValues = {
     branchName: componentName
-      ? `shipkit/add-${componentName}-${timestamp}`
-      : `shipkit/add-components-${timestamp}-${timeComponent}`,
+      ? `paperclip/add-${componentName}-${timestamp}`
+      : `paperclip/add-components-${timestamp}-${timeComponent}`,
     title: componentName ? `Add ${componentName} component` : "Add Shadcn UI components",
     description: "",
   };

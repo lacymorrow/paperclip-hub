@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       template_repo: template.name,
       name: template.name,
       private: true,
-      description: "My Shipkit instance",
+      description: "My Paperclip Hub instance",
     });
 
     return NextResponse.json({

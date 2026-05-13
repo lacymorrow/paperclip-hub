@@ -61,7 +61,7 @@ export function generateMailtoLink(options: MailtoOptions): string {
  */
 export function generateFeedbackMailto(content: string, source: string): string {
   const adminEmails = adminConfig.emails;
-  const subject = `Feedback from ${source} - Shipkit`;
+  const subject = `Feedback from ${source} - Paperclip Hub`;
 
   return generateMailtoLink({
     to: adminEmails[0], // Use first admin email as primary recipient

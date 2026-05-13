@@ -813,7 +813,7 @@ export const settings = db_schema.table("settings", {
     withTimezone: true,
     precision: 3,
   }),
-  siteTitle: varchar("site_title").default("Shipkit"),
+  siteTitle: varchar("site_title").default("Paperclip Hub"),
   siteDescription: varchar("site_description"),
   updatedAt: timestamp("updated_at", {
     mode: "string",

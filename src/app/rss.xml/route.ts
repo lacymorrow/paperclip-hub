@@ -84,7 +84,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
     <atom:link href="${selfHref}" rel="self" type="application/rss+xml" />
     <language>en-US</language>
     <ttl>60</ttl>
-    <generator>Next.js / Shipkit</generator>
+    <generator>Next.js / Paperclip Hub</generator>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>${itemsXml}
   </channel>
 </rss>`;

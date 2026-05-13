@@ -21,7 +21,7 @@ export function InstallSection() {
   const textRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
   const controls = useAnimation();
-  const installCommand = 'npx shadcn@latest add "https://cli.bones.sh"';
+  const installCommand = 'npx shadcn@latest add "https://cli.cliphub.fyi"';
 
   const selectText = () => {
     if (textRef.current) {
@@ -142,7 +142,7 @@ export function InstallSection() {
           </p>
           <p className="text-lg text-muted-foreground [&>a]:text-blue-400 [&>a]:underline [&>a]:font-medium">
             Get more components and ship even faster with{" "}
-            <Link href="https://shipkit.io">Shipkit</Link>.
+            <Link href="https://cliphub.fyi">Paperclip Hub</Link>.
           </p>
         </div>
       </div>

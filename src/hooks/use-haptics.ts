@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Web Haptics hook for ShipKit.
+ * Web Haptics hook for Paperclip Hub.
  *
  * Uses the `web-haptics` library which provides:
  * - `navigator.vibrate()` on Android/Chrome

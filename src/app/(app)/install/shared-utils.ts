@@ -10,7 +10,7 @@ import type { ContainerFile } from "./types";
 // Common constants
 export const TEMPLATE_BASE_DIR = path.join(
   "packages",
-  "create-shipkit-app",
+  "create-paperclip-app",
   "templates",
   "minimal"
 );

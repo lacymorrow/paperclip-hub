@@ -10,7 +10,7 @@ export const VercelDeployments: CollectionConfig = {
   slug: "vercel-deployments",
   admin: {
     useAsTitle: "projectName",
-    description: "Stores details of Vercel deployments initiated via Shipkit.",
+    description: "Stores details of Vercel deployments initiated via Paperclip Hub.",
     defaultColumns: ["projectName", "deploymentUrl", "repositoryUrl", "createdAt"],
     group: "Integrations", // Group under an 'Integrations' section in Payload admin UI
   },

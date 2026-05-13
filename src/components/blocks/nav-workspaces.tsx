@@ -34,17 +34,12 @@ export function NavWorkspaces({
           {workspaces.map((workspace) => (
             <Collapsible key={workspace.name}>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <span>{workspace.emoji}</span>
-                  <span>{workspace.name}</span>
-                </SidebarMenuButton>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuAction
-                    className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
-                    showOnHover
-                  >
-                    <ChevronRight />
-                  </SidebarMenuAction>
+                  <SidebarMenuButton>
+                    <span>{workspace.emoji}</span>
+                    <span>{workspace.name}</span>
+                    <ChevronRight className="ml-auto transition-transform data-[state=open]:rotate-90" />
+                  </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <SidebarMenuAction showOnHover>
                   <Plus />

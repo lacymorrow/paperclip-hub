@@ -14,7 +14,7 @@
     },
     "npmPackage": {
       "type": "string",
-      "description": "npm package name (e.g. opencode-copilot-auth or @scope/pkg).",
+      "description": "npm package name (e.g. paperclip-github or @scope/pkg).",
       "pattern": "^(@[a-z0-9-~][a-z0-9-._~]*/)?[a-z0-9-~][a-z0-9-._~]*$"
     },
     "description": {

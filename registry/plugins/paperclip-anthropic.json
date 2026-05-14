@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "Anthropic Provider",
+  "npmPackage": "paperclip-anthropic",
+  "description": "Route agent inference to Claude models via the Anthropic API. Supports prompt caching, tool use, and streaming.",
+  "category": "provider",
+  "capabilities": ["config"],
+  "sourceRepo": "https://github.com/paperclipai/paperclip",
+  "author": "paperclipai",
+  "submittedAt": "2026-05-01T00:00:00Z"
+}

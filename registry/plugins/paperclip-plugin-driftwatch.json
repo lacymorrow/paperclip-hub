@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "DriftWatch",
+  "npmPackage": "@octofloworg/paperclip-plugin-driftwatch",
+  "description": "Detect instruction drift in agent configurations. Audits agent behavior against declared policies and flags deviations.",
+  "category": "observability",
+  "capabilities": ["event", "config"],
+  "author": "lesean.johnson",
+  "submittedAt": "2026-04-29T00:00:00Z"
+}

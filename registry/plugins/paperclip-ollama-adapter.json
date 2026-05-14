@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Ollama Adapter",
+  "npmPackage": "paperclip-ollama-adapter",
+  "description": "Route agent inference to local Ollama models. Supports model selection, streaming, and tool-use with compatible models.",
+  "category": "provider",
+  "capabilities": ["config"],
+  "author": "allmightysauron",
+  "submittedAt": "2026-04-16T00:00:00Z"
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "GitHub",
+  "npmPackage": "paperclip-github-plugin",
+  "description": "GitHub integration for Paperclip agents. Create branches, open pull requests, manage issues, and sync repository events.",
+  "category": "integration",
+  "capabilities": ["tool", "event"],
+  "author": "alvarosanchez",
+  "submittedAt": "2026-04-12T00:00:00Z"
+}

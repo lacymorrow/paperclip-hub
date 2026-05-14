@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Babysitter",
+  "npmPackage": "@a5c-ai/babysitter-paperclip",
+  "description": "Orchestration layer that monitors agent runs, restarts failed tasks, and enforces timeout policies across Paperclip workflows.",
+  "category": "tools",
+  "capabilities": ["event", "config"],
+  "author": "tmuskal",
+  "submittedAt": "2026-04-18T00:00:00Z"
+}

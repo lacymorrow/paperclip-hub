@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "MCP Server",
+  "npmPackage": "@paperclipai/mcp-server",
+  "description": "Model Context Protocol server for Paperclip. Exposes agent tools and resources to any MCP-compatible client.",
+  "category": "integration",
+  "capabilities": ["tool", "config"],
+  "sourceRepo": "https://github.com/paperclipai/paperclip",
+  "author": "paperclipai",
+  "submittedAt": "2026-05-01T00:00:00Z"
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Live Analytics",
+  "npmPackage": "@agent-analytics/paperclip-live-analytics-plugin",
+  "description": "Real-time analytics dashboard for Paperclip agent activity. Tracks run metrics, success rates, and latency distributions.",
+  "category": "observability",
+  "capabilities": ["event", "config"],
+  "author": "dannyshmueli",
+  "submittedAt": "2026-04-26T00:00:00Z"
+}

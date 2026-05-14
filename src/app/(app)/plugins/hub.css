@@ -1506,9 +1506,9 @@
 
 /* ---------- Responsive collapses ---------- */
 @media (max-width: 1024px) {
-  .hub-c1 .hc-hero { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
-  .hub-c1 .hc-hero h1 { font-size: 64px; }
-  .hub-c1 .hc-poster h2 { font-size: 44px; }
+  .hub-c1 .hc-hero { grid-template-columns: 1fr; gap: 32px; padding: 36px 24px 28px; }
+  .hub-c1 .hc-hero h1 { font-size: 56px; }
+  .hub-c1 .hc-poster h2 { font-size: 40px; }
   .hub-c1 .hc-section-hd,
   .hub-c1 .hc-toolbar,
   .hub-c1 .hc-body,
@@ -1536,14 +1536,14 @@
 
 @media (max-width: 640px) {
   .hub-c1 .hc-hero h1,
-  .hub-c1 .hc-d-title h1 { font-size: 40px; }
-  .hub-c1 .hc-poster h2 { font-size: 32px; }
+  .hub-c1 .hc-d-title h1 { font-size: 36px; }
+  .hub-c1 .hc-poster h2 { font-size: 28px; }
   .hub-c1 .hc-recent-row { grid-template-columns: 1fr; }
   .hub-c1 .hc-d-meta { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .hub-c1 .hc-d-meta > div + div { border-left: 0; padding-left: 0; }
 
   .hub-c1 .hc-header { padding: 0 16px; gap: 12px; }
-  .hub-c1 .hc-hero { padding: 32px 16px 28px; gap: 28px; }
+  .hub-c1 .hc-hero { padding: 28px 16px 24px; gap: 24px; }
   .hub-c1 .hc-section-hd,
   .hub-c1 .hc-toolbar,
   .hub-c1 .hc-body,

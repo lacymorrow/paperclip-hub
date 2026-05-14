@@ -5,6 +5,7 @@
   "description": "Vector-backed long-term memory for Paperclip agents. Stores and retrieves context using semantic search powered by Vectorize.",
   "category": "memory",
   "capabilities": ["tool", "config"],
+  "sourceRepo": "https://github.com/vectorize-io/hindsight",
   "author": "nicoloboschi",
   "submittedAt": "2026-04-24T00:00:00Z"
 }

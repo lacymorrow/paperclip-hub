@@ -5,6 +5,7 @@
   "description": "Visual workflow builder for Paperclip. Design, test, and deploy agent workflows with a drag-and-drop workspace.",
   "category": "tools",
   "capabilities": ["tool", "config"],
+  "sourceRepo": "https://github.com/Vladick-Pick/paperclip-plugin-workflow-studio",
   "author": "vlbog",
   "submittedAt": "2026-04-25T00:00:00Z"
 }

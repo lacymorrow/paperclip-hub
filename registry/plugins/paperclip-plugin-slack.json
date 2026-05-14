@@ -5,6 +5,7 @@
   "description": "Slack integration for Paperclip. Send notifications, receive slash commands, and bridge channels with agent workflows.",
   "category": "integration",
   "capabilities": ["event", "tool"],
+  "sourceRepo": "https://github.com/mvanhorn/paperclip-plugin-slack",
   "author": "mvanhorn",
   "submittedAt": "2026-04-10T00:00:00Z"
 }

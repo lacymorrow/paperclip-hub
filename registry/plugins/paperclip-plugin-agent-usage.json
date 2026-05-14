@@ -5,6 +5,7 @@
   "description": "Track AI model usage, token consumption, and cost attribution across Paperclip agent runs.",
   "category": "observability",
   "capabilities": ["event", "config"],
+  "sourceRepo": "https://github.com/lacymorrow/paperclip-plugin-agent-usage",
   "author": "lacymorrow",
   "submittedAt": "2026-05-01T00:00:00Z"
 }

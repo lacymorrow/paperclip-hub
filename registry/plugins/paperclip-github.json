@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "name": "GitHub",
+  "npmPackage": "paperclip-github",
+  "description": "Connect Paperclip agents to GitHub — create branches, open pull requests, and manage issues directly from agent workflows.",
+  "category": "integration",
+  "capabilities": ["tool", "event"],
+  "sourceRepo": "https://github.com/paperclipai/paperclip",
+  "author": "paperclipai",
+  "submittedAt": "2026-05-01T00:00:00Z"
+}

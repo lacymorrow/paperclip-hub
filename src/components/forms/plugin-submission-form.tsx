@@ -168,7 +168,7 @@ export function PluginSubmissionForm({ githubUsername: initialUsername }: Plugin
             <FormItem>
               <FormLabel>npm package name</FormLabel>
               <FormControl>
-                <Input placeholder="opencode-anthropic-auth or @scope/plugin" {...field} />
+                <Input placeholder="paperclip-github or @scope/plugin" {...field} />
               </FormControl>
               <FormDescription>
                 Exact name as published on{" "}

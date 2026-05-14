@@ -5,6 +5,7 @@ import {
   ArrowDownToLine,
   Brain,
   Code,
+  Github,
   KeyRound,
   Link2,
   MessageCircle,
@@ -136,8 +137,32 @@ export const PluginCard = ({ plugin, href, dark }: PluginCardProps) => {
             <ArrowDownToLine style={{ width: "14px", height: "14px" }} />
             {formatInstalls(plugin.installs)}/wk
           </span>
-          <span className="font-mono" style={{ color: "#3A4260" }}>
-            {plugin.version !== "unknown" ? `v${plugin.version}` : plugin.npmPackage}
+          <span className="flex items-center gap-2">
+            {plugin.sourceRepo?.includes("github.com") && (
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(plugin.sourceRepo, "_blank", "noopener");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(plugin.sourceRepo, "_blank", "noopener");
+                  }
+                }}
+                className="hover:text-[#E8ECF4] transition-colors cursor-pointer"
+                title="View on GitHub"
+              >
+                <Github style={{ width: "14px", height: "14px" }} />
+              </span>
+            )}
+            <span className="font-mono" style={{ color: "#3A4260" }}>
+              {plugin.version !== "unknown" ? `v${plugin.version}` : plugin.npmPackage}
+            </span>
           </span>
         </div>
       </a>
@@ -174,8 +199,32 @@ export const PluginCard = ({ plugin, href, dark }: PluginCardProps) => {
               <ArrowDownToLine className="h-3.5 w-3.5" />
               {formatInstalls(plugin.installs)}/wk
             </span>
-            <span className="font-mono text-muted-foreground/60">
-              {plugin.version !== "unknown" ? `v${plugin.version}` : plugin.npmPackage}
+            <span className="flex items-center gap-2">
+              {plugin.sourceRepo?.includes("github.com") && (
+                <span
+                  role="link"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(plugin.sourceRepo, "_blank", "noopener");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      window.open(plugin.sourceRepo, "_blank", "noopener");
+                    }
+                  }}
+                  className="hover:text-foreground transition-colors cursor-pointer"
+                  title="View on GitHub"
+                >
+                  <Github className="h-3.5 w-3.5" />
+                </span>
+              )}
+              <span className="font-mono text-muted-foreground/60">
+                {plugin.version !== "unknown" ? `v${plugin.version}` : plugin.npmPackage}
+              </span>
             </span>
           </div>
         </CardContent>

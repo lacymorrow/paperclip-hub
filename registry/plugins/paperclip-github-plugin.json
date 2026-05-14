@@ -5,6 +5,7 @@
   "description": "GitHub integration for Paperclip agents. Create branches, open pull requests, manage issues, and sync repository events.",
   "category": "integration",
   "capabilities": ["tool", "event"],
+  "sourceRepo": "https://github.com/alvarosanchez/paperclip-github-plugin",
   "author": "alvarosanchez",
   "submittedAt": "2026-04-12T00:00:00Z"
 }

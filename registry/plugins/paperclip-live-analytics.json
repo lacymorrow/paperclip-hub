@@ -5,6 +5,7 @@
   "description": "Real-time analytics dashboard for Paperclip agent activity. Tracks run metrics, success rates, and latency distributions.",
   "category": "observability",
   "capabilities": ["event", "config"],
+  "sourceRepo": "https://github.com/Agent-Analytics/paperclip-live-analytics-plugin",
   "author": "dannyshmueli",
   "submittedAt": "2026-04-26T00:00:00Z"
 }

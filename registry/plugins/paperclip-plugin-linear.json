@@ -5,6 +5,7 @@
   "description": "Sync Paperclip issues with Linear. Two-way status updates, label mapping, and cycle tracking for agent-managed projects.",
   "category": "integration",
   "capabilities": ["tool", "event"],
+  "sourceRepo": "https://github.com/Oldharlem/paperclip-linear-plugin",
   "author": "oldharlem",
   "submittedAt": "2026-04-14T00:00:00Z"
 }

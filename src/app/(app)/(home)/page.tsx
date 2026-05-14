@@ -74,7 +74,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   }
 
   const featured = pickFeatured(allPlugins);
-  const grid = (featured ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, 8);
+  const grid = (featured && !params.q ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, 8);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
   const recent = [...allPlugins]

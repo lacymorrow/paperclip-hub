@@ -185,9 +185,9 @@
 .hub-c1 .hc-hero h1 .s {
   font-style: italic;
   color: var(--ink-2);
-  font-size: 0.78em;
+  font-size: 0.56em;
   display: block;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 .hub-c1 .hc-hero p {
   font-size: 18px;

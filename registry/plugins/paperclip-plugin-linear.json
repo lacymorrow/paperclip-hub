@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Linear",
+  "npmPackage": "@oldharlem/paperclip-plugin-linear",
+  "description": "Sync Paperclip issues with Linear. Two-way status updates, label mapping, and cycle tracking for agent-managed projects.",
+  "category": "integration",
+  "capabilities": ["tool", "event"],
+  "author": "oldharlem",
+  "submittedAt": "2026-04-14T00:00:00Z"
+}

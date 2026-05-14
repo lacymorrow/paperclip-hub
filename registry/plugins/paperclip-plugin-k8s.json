@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Kubernetes Sandbox",
+  "npmPackage": "@farhoodlabs/paperclip-plugin-k8s",
+  "description": "Run agent workloads in isolated Kubernetes pods. Supports resource limits, ephemeral volumes, and automatic cleanup.",
+  "category": "tools",
+  "capabilities": ["tool", "config"],
+  "author": "cpfarhood",
+  "submittedAt": "2026-04-28T00:00:00Z"
+}

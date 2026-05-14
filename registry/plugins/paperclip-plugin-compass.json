@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Compass",
+  "npmPackage": "paperclip-plugin-compass",
+  "description": "Consultant and navigation plugin for Paperclip agents. Adds guided decision-making and workflow routing capabilities.",
+  "category": "tools",
+  "capabilities": ["tool", "event"],
+  "author": "trickymagical2.0",
+  "submittedAt": "2026-04-20T00:00:00Z"
+}

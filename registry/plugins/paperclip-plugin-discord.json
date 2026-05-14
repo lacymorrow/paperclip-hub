@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Discord",
+  "npmPackage": "paperclip-plugin-discord",
+  "description": "Discord bot integration for Paperclip. Bridge agent workflows to Discord servers with slash commands and thread management.",
+  "category": "integration",
+  "capabilities": ["event", "tool"],
+  "author": "mvanhorn",
+  "submittedAt": "2026-04-10T00:00:00Z"
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "name": "Navigator",
+  "npmPackage": "paperclip-plugin-navigator",
+  "description": "Agent navigation and routing plugin. Helps agents discover and traverse project structures, file trees, and codebase maps.",
+  "category": "tools",
+  "capabilities": ["tool"],
+  "author": "rjvcastro",
+  "submittedAt": "2026-04-22T00:00:00Z"
+}

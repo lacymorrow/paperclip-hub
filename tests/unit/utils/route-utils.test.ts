@@ -81,12 +81,12 @@ describe("route-utils", () => {
     // Assuming the routes object from src/config/routes.ts is implicitly used
     it("should resolve a simple top-level route string", () => {
       expect(rx("home")).toBe("/");
-      expect(rx("pricing")).toBe("/pricing");
+      expect(rx("contact")).toBe("/contact");
     });
 
     it("should resolve a nested route string", () => {
       expect(rx("auth.signIn")).toBe("/sign-in");
-      expect(rx("admin.users")).toBe("/admin/users");
+      expect(rx("api.apiKeys")).toBe("/api/api-keys");
     });
 
     it("should resolve a nested route with an index property", () => {

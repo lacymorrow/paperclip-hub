@@ -56,10 +56,10 @@ describe("Blog Authors Configuration", () => {
 
   describe("getAuthorsByIds", () => {
     it("should return multiple authors by their IDs", () => {
-      const authors = getAuthorsByIds(["lacy-morrow", "shipkit-team"]);
+      const authors = getAuthorsByIds(["lacy-morrow", "paperclip-team"]);
       expect(authors).toHaveLength(2);
       expect(authors[0].id).toBe("lacy-morrow");
-      expect(authors[1].id).toBe("shipkit-team");
+      expect(authors[1].id).toBe("paperclip-team");
     });
 
     it("should return default authors for non-existent IDs", () => {
@@ -256,7 +256,7 @@ describe("Blog Authors Configuration", () => {
   describe("blogAuthors", () => {
     it("should contain expected authors", () => {
       expect(blogAuthors["lacy-morrow"]).toBeDefined();
-      expect(blogAuthors["shipkit-team"]).toBeDefined();
+      expect(blogAuthors["paperclip-team"]).toBeDefined();
     });
 
     it("should have authors with required properties", () => {

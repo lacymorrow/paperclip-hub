@@ -1,54 +1,65 @@
-# Contributing to Shipkit
+# Contributing to Paperclip Hub
 
-We love your input! We want to make contributing to Shipkit as easy and transparent as possible, whether it's:
+Thanks for your interest. Paperclip Hub is the plugin directory for [Paperclip](https://paperclip.ing) — a Next.js 15 app (App Router + TypeScript + Tailwind + Shadcn/UI), backed by Drizzle ORM on PostgreSQL with Payload CMS v3. The hub itself lives at [cliphub.fyi](https://cliphub.fyi).
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+## Quick start
 
-## We Develop with GitHub
+Prerequisites: **Bun**, **PostgreSQL** (or a hosted Postgres URL), Node 20+.
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
+```bash
+git clone https://github.com/lacymorrow/paperclip-hub.git
+cd paperclip-hub
+bun install
+cp .env.example .env   # fill in DATABASE_URL + auth providers you need
 
-## We Use [GitHub Flow](https://guides.github.com/introduction/flow/index.html)
+bun dev                # Next dev server
+bun run db:migrate     # apply migrations (after editing .env)
+```
 
-Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
+See [`CLAUDE.md`](../CLAUDE.md) for the architecture deep-dive: route groups, feature-flag system, Payload integration, plugin indexer.
 
-1. Fork the repo and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+## Reporting bugs
 
-## Any contributions you make will be under the MIT Software License
+Open an issue using the **Bug Report** template. Include the affected URL or page, exact reproduction steps, what you expected, what you saw, and (if the issue is registry-related) the plugin slug + version. Browser/OS only when the bug is visual or device-specific.
 
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
+## Proposing changes
 
-## Report bugs using GitHub's [issue tracker](https://github.com/shipkit/shipkit/issues)
+For non-trivial work — new routes, schema changes, auth/permission changes, indexer changes — open an issue first to align on the approach. Small fixes (typos, dead links, single-file bugs) can go straight to a PR.
 
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/shipkit/shipkit/issues/new/choose); it's that easy!
+## Pull requests
 
-## Write bug reports with detail, background, and sample code
+1. Branch from `main`. Use a descriptive name (`fix/plugin-detail-404`, `feat/category-filter`).
+2. One logical change per PR. Don't bundle refactors with feature work.
+3. Follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `perf:`, `test:`).
+4. Fill in the PR template — especially the test plan.
 
-**Great Bug Reports** tend to have:
+## Code style
 
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can.
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
+- **Server Components first.** Reach for `'use client'` only when you need browser-only APIs or interactivity.
+- **Server Actions for mutations**, Server Components for data fetching. Never use server actions to fetch.
+- **Services layer.** Business logic lives in `src/server/services/`; actions in `src/server/actions/` call services. Components consume actions, not services directly.
+- **Drizzle + Postgres.** Schema in `src/server/db/schema.ts`. After edits: `bun run db:generate` → `bun run db:migrate`. Prefer timestamps over booleans (`activeAt`, not `isActive`).
+- **TypeScript.** Strict; no `any` without an explanatory comment. Interfaces over types; no enums (use objects/maps).
+- **Naming.** kebab-case files, PascalCase components, camelCase variables. Named exports only — no default exports.
+- **File size.** Keep files under 500 lines.
+- **Feature flags.** Toggle features via `NEXT_PUBLIC_FEATURE_*_ENABLED` env vars. Features must degrade cleanly when disabled.
 
-## Use a Consistent Coding Style
+Run before pushing:
 
-- Use TypeScript for all code
-- Run `bun run lint:fix` to ensure consistent formatting
-- Follow the existing code style patterns
+```bash
+bun run lint:fix       # Biome + ESLint + Prettier auto-fix
+bun run typecheck      # tsc --noEmit
+bun test               # Vitest
+```
+
+## Submitting a plugin to the registry
+
+Plugins are **not** added by editing files in this repo. Publish an npm package with a valid Paperclip manifest — the nightly indexer picks it up automatically. See [Paperclip plugin docs](https://paperclip.ing/docs) for the manifest format.
+
+## Security
+
+Please **do not open public issues for security vulnerabilities**. See [SECURITY.md](SECURITY.md) for private disclosure.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its MIT License.
+By contributing, you agree that your contributions will be licensed under the project's [MIT License](../LICENSE).

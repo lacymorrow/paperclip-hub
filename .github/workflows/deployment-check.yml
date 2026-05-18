@@ -97,6 +97,17 @@ jobs:
             echo "   This may indicate Vercel infrastructure issues"
             exit 0
           fi
-          
+
+          # Pass gracefully for 401 when no bypass secret is configured:
+          # 401 means the deployment is up but Vercel Protection is enabled.
+          # Set VERCEL_AUTOMATION_BYPASS_SECRET in GitHub Actions secrets to
+          # enable authenticated checks (Vercel → Settings → Deployment Protection).
+          if [ "$STATUS" = "401" ] && [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "⚠️ Deployment returned HTTP 401 and no bypass secret is configured"
+            echo "   Deployment is healthy but Vercel Protection is enabled"
+            echo "   Add VERCEL_AUTOMATION_BYPASS_SECRET secret to enable authenticated checks"
+            exit 0
+          fi
+
           echo "💥 Deployment check FAILED — $URL returned HTTP $STATUS after 3 attempts"
           exit 1

@@ -386,6 +386,40 @@
 .hub-c1 .hc-poster-foot button:hover,
 .hub-c1 .hc-poster-cta:hover { background: var(--accent); }
 
+/* ---------- Compact search bar (active search) ---------- */
+.hub-c1 .hc-search-bar {
+  padding: 28px 48px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--bd-3);
+}
+.hub-c1 .hc-search-bar .hc-hero-search {
+  flex: 1;
+  max-width: 560px;
+}
+.hub-c1 .hc-search-count {
+  font-family: var(--hub-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .hub-c1 .hc-search-bar { padding: 20px 24px; }
+}
+@media (max-width: 640px) {
+  .hub-c1 .hc-search-bar {
+    padding: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .hub-c1 .hc-search-bar .hc-hero-search { max-width: 100%; }
+}
+
 /* ---------- Live ticker ---------- */
 .hub-c1 .hc-ticker {
   margin: 32px 48px 0;

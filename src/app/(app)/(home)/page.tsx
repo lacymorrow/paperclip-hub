@@ -74,7 +74,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   }
 
   const featured = pickFeatured(allPlugins);
-  const grid = (featured && !params.q ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, 8);
+  const isSearching = Boolean(params.q);
+  const grid = (featured && !isSearching ? results.filter((p) => p.slug !== featured.slug) : results).slice(0, isSearching ? 24 : 8);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
   const recent = [...allPlugins]
@@ -138,21 +139,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="hc-hero">
-        <div className="hc-hero-l">
-          <div className="hc-eyebrow">
-            <span className="vol">May 2026</span>
-            <span>A registry for autonomous teams.</span>
-          </div>
-          <h1>
-            Plugins for <em>autonomous</em>
-            <span className="s">teams that build with agents.</span>
-          </h1>
-          <p>
-            The Paperclip Hub is a curated directory of connectors, providers, tools and memory
-            backends — published by the community, indexed nightly, installed in one line.
-          </p>
+      {params.q ? (
+        <section className="hc-search-bar">
           <form
             action="/"
             method="get"
@@ -181,91 +169,142 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             />
             <button type="submit">Search</button>
           </form>
-          <div className="hc-hero-meta">
-            <div>
-              <b>{allPlugins.length}</b>
-              <small>plugins indexed</small>
+          <span className="hc-search-count">
+            {results.length} result{results.length !== 1 ? "s" : ""} for &ldquo;{params.q}&rdquo;
+          </span>
+        </section>
+      ) : (
+        <>
+          {/* Hero */}
+          <section className="hc-hero">
+            <div className="hc-hero-l">
+              <div className="hc-eyebrow">
+                <span className="vol">May 2026</span>
+                <span>A registry for autonomous teams.</span>
+              </div>
+              <h1>
+                Plugins for <em>autonomous</em>
+                <span className="s">teams that build with agents.</span>
+              </h1>
+              <p>
+                The Paperclip Hub is a curated directory of connectors, providers, tools and memory
+                backends — published by the community, indexed nightly, installed in one line.
+              </p>
+              <form
+                action="/"
+                method="get"
+                className="hc-hero-search"
+                aria-label="Search plugins"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--ink-2)"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <input
+                  name="q"
+                  defaultValue={params.q ?? ""}
+                  placeholder={'Try "github", "memory", "hermes"…'}
+                  aria-label="Search plugins"
+                />
+                <button type="submit">Search</button>
+              </form>
+              <div className="hc-hero-meta">
+                <div>
+                  <b>{allPlugins.length}</b>
+                  <small>plugins indexed</small>
+                </div>
+                <div>
+                  <b>{publisherCount}</b>
+                  <small>publishers</small>
+                </div>
+                <div>
+                  <b>{totalInstallsLabel}</b>
+                  <small>npm downloads / wk</small>
+                </div>
+                <div>
+                  <b>{verifiedCount}</b>
+                  <small>verified · official</small>
+                </div>
+              </div>
             </div>
-            <div>
-              <b>{publisherCount}</b>
-              <small>publishers</small>
+
+            <div className="hc-hero-r">
+              {featured && (
+                <article className="hc-poster">
+                  <div className="hc-poster-head">
+                    <span>Featured plugin</span>
+                    <span className="stamp">Top Plugin</span>
+                  </div>
+                  <div className="hc-poster-rule" />
+                  <div className="hc-poster-cat">
+                    <span className="d" />
+                    {featured.category} · by @{featured.author.name.toLowerCase()}
+                  </div>
+                  <h2>
+                    <Link href={`/plugins/${featured.slug}`}>
+                      {featured.name}.<em> Wired into Paperclip.</em>
+                    </Link>
+                  </h2>
+                  <span className="hc-poster-pkg">$ {featured.installCommand}</span>
+                  <p className="hc-poster-desc">{featured.description}</p>
+                  <div className="hc-poster-foot">
+                    <div>
+                      <b>{fmtK(featured.installs)}</b>
+                      <small>downloads / wk</small>
+                    </div>
+                    <div>
+                      <b>v{featured.version}</b>
+                      <small>{shortDate(featured.submittedAt)}</small>
+                    </div>
+                    <Link href={`/plugins/${featured.slug}`} className="hc-poster-cta">
+                      Install
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </article>
+              )}
             </div>
-            <div>
-              <b>{totalInstallsLabel}</b>
-              <small>npm downloads / wk</small>
-            </div>
-            <div>
-              <b>{verifiedCount}</b>
-              <small>verified · official</small>
-            </div>
+          </section>
+
+          {/* Ticker */}
+          <div className="hc-ticker">
+            <span>
+              <span className="star">●</span> Registry
+            </span>
+            <span className="div" />
+            <span>
+              <b>{allPlugins.length}</b> plugins indexed
+            </span>
+            <span className="div" />
+            <span>
+              <b>{publisherCount}</b> publishers
+            </span>
           </div>
-        </div>
-
-        <div className="hc-hero-r">
-          {featured && (
-            <article className="hc-poster">
-              <div className="hc-poster-head">
-                <span>Featured plugin</span>
-                <span className="stamp">Top Plugin</span>
-              </div>
-              <div className="hc-poster-rule" />
-              <div className="hc-poster-cat">
-                <span className="d" />
-                {featured.category} · by @{featured.author.name.toLowerCase()}
-              </div>
-              <h2>
-                <Link href={`/plugins/${featured.slug}`}>
-                  {featured.name}.<em> Wired into Paperclip.</em>
-                </Link>
-              </h2>
-              <span className="hc-poster-pkg">$ {featured.installCommand}</span>
-              <p className="hc-poster-desc">{featured.description}</p>
-              <div className="hc-poster-foot">
-                <div>
-                  <b>{fmtK(featured.installs)}</b>
-                  <small>downloads / wk</small>
-                </div>
-                <div>
-                  <b>v{featured.version}</b>
-                  <small>{shortDate(featured.submittedAt)}</small>
-                </div>
-                <Link href={`/plugins/${featured.slug}`} className="hc-poster-cta">
-                  Install
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-            </article>
-          )}
-        </div>
-      </section>
-
-      {/* Ticker */}
-      <div className="hc-ticker">
-        <span>
-          <span className="star">●</span> Registry
-        </span>
-        <span className="div" />
-        <span>
-          <b>{allPlugins.length}</b> plugins indexed
-        </span>
-        <span className="div" />
-        <span>
-          <b>{publisherCount}</b> publishers
-        </span>
-      </div>
+        </>
+      )}
 
       {/* Section header */}
       <div className="hc-section-hd">

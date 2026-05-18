@@ -1,6 +1,6 @@
 # Contributing to Paperclip Hub
 
-Thanks for your interest. Paperclip Hub is the plugin directory for [Paperclip](https://paperclip.ing) — a Next.js 15 app (App Router + TypeScript + Tailwind + Shadcn/UI), backed by Drizzle ORM on PostgreSQL with Payload CMS v3. The hub itself lives at [cliphub.fyi](https://cliphub.fyi).
+Thanks for your interest. Paperclip Hub is the plugin directory for [Paperclip](https://paperclip.ing) — a Next.js 16 + React 19 app (App Router + TypeScript + Tailwind + Shadcn/UI), backed by Drizzle ORM on PostgreSQL with Payload CMS v3. The hub itself lives at [cliphub.fyi](https://cliphub.fyi).
 
 ## Quick start
 

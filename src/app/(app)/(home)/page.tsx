@@ -13,15 +13,13 @@ export const metadata: Metadata = {
 };
 
 interface HomePageProps {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string; verified?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
 }
 
 const SORT_LABELS: Record<string, string> = {
   popular: "Most downloaded",
   newest: "Newest",
 };
-
-const OFFICIAL_AUTHORS = new Set(["paperclipai", "paperclip-official", "paperclip"]);
 
 function fmtK(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;
@@ -35,18 +33,14 @@ function shortDate(date: string): string {
   });
 }
 
-function isVerified(p: Plugin): boolean {
-  return OFFICIAL_AUTHORS.has(p.author.name.toLowerCase());
-}
-
 function pickFeatured(all: Plugin[]): Plugin | undefined {
   return [...all].sort((a, b) => b.installs - a.installs)[0];
 }
 
 function buildHref(
   base: string,
-  params: { q?: string; category?: string; sort?: string; verified?: string },
-  patch: Record<string, string | undefined>
+  params: { q?: string; category?: string; sort?: string },
+  patch: Record<string, string | undefined>,
 ): string {
   const merged = { ...params, ...patch };
   const qs = new URLSearchParams();
@@ -62,16 +56,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const sortKey = params.sort ?? "popular";
   const activeCategory = params.category ?? "all";
-  const verifiedOnly = params.verified === "true";
 
-  let results = filterPlugins(allPlugins, {
+  const results = filterPlugins(allPlugins, {
     search: params.q,
     category: params.category,
     sort: sortKey,
   });
-  if (verifiedOnly) {
-    results = results.filter(isVerified);
-  }
 
   const featured = pickFeatured(allPlugins);
   const isSearching = Boolean(params.q);
@@ -83,7 +73,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     .slice(0, 4);
 
   const totalInstalls = allPlugins.reduce((s, p) => s + p.installs, 0);
-  const verifiedCount = allPlugins.filter(isVerified).length;
   const publisherCount = new Set(allPlugins.map((p) => p.author.name)).size;
   const totalInstallsLabel = totalInstalls > 0 ? `${fmtK(totalInstalls)}` : "—";
 
@@ -94,7 +83,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       c.value === "all"
         ? allPlugins.length
         : allPlugins.filter((p) => p.category === c.value).length,
-  }));
+  })).filter((c) => c.key === "all" || c.count > 0);
 
   return (
     <div className="hub-c1">
@@ -110,8 +99,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <Link href="/" className="is-active">
             Browse
           </Link>
-          <Link href="/?sort=newest">Collections</Link>
-          <Link href="/?category=provider">Publishers</Link>
           <Link href="/submit">Submit</Link>
           <Link href="/docs">Docs</Link>
         </nav>
@@ -231,10 +218,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   <b>{totalInstallsLabel}</b>
                   <small>npm downloads / wk</small>
                 </div>
-                <div>
-                  <b>{verifiedCount}</b>
-                  <small>verified · official</small>
-                </div>
               </div>
             </div>
 
@@ -337,17 +320,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           ))}
         </div>
         <div className="hc-toolbar-r">
-          <Link
-            href={buildHref("/", params, {
-              verified: verifiedOnly ? undefined : "true",
-            })}
-            className={`hc-toggle${verifiedOnly ? " is-on" : ""}`}
-            role="button"
-            aria-pressed={verifiedOnly}
-          >
-            <span className="sw" />
-            Verified only
-          </Link>
           <details className="hc-sort">
             <summary>
               <small>Sort</small>
@@ -403,48 +375,44 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </div>
         ) : (
           <div className="hc-grid">
-            {grid.map((p) => {
-              const verified = isVerified(p);
-              return (
-                <Link key={p.id} href={`/plugins/${p.slug}`} className="hc-card">
-                  <div className="hc-card-cat">
-                    <span className="d" />
-                    {p.category}
-                    {verified && <span className="vfd">· verified</span>}
-                  </div>
-                  <h3>
-                    {p.name}{" "}
-                    <span className="ver">{p.version !== "unknown" ? `v${p.version}` : "—"}</span>
-                  </h3>
-                  <span className="hc-card-pkg">{p.npmPackage}</span>
-                  <p className="hc-card-desc">{p.description}</p>
-                  <div className="hc-card-foot">
-                    <div className="l">
-                      <span>
-                        <b>{fmtK(p.installs)}</b>/wk
-                      </span>
-                      <span>@{p.author.name.toLowerCase()}</span>
-                    </div>
-                    <span className="hc-btn-mock" aria-hidden>
-                      Install
-                      <svg
-                        width="11"
-                        height="11"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
+            {grid.map((p) => (
+              <Link key={p.id} href={`/plugins/${p.slug}`} className="hc-card">
+                <div className="hc-card-cat">
+                  <span className="d" />
+                  {p.category}
+                </div>
+                <h3>
+                  {p.name}{" "}
+                  <span className="ver">{p.version !== "unknown" ? `v${p.version}` : "—"}</span>
+                </h3>
+                <span className="hc-card-pkg">{p.npmPackage}</span>
+                <p className="hc-card-desc">{p.description}</p>
+                <div className="hc-card-foot">
+                  <div className="l">
+                    <span>
+                      <b>{fmtK(p.installs)}</b>/wk
                     </span>
+                    <span>@{p.author.name.toLowerCase()}</span>
                   </div>
-                </Link>
-              );
-            })}
+                  <span className="hc-btn-mock" aria-hidden>
+                    Install
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
 

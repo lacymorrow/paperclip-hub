@@ -37,7 +37,7 @@ For non-trivial work — new routes, schema changes, auth/permission changes, in
 
 - **Server Components first.** Reach for `'use client'` only when you need browser-only APIs or interactivity.
 - **Server Actions for mutations**, Server Components for data fetching. Never use server actions to fetch.
-- **Services layer.** Business logic lives in `src/server/services/`; actions in `src/server/actions/` call services. Components consume actions, not services directly.
+- **Services layer.** Business logic lives in `src/server/services/`; mutation actions in `src/server/actions/` call services. **Server Components call services directly for data fetching.** **Client Components call actions for mutations** — never reach into services from the client.
 - **Drizzle + Postgres.** Schema in `src/server/db/schema.ts`. After edits: `bun run db:generate` → `bun run db:migrate`. Prefer timestamps over booleans (`activeAt`, not `isActive`).
 - **TypeScript.** Strict; no `any` without an explanatory comment. Interfaces over types; no enums (use objects/maps).
 - **Naming.** kebab-case files, PascalCase components, camelCase variables. Named exports only — no default exports.

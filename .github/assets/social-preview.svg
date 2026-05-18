@@ -43,7 +43,7 @@
 	<!-- Tagline -->
 	<text x="444" y="354"
 		font-family="Inter" font-size="32" font-weight="500"
-		fill="#5a6478">The plugin directory for autonomous teams.</text>
+		fill="#5a6478">The plugin registry for the Paperclip agent platform.</text>
 
 	<!-- Pill: install command -->
 	<g transform="translate(440, 400)">
@@ -61,7 +61,7 @@
 	<!-- Footer left -->
 	<text x="108" y="560"
 		font-family="Inter" font-size="22" font-weight="500"
-		fill="#5a6478">Next.js 16 · Drizzle · Payload · Indexed nightly</text>
+		fill="#5a6478">Browse · Discover · Install · Indexed nightly · Community-published</text>
 
 	<!-- Footer right -->
 	<text x="1172" y="560" text-anchor="end"

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import type { Plugin } from "@/data/plugins";
 import { getPluginBySlug, getPlugins } from "@/lib/registry";
 
 import "../hub.css";
@@ -12,8 +11,6 @@ import { InstallCard } from "./install-card";
 interface PluginDetailPageProps {
   params: Promise<{ slug: string }>;
 }
-
-const OFFICIAL_AUTHORS = new Set(["paperclipai", "paperclip-official", "paperclip"]);
 
 export async function generateStaticParams() {
   const plugins = await getPlugins();
@@ -41,10 +38,6 @@ function longDate(date: string): string {
     day: "numeric",
     year: "numeric",
   });
-}
-
-function isVerified(p: Plugin): boolean {
-  return OFFICIAL_AUTHORS.has(p.author.name.toLowerCase());
 }
 
 function describeCapability(cap: string): string {
@@ -84,7 +77,6 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
 
   const cliCommand = plugin.installCommand;
   const npmCommand = `install ${plugin.npmPackage}`;
-  const verified = isVerified(plugin);
 
   const related = allPlugins
     .filter((p) => p.category === plugin.category && p.slug !== plugin.slug)
@@ -237,8 +229,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <Link href="/" className="is-active">
             Browse
           </Link>
-          <Link href="/?sort=newest">Collections</Link>
-          <Link href="/?category=provider">Publishers</Link>
           <Link href="/submit">Submit</Link>
           <Link href="/docs">Docs</Link>
         </nav>
@@ -266,7 +256,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           <div className="hc-d-cat">
             <span className="d" />
             {plugin.category}
-            {verified && <span className="vfd">· verified · official</span>}
           </div>
           <h1>{plugin.name}.</h1>
           <p className="hc-d-tag">
@@ -311,9 +300,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                   <div className="avatar">{plugin.author.name[0]?.toUpperCase()}</div>
                   <div>
                     <b>{plugin.author.name.toLowerCase()}</b>
-                    <small>
-                      {verified ? "Verified publisher · core team" : "Community publisher"}
-                    </small>
+                    <small>Community publisher</small>
                   </div>
                 </div>
                 <div className="hc-d-provenance">

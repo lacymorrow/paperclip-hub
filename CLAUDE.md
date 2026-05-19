@@ -57,7 +57,7 @@ Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/fea
 ## Architecture Overview
 
 ### Core Framework Stack
-- **Next.js 15** with App Router - Full-stack React framework
+- **Next.js 16** with App Router - Full-stack React framework
 - **TypeScript** - Type safety throughout
 - **Tailwind CSS** - Utility-first styling
 - **Shadcn/UI** - Component library built on Radix UI

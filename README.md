@@ -11,7 +11,7 @@
 
 ## What is Paperclip Hub?
 
-The Paperclip Hub is the official plugin directory for [Paperclip](https://paperclip.ing) — the agent orchestration platform for autonomous teams. Browse and install community-published plugins directly from the registry.
+The Paperclip Hub is the official plugin registry for [Paperclip](https://paperclip.ing) — the agent orchestration platform for autonomous teams. Browse and install community-published plugins directly from the registry.
 
 ### Features
 

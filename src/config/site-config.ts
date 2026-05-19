@@ -204,7 +204,7 @@ export const siteConfig: SiteConfig = {
     },
     domain: "cliphub.fyi",
     protocol: "web+paperclip",
-    githubOrg: "paperclipai",
+    githubOrg: "lacymorrow",
     githubRepo: "paperclip-hub",
     vercelProjectName: "cliphub",
     databaseName: "cliphub",
@@ -219,7 +219,7 @@ export const siteConfig: SiteConfig = {
   },
 
   social: {
-    github: "https://github.com/paperclipai",
+    github: "https://github.com/lacymorrow",
     x: "https://x.com/paperclipai",
     linkedin: "",
     instagram: "",

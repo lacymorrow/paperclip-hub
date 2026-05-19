@@ -62,7 +62,7 @@ export const blogAuthors: Record<string, BlogAuthor> = {
     bio: "The collective team behind Paperclip Hub, working to make plugin discovery faster and more enjoyable.",
     website: "https://cliphub.fyi",
     twitter: "paperclipai",
-    github: "paperclipai",
+    github: "lacymorrow",
     email: "team@cliphub.fyi",
     role: "Engineering Team",
     location: "Remote",

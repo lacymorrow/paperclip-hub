@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.1.34
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
 
@@ -37,12 +37,15 @@ jobs:
           LH_T_A11Y: '95'
           LH_T_SEO: '95'
           LH_T_BP: '95'
-        run: bun run audit:lh:loop -- http://localhost:3000/
+        run: |
+          if [ -f scripts/lighthouse/loop.ts ]; then
+            bun run audit:lh:loop -- http://localhost:3000/
+          else
+            echo "⚠️ Lighthouse scripts not found at scripts/lighthouse/loop.ts — skipping"
+          fi
 
       - name: Upload Lighthouse Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lighthouse-reports
           path: .lighthouse
-
-

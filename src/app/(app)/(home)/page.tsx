@@ -86,7 +86,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       c.value === "all"
         ? allPlugins.length
         : allPlugins.filter((p) => p.category === c.value).length,
-  })).filter((c) => c.key === "all" || c.count > 0);
+  })).filter((c) => c.key === "all" || c.count > 0 || c.key === activeCategory);
 
   return (
     <div className="hub-c1">

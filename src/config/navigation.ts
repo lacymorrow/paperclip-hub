@@ -1,5 +1,3 @@
-import { routes } from "@/config/routes";
-
 export interface NavLink {
   href: string;
   label: string;

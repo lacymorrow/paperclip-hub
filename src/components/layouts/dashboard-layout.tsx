@@ -10,7 +10,12 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     <SidebarLayout>
       <div
         className="flex min-h-svh w-full flex-col"
-        style={{ "--header-height": "4rem", "--sidebar-top": "var(--header-height)" } as React.CSSProperties}
+        style={
+          {
+            "--header-height": "4rem",
+            "--sidebar-top": "var(--header-height)",
+          } as React.CSSProperties
+        }
       >
         <Suspense fallback={<SuspenseFallback />}>
           <DashboardHeader />

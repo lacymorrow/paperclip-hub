@@ -38,7 +38,7 @@ export function isEssentialPath(
   }
 
   // Check if it's in an essential directory
-  return essentialDirs.some((dir) => normalizedPath.startsWith(dir + "/"));
+  return essentialDirs.some((dir) => normalizedPath.startsWith(`${dir}/`));
 }
 
 /**
@@ -48,7 +48,7 @@ export async function fileExists(container: any, path: string): Promise<boolean>
   try {
     await container.fs.stat(path);
     return true;
-  } catch (err) {
+  } catch (_err) {
     return false;
   }
 }
@@ -99,11 +99,11 @@ export async function takeFileSystemSnapshot(container: any): Promise<Map<string
         try {
           // Try to determine if it's a directory by attempting to read it
           try {
-            const subEntries = await container.fs.readdir(fullPath);
+            const _subEntries = await container.fs.readdir(fullPath);
             // If we get here, it's a directory
             logInfo(`Found directory: ${fullPath}`);
             await processDirectory(fullPath);
-          } catch (readError) {
+          } catch (_readError) {
             // If we can't read it as a directory, assume it's a file
             // Skip binary files based on extension
             const extension = fullPath.split(".").pop()?.toLowerCase() || "";

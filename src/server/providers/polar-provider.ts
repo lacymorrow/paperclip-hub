@@ -23,7 +23,6 @@ import {
   type OrderData,
   PaymentProviderError,
   type ProductData,
-  type ProviderConfig, // Use the standard config type
 } from "./types";
 // Removed crypto as webhook verification is expected to be handled (or needed) in processPolarWebhook
 

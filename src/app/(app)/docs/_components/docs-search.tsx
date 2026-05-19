@@ -17,10 +17,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandLoading,
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { type DocSearchResult, useDocsSearch } from "@/hooks/use-docs-search";
 import { cn } from "@/lib/utils";

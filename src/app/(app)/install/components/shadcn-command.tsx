@@ -229,7 +229,7 @@ export const ShadcnCommand = ({
         .join("\n");
 
       // Process terminal output to clean up repetitive messages
-      const processedOutput =
+      const _processedOutput =
         processTerminalOutput(formattedLogs) || "Command completed successfully";
       // setCommandOutput(processedOutput);
       setProgressMessage("Command completed successfully");

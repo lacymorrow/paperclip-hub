@@ -76,7 +76,7 @@ const toggleBodyScroll = (disable: boolean) => {
     document.body.style.top = `-${scrollY}px`;
   } else {
     // Restore the scroll position
-    const scrollY = document.body.style.top;
+    const _scrollY = document.body.style.top;
     document.body.style.position = "";
     document.body.style.width = "";
     document.body.style.top = "";
@@ -299,10 +299,8 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
   };
 
   return (
-    <>
-      <Button onClick={handleClick} variant="default" className={cn(className)}>
-        Get {siteConfig.title}
-      </Button>
-    </>
+    <Button onClick={handleClick} variant="default" className={cn(className)}>
+      Get {siteConfig.title}
+    </Button>
   );
 };

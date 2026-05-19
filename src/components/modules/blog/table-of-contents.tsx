@@ -3,7 +3,6 @@
 import { type KeyboardEvent, useCallback, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { cn } from "@/lib/utils";
-import { TOCSkeleton } from "./skeleton";
 
 interface Heading {
   id: string;
@@ -88,7 +87,7 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
   }
 
   return (
-    <aside className="blog-toc" role="complementary" aria-label="Table of contents">
+    <aside className="blog-toc" aria-label="Table of contents">
       <div className="px-4 py-3 border-b border-border">
         <h4
           className="font-medium text-sm text-muted-foreground uppercase tracking-wide"
@@ -97,10 +96,10 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
           Table of Contents
         </h4>
       </div>
-      <nav className="p-4" role="navigation" aria-labelledby="toc-heading">
-        <ul className="space-y-1" role="list">
-          {headings.map(({ id, text, level }, index) => (
-            <li key={id} role="listitem">
+      <nav className="p-4" aria-labelledby="toc-heading">
+        <ul className="space-y-1">
+          {headings.map(({ id, text, level }, _index) => (
+            <li key={id}>
               <button
                 type="button"
                 onClick={() => handleClick(id)}

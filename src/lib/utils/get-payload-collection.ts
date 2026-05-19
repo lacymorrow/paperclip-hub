@@ -24,7 +24,6 @@ export async function getPayloadCollection<T extends CollectionKey>(
   try {
     const payload = await getPayloadClient();
     if (!payload) {
-      console.debug("Payload not available, returning empty array");
       return [];
     }
 

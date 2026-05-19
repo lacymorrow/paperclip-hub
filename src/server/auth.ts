@@ -1,6 +1,4 @@
-import type { Adapter, AdapterAccount } from "@auth/core/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { eq } from "drizzle-orm";
 import type { Session } from "next-auth";
 import NextAuth from "next-auth";
 import { cache } from "react";
@@ -14,7 +12,6 @@ import { authOptions } from "@/server/auth-js/auth.config";
 import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
-import { grantGitHubAccess } from "@/server/services/github/github-service";
 import type { UserRole } from "@/types/user";
 
 /**

@@ -8,7 +8,7 @@ import ArrowRightIcon from "./_components/icons/ArrowRightIcon";
 import StopIcon from "./_components/icons/StopIcon";
 import Progress from "./_components/Progress";
 
-const IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
+const _IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
 const STICKY_SCROLL_THRESHOLD = 120;
 const EXAMPLES = [
   "Give me some tips to improve my time management skills.",
@@ -50,7 +50,7 @@ export const AISmollmWebGPU = () => {
         }
         await gpu.requestAdapter();
         setIsWebGPUAvailable(true);
-      } catch (e) {
+      } catch (_e) {
         setIsWebGPUAvailable(false);
       }
     };
@@ -286,14 +286,12 @@ export const AISmollmWebGPU = () => {
         </div>
       )}
       {status === "loading" && (
-        <>
-          <div className="w-full max-w-[500px] text-left mx-auto p-4 bottom-0 mt-auto">
-            <p className="text-center mb-1">{loadingMessage}</p>
-            {progressItems.map(({ file, progress, total }, i) => (
-              <Progress key={i} text={file} percentage={progress} total={total} />
-            ))}
-          </div>
-        </>
+        <div className="w-full max-w-[500px] text-left mx-auto p-4 bottom-0 mt-auto">
+          <p className="text-center mb-1">{loadingMessage}</p>
+          {progressItems.map(({ file, progress, total }, i) => (
+            <Progress key={i} text={file} percentage={progress} total={total} />
+          ))}
+        </div>
       )}
 
       {status === "ready" && (

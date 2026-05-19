@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import withPWA from "next-pwa";
-import { buildTimeFeatures, envIsTrue } from "../features-config";
+import { buildTimeFeatures } from "../features-config";
 
 /**
  * Applies PWA configuration to the Next.js config.

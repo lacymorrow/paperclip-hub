@@ -126,7 +126,7 @@ export function PopoverContent({ children, className, align = "start" }: Popover
 
   useKeyboardShortcut(
     ShortcutAction.CLOSE_POPOVER,
-    (event) => {
+    (_event) => {
       closePopover();
     },
     () => isOpen,
@@ -218,7 +218,6 @@ export function PopoverTextarea({ className }: PopoverTextareaProps) {
         "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-none",
         className
       )}
-      autoFocus
       value={note}
       onChange={(e) => setNote(e.target.value)}
     />

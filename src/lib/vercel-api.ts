@@ -421,7 +421,7 @@ export class VercelAPIService {
       return !projects.projects.some(
         (project: any) => project.name.toLowerCase() === name.toLowerCase()
       );
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

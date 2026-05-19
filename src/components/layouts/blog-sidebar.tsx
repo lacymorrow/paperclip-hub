@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  BookOpenIcon,
-  ClockIcon,
-  MenuIcon,
-  SearchIcon,
-  TagIcon,
-  TrendingUpIcon,
-} from "lucide-react";
+import { ClockIcon, MenuIcon, SearchIcon, TagIcon, TrendingUpIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Link } from "@/components/primitives/link";

@@ -57,7 +57,7 @@ export class MetricsService {
     };
 
     try {
-      await redis!.zadd(`${this.prefix}:${name}`, {
+      await redis?.zadd(`${this.prefix}:${name}`, {
         score: metric.timestamp,
         member: JSON.stringify(metric),
       });
@@ -96,8 +96,8 @@ export class MetricsService {
 
     try {
       const key = `${this.prefix}:counter:${name}`;
-      await redis!
-        .pipeline()
+      await redis
+        ?.pipeline()
         .incrby(key, value)
         .zadd(`${this.prefix}:${name}`, {
           score: Date.now(),
@@ -127,7 +127,7 @@ export class MetricsService {
     const { from = 0, to = Date.now(), limit } = query;
 
     try {
-      const metrics = await redis!.zrange(`${this.prefix}:${name}`, from, to, { byScore: true });
+      const metrics = await redis?.zrange(`${this.prefix}:${name}`, from, to, { byScore: true });
 
       return metrics.map((metric) => JSON.parse(String(metric)) as MetricData).slice(0, limit);
     } catch (error) {
@@ -143,7 +143,7 @@ export class MetricsService {
     if (!this.enabled) return 0;
 
     try {
-      const value = await redis!.get(`${this.prefix}:counter:${name}`);
+      const value = await redis?.get(`${this.prefix}:counter:${name}`);
       return Number(value) || 0;
     } catch (error) {
       logger.error("Failed to get counter", { name, error });
@@ -158,7 +158,7 @@ export class MetricsService {
     if (!this.enabled) return;
 
     try {
-      await redis!.del(`${this.prefix}:counter:${name}`);
+      await redis?.del(`${this.prefix}:counter:${name}`);
     } catch (error) {
       logger.error("Failed to reset counter", { name, error });
     }
@@ -173,10 +173,10 @@ export class MetricsService {
     const cutoff = Date.now() - retentionDays * 24 * 60 * 60 * 1000;
 
     try {
-      const keys = await redis!.keys(`${this.prefix}:*`);
+      const keys = await redis?.keys(`${this.prefix}:*`);
       for (const key of keys) {
         if (key.includes("counter")) continue;
-        await redis!.zremrangebyscore(key, 0, cutoff);
+        await redis?.zremrangebyscore(key, 0, cutoff);
       }
     } catch (error) {
       logger.error("Failed to cleanup metrics", { error });

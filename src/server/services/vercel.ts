@@ -1,6 +1,5 @@
 import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
-import type { VercelDeployment } from "@/payload-types"; // Assuming payload-types are generated
 
 interface DeploymentInfo {
   teamId: string | undefined;

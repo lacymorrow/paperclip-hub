@@ -157,8 +157,8 @@ export const PrivateRepoDeployButton = () => {
           Deploy Paperclip Hub
         </CardTitle>
         <CardDescription>
-          Deploy your own instance of Paperclip Hub to GitHub and Vercel. Make sure you have connected
-          both your GitHub and Vercel accounts in Settings first.
+          Deploy your own instance of Paperclip Hub to GitHub and Vercel. Make sure you have
+          connected both your GitHub and Vercel accounts in Settings first.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -294,8 +294,8 @@ export const PrivateRepoDeployButton = () => {
             <Alert>
               <Github className="h-4 w-4" />
               <AlertDescription>
-                This will create a copy of the Paperclip Hub repository ({PAPERCLIP_REPO}) in your GitHub
-                account and deploy it to Vercel.
+                This will create a copy of the Paperclip Hub repository ({PAPERCLIP_REPO}) in your
+                GitHub account and deploy it to Vercel.
               </AlertDescription>
             </Alert>
 
@@ -330,10 +330,7 @@ export const PrivateRepoDeployButton = () => {
               </Button>
               <p className="text-xs text-center text-muted-foreground">
                 Make sure you've connected your GitHub and Vercel accounts in{" "}
-                <LinkWithTransition
-                  href={routes.home}
-                  className="text-primary hover:underline"
-                >
+                <LinkWithTransition href={routes.home} className="text-primary hover:underline">
                   Settings
                 </LinkWithTransition>{" "}
                 first.

@@ -1,10 +1,9 @@
 import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
-import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
-import { payments, users } from "@/server/db/schema";
+import { payments } from "@/server/db/schema";
 import { userService } from "../services/user-service";
 import { BasePaymentProvider } from "./base-provider";
 import type { CheckoutOptions, ImportStats, OrderData, ProductData } from "./types";
@@ -327,7 +326,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
         }
 
         const productName = orderItem.product_name;
-        const variantName = orderItem.variant_name;
+        const _variantName = orderItem.variant_name;
 
         // Return just the product name since we now show variant separately
         return productName || "Unknown Product";

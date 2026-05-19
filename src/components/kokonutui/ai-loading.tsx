@@ -219,7 +219,7 @@ export default function AILoadingState({
             style={{ scrollBehavior: "smooth" }}
           >
             <div>
-              {visibleLines.map((line, index) => (
+              {visibleLines.map((line, _index) => (
                 <div
                   key={`${line.number}-${line.text}`}
                   className="flex h-[28px] items-center px-2"

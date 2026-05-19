@@ -74,7 +74,7 @@ export const CategoryTabs = ({ className, dark }: CategoryTabsProps) => {
             "px-4 py-2 rounded-full text-sm font-medium transition-all",
             active === cat.value
               ? "bg-primary text-primary-foreground shadow-sm"
-              : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground",
+              : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
           )}
         >
           {cat.label}

@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { Plugin } from "@/data/plugins";
 
 interface RegistryPlugin {
@@ -13,15 +13,21 @@ interface RegistryPlugin {
   submittedAt: string;
 }
 
-async function fetchNpmData(npmPackage: string): Promise<{ version: string; weeklyDownloads: number }> {
+async function fetchNpmData(
+  npmPackage: string
+): Promise<{ version: string; weeklyDownloads: number }> {
   try {
     const encoded = encodeURIComponent(npmPackage);
     const [regRes, dlRes] = await Promise.all([
       fetch(`https://registry.npmjs.org/${encoded}/latest`, { next: { revalidate: 3600 } }),
-      fetch(`https://api.npmjs.org/downloads/point/last-week/${encoded}`, { next: { revalidate: 3600 } }),
+      fetch(`https://api.npmjs.org/downloads/point/last-week/${encoded}`, {
+        next: { revalidate: 3600 },
+      }),
     ]);
     const version = regRes.ok ? ((await regRes.json()) as { version: string }).version : "unknown";
-    const weeklyDownloads = dlRes.ok ? ((await dlRes.json()) as { downloads: number }).downloads : 0;
+    const weeklyDownloads = dlRes.ok
+      ? ((await dlRes.json()) as { downloads: number }).downloads
+      : 0;
     return { version, weeklyDownloads };
   } catch {
     return { version: "unknown", weeklyDownloads: 0 };
@@ -69,7 +75,7 @@ export async function getPlugins(): Promise<Plugin[]> {
         installCommand: `paperclip plugin add ${rp.npmPackage}`,
         submittedAt: rp.submittedAt,
       };
-    }),
+    })
   );
 
   _cache = plugins;

@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         locale: "en_US",
       },
     });
-  } catch (error) {
+  } catch (_error) {
     return defaultMetadata;
   }
 }

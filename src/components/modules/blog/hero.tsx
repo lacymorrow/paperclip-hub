@@ -1,6 +1,4 @@
 import Image from "next/image";
-import type React from "react";
-import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link";
 import { siteConfig } from "@/config/site-config";
 import logoImage from "@/public/logo.png";
@@ -16,8 +14,8 @@ export const BlogHero = () => {
           </h1>
         </div>
         <p className="mt-4 text-base leading-7 text-muted-foreground">
-          Paperclip Hub is an open source starter template made with Next.js, React, and Tailwindcss.
-          Subscribe to our newsletter to get the latest updates or follow us on{" "}
+          Paperclip Hub is an open source starter template made with Next.js, React, and
+          Tailwindcss. Subscribe to our newsletter to get the latest updates or follow us on{" "}
           <Link
             href={siteConfig.links.x}
             className="text-primary underline hover:text-primary/70"

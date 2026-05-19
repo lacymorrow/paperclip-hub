@@ -8,8 +8,6 @@ import type {
   StripeCheckoutOptions,
   StripeCustomer,
   StripeOrder,
-  StripePaymentData,
-  StripeSubscription,
   StripeWebhookEvent,
 } from "@/types/stripe";
 

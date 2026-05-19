@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
 import { db } from "@/server/db";

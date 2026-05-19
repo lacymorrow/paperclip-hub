@@ -14,7 +14,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { GOOGLE_FONTS, type FontCategory } from "@/config/fonts";
+import { type FontCategory, GOOGLE_FONTS } from "@/config/fonts";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
@@ -73,44 +73,41 @@ export function FontSelector() {
   // Apply font globally: injects a <style> tag that forces font-family on all elements.
   // This bypasses next/font scoped class names, Tailwind utilities, and CSS variable
   // specificity issues by using !important on *, body, and common element selectors.
-  const applyFont = React.useCallback(
-    (fontFamily: string) => {
-      if (typeof window === "undefined") return;
+  const applyFont = React.useCallback((fontFamily: string) => {
+    if (typeof window === "undefined") return;
 
-      const fallback = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    const fallback = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
 
-      // Remove old font link
-      const existingLink = document.head.querySelector('link[data-font-selector="true"]');
-      if (existingLink) document.head.removeChild(existingLink);
+    // Remove old font link
+    const existingLink = document.head.querySelector('link[data-font-selector="true"]');
+    if (existingLink) document.head.removeChild(existingLink);
 
-      // Remove old override style
-      const existingStyle = document.head.querySelector('style[data-font-selector-override="true"]');
-      if (existingStyle) document.head.removeChild(existingStyle);
+    // Remove old override style
+    const existingStyle = document.head.querySelector('style[data-font-selector-override="true"]');
+    if (existingStyle) document.head.removeChild(existingStyle);
 
-      if (!fontFamily) return;
+    if (!fontFamily) return;
 
-      // Load font from Google Fonts CDN
-      const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`;
-      const link = document.createElement("link");
-      link.href = fontUrl;
-      link.rel = "stylesheet";
-      link.setAttribute("data-font-selector", "true");
-      document.head.appendChild(link);
+    // Load font from Google Fonts CDN
+    const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`;
+    const link = document.createElement("link");
+    link.href = fontUrl;
+    link.rel = "stylesheet";
+    link.setAttribute("data-font-selector", "true");
+    document.head.appendChild(link);
 
-      // Build the font-family value
-      const fontName = fontFamily.includes(" ") ? `"${fontFamily}"` : fontFamily;
-      const fontValue = `${fontName}, ${fallback}`;
+    // Build the font-family value
+    const fontName = fontFamily.includes(" ") ? `"${fontFamily}"` : fontFamily;
+    const fontValue = `${fontName}, ${fallback}`;
 
-      // Inject a <style> tag that forces the font on everything
-      const style = document.createElement("style");
-      style.setAttribute("data-font-selector-override", "true");
-      style.textContent = `
+    // Inject a <style> tag that forces the font on everything
+    const style = document.createElement("style");
+    style.setAttribute("data-font-selector-override", "true");
+    style.textContent = `
         *, *::before, *::after { font-family: ${fontValue} !important; }
       `;
-      document.head.appendChild(style);
-    },
-    []
-  );
+    document.head.appendChild(style);
+  }, []);
 
   // Register font categories from API responses
   const registerCategories = React.useCallback((fonts: FontWithCategory[]) => {
@@ -260,9 +257,7 @@ export function FontSelector() {
   const categoryBadge = (category: FontCategory | undefined) => {
     if (!category || category === "sans-serif") return null;
     const short = category === "handwriting" ? "hand" : category;
-    return (
-      <span className="ml-auto text-[10px] text-muted-foreground opacity-60">{short}</span>
-    );
+    return <span className="ml-auto text-[10px] text-muted-foreground opacity-60">{short}</span>;
   };
 
   return (

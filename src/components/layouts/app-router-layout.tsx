@@ -18,11 +18,7 @@ import { TeamProvider } from "@/components/providers/team-provider";
  *
  * Theme is provided by KitProvider's internal ThemeProvider (shared with Pages Router).
  */
-export function AppRouterLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function AppRouterLayout({ children }: { children: ReactNode }) {
   return (
     <ViewTransitions>
       {/* PageTracker - Track page views */}

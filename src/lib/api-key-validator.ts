@@ -1,4 +1,3 @@
-import { Redis } from "@upstash/redis";
 import { nanoid } from "nanoid";
 
 import { redisClient as redis } from "@/server/services/redis-service";

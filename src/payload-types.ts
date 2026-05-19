@@ -13,53 +13,53 @@
  * via the `definition` "supportedTimezones".
  */
 export type SupportedTimezones =
-  | 'Pacific/Midway'
-  | 'Pacific/Niue'
-  | 'Pacific/Honolulu'
-  | 'Pacific/Rarotonga'
-  | 'America/Anchorage'
-  | 'Pacific/Gambier'
-  | 'America/Los_Angeles'
-  | 'America/Tijuana'
-  | 'America/Denver'
-  | 'America/Phoenix'
-  | 'America/Chicago'
-  | 'America/Guatemala'
-  | 'America/New_York'
-  | 'America/Bogota'
-  | 'America/Caracas'
-  | 'America/Santiago'
-  | 'America/Buenos_Aires'
-  | 'America/Sao_Paulo'
-  | 'Atlantic/South_Georgia'
-  | 'Atlantic/Azores'
-  | 'Atlantic/Cape_Verde'
-  | 'Europe/London'
-  | 'Europe/Berlin'
-  | 'Africa/Lagos'
-  | 'Europe/Athens'
-  | 'Africa/Cairo'
-  | 'Europe/Moscow'
-  | 'Asia/Riyadh'
-  | 'Asia/Dubai'
-  | 'Asia/Baku'
-  | 'Asia/Karachi'
-  | 'Asia/Tashkent'
-  | 'Asia/Calcutta'
-  | 'Asia/Dhaka'
-  | 'Asia/Almaty'
-  | 'Asia/Jakarta'
-  | 'Asia/Bangkok'
-  | 'Asia/Shanghai'
-  | 'Asia/Singapore'
-  | 'Asia/Tokyo'
-  | 'Asia/Seoul'
-  | 'Australia/Brisbane'
-  | 'Australia/Sydney'
-  | 'Pacific/Guam'
-  | 'Pacific/Noumea'
-  | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | "Pacific/Midway"
+  | "Pacific/Niue"
+  | "Pacific/Honolulu"
+  | "Pacific/Rarotonga"
+  | "America/Anchorage"
+  | "Pacific/Gambier"
+  | "America/Los_Angeles"
+  | "America/Tijuana"
+  | "America/Denver"
+  | "America/Phoenix"
+  | "America/Chicago"
+  | "America/Guatemala"
+  | "America/New_York"
+  | "America/Bogota"
+  | "America/Caracas"
+  | "America/Santiago"
+  | "America/Buenos_Aires"
+  | "America/Sao_Paulo"
+  | "Atlantic/South_Georgia"
+  | "Atlantic/Azores"
+  | "Atlantic/Cape_Verde"
+  | "Europe/London"
+  | "Europe/Berlin"
+  | "Africa/Lagos"
+  | "Europe/Athens"
+  | "Africa/Cairo"
+  | "Europe/Moscow"
+  | "Asia/Riyadh"
+  | "Asia/Dubai"
+  | "Asia/Baku"
+  | "Asia/Karachi"
+  | "Asia/Tashkent"
+  | "Asia/Calcutta"
+  | "Asia/Dhaka"
+  | "Asia/Almaty"
+  | "Asia/Jakarta"
+  | "Asia/Bangkok"
+  | "Asia/Shanghai"
+  | "Asia/Singapore"
+  | "Asia/Tokyo"
+  | "Asia/Seoul"
+  | "Australia/Brisbane"
+  | "Australia/Sydney"
+  | "Pacific/Guam"
+  | "Pacific/Noumea"
+  | "Pacific/Auckland"
+  | "Pacific/Fiji";
 
 export interface Config {
   auth: {
@@ -74,11 +74,11 @@ export interface Config {
     features: Feature;
     testimonials: Testimonial;
     rbac: Rbac;
-    'vercel-deployments': VercelDeployment;
-    'payload-kv': PayloadKv;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
+    "vercel-deployments": VercelDeployment;
+    "payload-kv": PayloadKv;
+    "payload-locked-documents": PayloadLockedDocument;
+    "payload-preferences": PayloadPreference;
+    "payload-migrations": PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
@@ -89,11 +89,13 @@ export interface Config {
     features: FeaturesSelect<false> | FeaturesSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     rbac: RbacSelect<false> | RbacSelect<true>;
-    'vercel-deployments': VercelDeploymentsSelect<false> | VercelDeploymentsSelect<true>;
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+    "vercel-deployments": VercelDeploymentsSelect<false> | VercelDeploymentsSelect<true>;
+    "payload-kv": PayloadKvSelect<false> | PayloadKvSelect<true>;
+    "payload-locked-documents":
+      | PayloadLockedDocumentsSelect<false>
+      | PayloadLockedDocumentsSelect<true>;
+    "payload-preferences": PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    "payload-migrations": PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: number;
@@ -156,7 +158,7 @@ export interface User {
       }[]
     | null;
   password?: string | null;
-  collection: 'users';
+  collection: "users";
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -211,10 +213,10 @@ export interface Page {
         /**
          * Choose the layout style for this hero section
          */
-        style?: ('default' | 'centered' | 'split') | null;
+        style?: ("default" | "centered" | "split") | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'hero';
+        blockType: "hero";
       }
     | {
         /**
@@ -228,8 +230,8 @@ export interface Page {
               version: number;
               [k: string]: unknown;
             }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            direction: ("ltr" | "rtl") | null;
+            format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
             indent: number;
             version: number;
           };
@@ -238,14 +240,14 @@ export interface Page {
         /**
          * Choose the width of the content container
          */
-        width?: ('default' | 'wide' | 'narrow') | null;
+        width?: ("default" | "wide" | "narrow") | null;
         /**
          * Choose a background style for this section
          */
-        background?: ('none' | 'gray' | 'accent') | null;
+        background?: ("none" | "gray" | "accent") | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'content';
+        blockType: "content";
       }
     | {
         /**
@@ -259,14 +261,14 @@ export interface Page {
         /**
          * Choose how to display the features
          */
-        layout?: ('grid' | 'list' | 'carousel') | null;
+        layout?: ("grid" | "list" | "carousel") | null;
         /**
          * Number of columns in grid layout
          */
-        columns?: ('2' | '3' | '4') | null;
+        columns?: ("2" | "3" | "4") | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'features';
+        blockType: "features";
       }
     | {
         /**
@@ -280,14 +282,14 @@ export interface Page {
         /**
          * Choose how to display the testimonials
          */
-        layout?: ('grid' | 'slider' | 'single') | null;
+        layout?: ("grid" | "slider" | "single") | null;
         /**
          * Choose a background style for this section
          */
-        background?: ('none' | 'light' | 'dark') | null;
+        background?: ("none" | "light" | "dark") | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'testimonials';
+        blockType: "testimonials";
       }
   )[];
   /**
@@ -324,9 +326,9 @@ export interface Feature {
   id: number;
   name: string;
   description: string;
-  category: 'core' | 'dx' | 'backend' | 'advanced' | 'security' | 'devops' | 'support';
-  plans: ('bones' | 'brains' | 'muscles')[];
-  badge?: ('new' | 'popular' | 'pro') | null;
+  category: "core" | "dx" | "backend" | "advanced" | "security" | "devops" | "support";
+  plans: ("bones" | "brains" | "muscles")[];
+  badge?: ("new" | "popular" | "pro") | null;
   /**
    * Lucide icon name
    */
@@ -370,14 +372,14 @@ export interface Faq {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      direction: ("ltr" | "rtl") | null;
+      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
       indent: number;
       version: number;
     };
     [k: string]: unknown;
   };
-  category?: ('general' | 'technical' | 'pricing' | 'support') | null;
+  category?: ("general" | "technical" | "pricing" | "support") | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -390,9 +392,9 @@ export interface Rbac {
   id: number;
   name: string;
   description: string;
-  type: 'role' | 'permission';
-  resource?: ('team' | 'project' | 'user' | 'api_key' | 'billing' | 'settings') | null;
-  action?: ('create' | 'read' | 'update' | 'delete' | 'manage') | null;
+  type: "role" | "permission";
+  resource?: ("team" | "project" | "user" | "api_key" | "billing" | "settings") | null;
+  action?: ("create" | "read" | "update" | "delete" | "manage") | null;
   permissions?: (number | Rbac)[] | null;
   updatedAt: string;
   createdAt: string;
@@ -442,40 +444,40 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
+        relationTo: "users";
         value: number | User;
       } | null)
     | ({
-        relationTo: 'pages';
+        relationTo: "pages";
         value: number | Page;
       } | null)
     | ({
-        relationTo: 'media';
+        relationTo: "media";
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'faqs';
+        relationTo: "faqs";
         value: number | Faq;
       } | null)
     | ({
-        relationTo: 'features';
+        relationTo: "features";
         value: number | Feature;
       } | null)
     | ({
-        relationTo: 'testimonials';
+        relationTo: "testimonials";
         value: number | Testimonial;
       } | null)
     | ({
-        relationTo: 'rbac';
+        relationTo: "rbac";
         value: number | Rbac;
       } | null)
     | ({
-        relationTo: 'vercel-deployments';
+        relationTo: "vercel-deployments";
         value: number | VercelDeployment;
       } | null);
   globalSlug?: string | null;
   user: {
-    relationTo: 'users';
+    relationTo: "users";
     value: number | User;
   };
   updatedAt: string;
@@ -488,7 +490,7 @@ export interface PayloadLockedDocument {
 export interface PayloadPreference {
   id: number;
   user: {
-    relationTo: 'users';
+    relationTo: "users";
     value: number | User;
   };
   key?: string | null;
@@ -778,7 +780,7 @@ export interface CollectionsWidget {
   data?: {
     [k: string]: unknown;
   };
-  width: 'full';
+  width: "full";
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -788,7 +790,6 @@ export interface Auth {
   [k: string]: unknown;
 }
 
-
-declare module 'payload' {
+declare module "payload" {
   export interface GeneratedTypes extends Config {}
 }

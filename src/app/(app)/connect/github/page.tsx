@@ -163,10 +163,7 @@ export default function GitHubConnectPage() {
             )}
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Link
-              href={routes.home}
-              className={cn(buttonVariants({ variant: "outline" }))}
-            >
+            <Link href={routes.home} className={cn(buttonVariants({ variant: "outline" }))}>
               Back to Settings
             </Link>
           </CardFooter>

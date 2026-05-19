@@ -40,7 +40,7 @@ function pickFeatured(all: Plugin[]): Plugin | undefined {
 function buildHref(
   base: string,
   params: { q?: string; category?: string; sort?: string },
-  patch: Record<string, string | undefined>,
+  patch: Record<string, string | undefined>
 ): string {
   const merged = { ...params, ...patch };
   const qs = new URLSearchParams();
@@ -65,9 +65,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const featured = pickFeatured(allPlugins);
   const isSearching = Boolean(params.q);
-  const baseResults = featured && !isSearching
-    ? results.filter((p) => p.slug !== featured.slug)
-    : results;
+  const baseResults =
+    featured && !isSearching ? results.filter((p) => p.slug !== featured.slug) : results;
   const grid = baseResults.slice(0, isSearching ? 24 : 8);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
@@ -131,12 +130,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       {isSearching ? (
         <section className="hc-search-bar">
-          <form
-            action="/"
-            method="get"
-            className="hc-hero-search"
-            aria-label="Search plugins"
-          >
+          <form action="/" method="get" className="hc-hero-search" aria-label="Search plugins">
             <svg
               width="20"
               height="20"
@@ -180,12 +174,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 The Paperclip Hub is a curated directory of connectors, providers, tools and memory
                 backends — published by the community, indexed nightly, installed in one line.
               </p>
-              <form
-                action="/"
-                method="get"
-                className="hc-hero-search"
-                aria-label="Search plugins"
-              >
+              <form action="/" method="get" className="hc-hero-search" aria-label="Search plugins">
                 <svg
                   width="20"
                   height="20"

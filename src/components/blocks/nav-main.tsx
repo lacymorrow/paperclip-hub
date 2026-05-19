@@ -2,12 +2,7 @@
 
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import type { LucideIcon } from "lucide-react";
-import {
-  ArrowLeftFromLineIcon,
-  Settings2,
-  SquareTerminal,
-  Wrench,
-} from "lucide-react";
+import { ArrowLeftFromLineIcon, Settings2, SquareTerminal, Wrench } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";

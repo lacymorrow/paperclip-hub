@@ -4,7 +4,6 @@ import { getPayloadClient } from "@/lib/payload/payload";
 export const seedFeatures = async () => {
   const payload = await getPayloadClient();
   if (!payload) {
-    console.debug("Payload not available, skipping features seeding");
     return [];
   }
 

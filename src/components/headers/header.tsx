@@ -14,12 +14,12 @@ import { SearchMenu } from "@/components/modules/search/search-menu";
 import { UserMenu } from "@/components/modules/user/user-menu";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { PriorityNav } from "@/components/ui/priority-nav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/shipkit/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
 import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigation";
-import { PriorityNav } from "@/components/ui/priority-nav";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
@@ -145,8 +145,8 @@ export const Header: React.FC<HeaderProps> = ({
         variant === "floating" && styles.header,
         variant === "floating" && isOpaque && styles.opaque,
         variant === "floating" &&
-        isOpaque &&
-        "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
+          isOpaque &&
+          "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
         className
       )}
     >
@@ -224,17 +224,15 @@ export const Header: React.FC<HeaderProps> = ({
                     </>
                   )}
                   {isLoggedIn && (
-                    <>
-                      <Link
-                        href={routes.home}
-                        className={cn(
-                          buttonVariants({ variant: "default" }),
-                          "w-full justify-center"
-                        )}
-                      >
-                        Dashboard
-                      </Link>
-                    </>
+                    <Link
+                      href={routes.home}
+                      className={cn(
+                        buttonVariants({ variant: "default" }),
+                        "w-full justify-center"
+                      )}
+                    >
+                      Dashboard
+                    </Link>
                   )}
                 </nav>
               </SheetContent>
@@ -255,76 +253,74 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {!isLogoOnly && (
-          <>
-            <div className="flex items-center gap-2 lg:gap-4 shrink-0">
-              {/* Search */}
-              {searchVariant === "menu" && (
-                <SearchMenu
-                  buttonText={searchPlaceholder}
-                  minimal={true}
-                  buttonClassName="hidden md:flex min-w-[40px]"
-                  collapsible
-                />
-              )}
-              {searchVariant === "ai" && (
-                <SearchAi
-                  buttonText={searchPlaceholder}
-                  className="hidden md:flex min-w-[40px]"
-                  collapsible
-                />
-              )}
+          <div className="flex items-center gap-2 lg:gap-4 shrink-0">
+            {/* Search */}
+            {searchVariant === "menu" && (
+              <SearchMenu
+                buttonText={searchPlaceholder}
+                minimal={true}
+                buttonClassName="hidden md:flex min-w-[40px]"
+                collapsible
+              />
+            )}
+            {searchVariant === "ai" && (
+              <SearchAi
+                buttonText={searchPlaceholder}
+                className="hidden md:flex min-w-[40px]"
+                collapsible
+              />
+            )}
 
-              {!isLoggedIn && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
+            {!isLoggedIn && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 
-              <UserMenu user={user} />
+            <UserMenu user={user} />
 
-              {!isLoggedIn &&
-                (animatedCTAOnScroll ? (
-                  <AnimatePresence mode="wait">
-                    {scrollY > animatedCTAOnScroll ? (
-                      <motion.div
-                        key="compact"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.1 }}
-                      >
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="relative -m-1 p-1">
-                                <BuyButton />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="bottom"
-                              sideOffset={3}
-                              className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
-                            >
-                              <LoginButton className="hover:text-foreground">or Login</LoginButton>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="full"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.1 }}
-                      >
-                        <LoginButton variant="outline" nextUrl={routes.home}>
-                          Dashboard
-                        </LoginButton>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                ) : (
-                  <BuyButton />
-                ))}
-            </div>
-          </>
+            {!isLoggedIn &&
+              (animatedCTAOnScroll ? (
+                <AnimatePresence mode="wait">
+                  {scrollY > animatedCTAOnScroll ? (
+                    <motion.div
+                      key="compact"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="relative -m-1 p-1">
+                              <BuyButton />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            sideOffset={3}
+                            className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+                          >
+                            <LoginButton className="hover:text-foreground">or Login</LoginButton>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="full"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <LoginButton variant="outline" nextUrl={routes.home}>
+                        Dashboard
+                      </LoginButton>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              ) : (
+                <BuyButton />
+              ))}
+          </div>
         )}
       </nav>
     </header>

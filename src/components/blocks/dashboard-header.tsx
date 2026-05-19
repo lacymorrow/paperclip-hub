@@ -1,13 +1,12 @@
 import { DashboardHeaderHomeLink } from "@/components/blocks/dashboard-header-home-link";
 import { ProjectSwitcher } from "@/components/blocks/project-switcher";
 import { TeamSwitcher } from "@/components/blocks/team-switcher";
-import { UserMenu } from "@/components/modules/user/user-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/server/auth";
 
 export const DashboardHeader = async () => {
-  const session = await auth();
+  const _session = await auth();
 
   return (
     <header className="fixed top-0 z-30 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 function formatBytes(size) {
-  const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+  const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
   return +(size / 1024 ** i).toFixed(2) * 1 + ["B", "kB", "MB", "GB", "TB"][i];
 }
 
@@ -13,7 +13,7 @@ export default function Progress({ text, percentage, total }) {
         className="bg-blue-400 whitespace-nowrap px-1 text-sm"
         style={{ width: `${percentage}%` }}
       >
-        {text} ({percentage.toFixed(2)}%{isNaN(total) ? "" : ` of ${formatBytes(total)}`})
+        {text} ({percentage.toFixed(2)}%{Number.isNaN(total) ? "" : ` of ${formatBytes(total)}`})
       </div>
     </div>
   );

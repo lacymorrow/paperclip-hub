@@ -1,7 +1,7 @@
-import type { Buffer } from "buffer";
-import { readdir, stat } from "fs/promises";
+import type { Buffer } from "node:buffer";
+import { readdir, stat } from "node:fs/promises";
+import { join } from "node:path";
 import type { MetadataRoute } from "next";
-import { join } from "path";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
@@ -41,7 +41,7 @@ async function getContentFiles(contentDir: string): Promise<ContentFile[]> {
 // This function will be called at build time and can also be called on-demand
 export async function generateSitemaps() {
   // Count the number of blog posts and docs to determine sitemap splitting
-  const [blogFiles, docFiles] = await Promise.all([
+  const [_blogFiles, _docFiles] = await Promise.all([
     getContentFiles("blog"),
     getContentFiles("docs"),
   ]);

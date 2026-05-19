@@ -31,7 +31,7 @@ export const SearchBar = ({ className, dark, heroSize }: SearchBarProps) => {
         router.push(`/?${params.toString()}`);
       });
     },
-    [router, searchParams],
+    [router, searchParams]
   );
 
   if (dark) {

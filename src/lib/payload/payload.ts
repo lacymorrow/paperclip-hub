@@ -3,10 +3,9 @@
 import payloadConfig from "@payload-config";
 import { getPayload } from "payload";
 import { env } from "@/env";
-import { logger } from "@/lib/logger";
 
 // Flag to track if the warning has been logged
-const payloadWarningLogged = false;
+const _payloadWarningLogged = false;
 
 // Initialize Payload
 export const getPayloadClient = async () => {

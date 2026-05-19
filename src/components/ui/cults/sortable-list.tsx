@@ -40,7 +40,7 @@ function SortableListItem({
 }: SortableListItemProps) {
   const [ref, bounds] = useMeasure();
   const [isDragging, setIsDragging] = useState(false);
-  const [isDraggable, setIsDraggable] = useState(true);
+  const [isDraggable, _setIsDraggable] = useState(true);
   const dragControls = useDragControls();
 
   const handleDragStart = (event: any) => {
@@ -156,7 +156,7 @@ function SortableListItem({
               </AnimatePresence>
 
               {/* List Item Children */}
-              {renderExtra && renderExtra(item)}
+              {renderExtra?.(item)}
             </motion.div>
           </div>
           <div

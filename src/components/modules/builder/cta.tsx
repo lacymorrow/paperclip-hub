@@ -1,7 +1,6 @@
 "use client";
 
 import { Builder } from "@builder.io/react";
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 
 interface CTAButton {

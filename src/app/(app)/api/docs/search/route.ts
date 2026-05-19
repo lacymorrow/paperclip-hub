@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { openai } from "@/lib/open-ai";
+import { auth } from "@/server/auth";
 import { DocsSearchService } from "@/server/services/docs-search";
 import { ErrorService } from "@/server/services/error-service";
-import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
+import { rateLimitService } from "@/server/services/rate-limit-service";
 
 // Sanitize input to prevent prompt injection
 function sanitizeForPrompt(text: string): string {
@@ -41,24 +42,20 @@ const searchRequestSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // Extract client IP for rate limiting
-    // Try to get IP from various headers in order of reliability
-    const forwardedFor = req.headers.get("x-forwarded-for");
-    const realIp = req.headers.get("x-real-ip");
-    const cfConnectingIp = req.headers.get("cf-connecting-ip");
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
 
-    // Use the first available IP address, with fallback to a generic identifier
-    const clientIp = forwardedFor?.split(",")[0]?.trim() || realIp || cfConnectingIp || "anonymous";
+    const rateLimitKey = session.user.id;
 
-    // Apply rate limiting with custom limits for AI search
-    // More restrictive than regular search due to OpenAI API costs
     const aiSearchRateLimit = {
-      requests: 10, // 10 requests
-      duration: 60, // per minute
+      requests: 10,
+      duration: 60,
     };
 
     try {
-      await rateLimitService.checkLimit(clientIp, "ai-docs-search", aiSearchRateLimit);
+      await rateLimitService.checkLimit(rateLimitKey, "ai-docs-search", aiSearchRateLimit);
     } catch (error) {
       // If it's a rate limit error, return appropriate response
       if (ErrorService.isAppError(error) && error.code === "RATE_LIMITED") {
@@ -102,7 +99,7 @@ export async function POST(req: Request) {
     const { query, limit } = validationResult.data;
 
     // Get current rate limit status for response headers
-    const rateLimitStatus = await rateLimitService.getStatus(clientIp, "ai-docs-search");
+    const rateLimitStatus = await rateLimitService.getStatus(rateLimitKey, "ai-docs-search");
     const rateLimitHeaders = {
       "X-RateLimit-Limit": String(rateLimitStatus.limit),
       "X-RateLimit-Remaining": String(rateLimitStatus.remaining),

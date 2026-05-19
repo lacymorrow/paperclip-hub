@@ -4,7 +4,6 @@ import {
   DesktopIcon,
   ExitIcon,
   GearIcon,
-  LockClosedIcon,
   MoonIcon,
   PersonIcon,
   RocketIcon,

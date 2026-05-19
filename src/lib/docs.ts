@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
-import path from "path";
 import { cache } from "react";
 import { z } from "zod";
 
@@ -89,7 +89,7 @@ function extractTitleFromH1(content: string): string | null {
 
   // Look for the first H1 tag in the cleaned content
   const h1Match = /^#\s+(.+)$/m.exec(contentWithoutCodeBlocks);
-  if (h1Match && h1Match[1]) {
+  if (h1Match?.[1]) {
     // Clean up the title (remove extra whitespace, emoji, etc.)
     return h1Match[1]
       .trim()

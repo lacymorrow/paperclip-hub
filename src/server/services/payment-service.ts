@@ -911,7 +911,7 @@ const PaymentService = {
                   // Extract variant name separately
                   variantName = metadata.variantName || metadata.variant_name || null;
                 }
-              } catch (error) {
+              } catch (_error) {
                 // Ignore parsing errors
               }
             }

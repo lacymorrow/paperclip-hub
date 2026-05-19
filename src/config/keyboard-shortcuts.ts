@@ -1,5 +1,3 @@
-import type { HotkeyItem } from "@mantine/hooks";
-
 /**
  * Defines unique identifiers for each keyboard shortcut action.
  */

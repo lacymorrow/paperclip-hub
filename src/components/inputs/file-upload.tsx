@@ -106,7 +106,7 @@ export function FileDropzone() {
         return { success: true, file: fileWithPreview };
       }
       return { success: false, file: fileWithPreview, error: "Upload failed" };
-    } catch (error) {
+    } catch (_error) {
       clearInterval(progressIntervalRef.current[fileWithPreview.id]);
 
       setFiles((prev) =>

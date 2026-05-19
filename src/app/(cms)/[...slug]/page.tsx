@@ -1,4 +1,3 @@
-import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { getPayloadClient } from "@/lib/payload/payload";
@@ -105,7 +104,7 @@ async function getPageData(
       if (pageQuery?.docs[0]) {
         return { source: "payload", data: pageQuery.docs[0] };
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently handle errors, as in original code
     }
   }
@@ -125,7 +124,7 @@ async function getPageData(
       if (builderContent) {
         return { source: "builder", data: builderContent };
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently handle errors
     }
   }

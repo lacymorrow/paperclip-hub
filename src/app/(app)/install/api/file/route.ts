@@ -1,7 +1,7 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import path from "path";
 import { BINARY_EXTENSIONS, fileContentCache, getContentType, sanitizePath } from "../utils";
 
 // Use a more specific template directory path that only includes necessary files
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
       if (!stats.isFile()) {
         return NextResponse.json({ error: "Not a file" }, { status: 400 });
       }
-    } catch (error) {
+    } catch (_error) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 

@@ -198,7 +198,7 @@ const config = {
 
         // console.info("✅ Seeding completed and flag set");
       }
-    } catch (error) {
+    } catch (_error) {
       // console.error("❌ Error in Payload CMS onInit hook:", error);
     }
   },
@@ -268,7 +268,7 @@ async function checkIfSeedingNeeded(payload: Payload): Promise<boolean> {
 
     // No data exists or seedCompleted is false, seeding is needed
     return true;
-  } catch (error) {
+  } catch (_error) {
     // console.error("Error checking if seeding is needed:", error);
     // If there's an error, assume seeding is needed
     return true;
@@ -288,7 +288,7 @@ async function markSeedingCompleted(payload: Payload): Promise<void> {
         seedCompletedAt: new Date().toISOString(),
       },
     });
-  } catch (error) {
+  } catch (_error) {
     // console.error("Error marking seeding as completed:", error);
   }
 }

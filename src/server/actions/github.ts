@@ -2,7 +2,6 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { routes } from "@/config/routes";
 import { auth, update as updateSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
@@ -221,7 +220,7 @@ export async function verifyGitHubUsername(username: string) {
     }
 
     console.log("Calling verifyAndStoreGitHubUsername with userId:", session.user.id);
-    const success = await verifyAndStoreGitHubUsername(session.user.id, username);
+    const _success = await verifyAndStoreGitHubUsername(session.user.id, username);
     console.log("GitHub username verification successful");
 
     // Update the session directly with the new GitHub username

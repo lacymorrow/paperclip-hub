@@ -8,7 +8,7 @@ import { ShadcnCommand } from "./components/shadcn-command";
 export default function InstallPage() {
   const [containerStatus, setContainerStatus] = useState<string>("initializing");
   const [containerProgress, setContainerProgress] = useState<number>(0);
-  const [files, setFiles] = useState<{ path: string; content: string }[]>([]);
+  const [_files, setFiles] = useState<{ path: string; content: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [webContainerSupported, setWebContainerSupported] = useState(false);
   const [isCrossOriginIsolated, setIsCrossOriginIsolated] = useState(false);

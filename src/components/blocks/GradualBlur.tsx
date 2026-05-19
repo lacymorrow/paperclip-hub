@@ -69,7 +69,7 @@ const useResponsiveDimension = (responsive: any, config: any, key: string) => {
     const calc = () => {
       const w = window.innerWidth;
       let v = (config as any)[key];
-      const capitalizedKey = key && key.length > 0 ? key[0]!.toUpperCase() + key.slice(1) : key;
+      const capitalizedKey = key && key.length > 0 ? key[0]?.toUpperCase() + key.slice(1) : key;
       if (w <= 480 && (config as any)[`mobile${capitalizedKey}`])
         v = (config as any)[`mobile${capitalizedKey}`];
       else if (w <= 768 && (config as any)[`tablet${capitalizedKey}`])

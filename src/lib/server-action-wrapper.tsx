@@ -284,7 +284,7 @@ export function useServerAction<T extends any[], R>(
  */
 export function withServerActionForm<P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  options: ServerActionOptions = {}
+  _options: ServerActionOptions = {}
 ) {
   return function ServerActionFormWrapper(props: P) {
     return (

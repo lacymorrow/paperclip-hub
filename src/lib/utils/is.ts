@@ -11,7 +11,7 @@ export const isMac = (): boolean => {
       (navigator.userAgent?.toLowerCase().includes("mac") ||
         (navigator.platform?.includes("Mac") && "ontouchend" in document === false))
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -24,7 +24,7 @@ export const isIOS = (): boolean => {
       (/iPad|iPhone|iPod/.test(navigator.userAgent || "") ||
         (navigator.platform === "MacIntel" && "ontouchend" in document))
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -36,7 +36,7 @@ export const isWindows = (): boolean => {
       typeof navigator !== "undefined" &&
       (navigator.userAgent?.toLowerCase().includes("win") || navigator.platform?.includes("Win"))
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -50,7 +50,7 @@ export const isLinux = (): boolean => {
         !navigator.userAgent?.toLowerCase().includes("android")) ||
         navigator.platform?.includes("Linux"))
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -62,7 +62,7 @@ export const isAndroid = (): boolean => {
       typeof navigator !== "undefined" &&
       /android/i.test(navigator.userAgent || "")
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -77,7 +77,7 @@ export const isMobile = (): boolean => {
       ) ||
         (typeof navigator.maxTouchPoints === "number" && navigator.maxTouchPoints > 2))
     );
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };

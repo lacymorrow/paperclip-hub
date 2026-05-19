@@ -28,9 +28,9 @@ export const SignInButton = ({
   onSignOut?: () => void;
 }) => {
   const { data: session, status } = useSession();
-  const pathname = usePathname();
+  const _pathname = usePathname();
   const signInRedirectUrl = useSignInRedirectUrl();
-  const signOutRedirectUrl = useSignOutRedirectUrl();
+  const _signOutRedirectUrl = useSignOutRedirectUrl();
 
   const isAuthenticated = status === "authenticated" && session?.user;
   const isLoading = status === "loading";

@@ -83,7 +83,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
             <ScrollArea className="h-full">
               <AnimatePresence initial={false}>
                 {logs.length > 0 ? (
-                  logs.map((log, index) => (
+                  logs.map((log, _index) => (
                     <motion.div
                       key={log}
                       initial={{ opacity: 0, y: 20 }}

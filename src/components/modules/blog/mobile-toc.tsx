@@ -6,7 +6,6 @@ import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Heading } from "@/lib/utils/extract-headings";
-import { MobileTOCSkeleton } from "./skeleton";
 import { TableOfContents } from "./table-of-contents";
 
 interface MobileTocProps {

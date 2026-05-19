@@ -1,7 +1,29 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/server/auth";
+import { ErrorService } from "@/server/services/error-service";
+import { rateLimitService } from "@/server/services/rate-limit-service";
+
+const V0_PROXY_RATE_LIMIT = { requests: 20, duration: 60 };
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
+    try {
+      await rateLimitService.checkLimit(session.user.id, "v0-proxy", V0_PROXY_RATE_LIMIT);
+    } catch (error) {
+      if (ErrorService.isAppError(error) && error.code === "RATE_LIMITED") {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          { status: 429, headers: { "Retry-After": String(Math.ceil(((error.metadata?.reset as number) || 0) - Date.now() / 1000)) } }
+        );
+      }
+      throw error;
+    }
+
     const body = await request.json();
     const { componentId } = body;
 

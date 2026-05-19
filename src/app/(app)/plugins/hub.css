@@ -404,7 +404,7 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-3);
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 1024px) {

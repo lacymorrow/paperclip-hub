@@ -73,8 +73,8 @@ export default function SubmitPage() {
               lineHeight: 1.6,
             }}
           >
-            Share your plugin with the Paperclip community. We&apos;ll open a pull request to the
-            registry on your behalf.
+            Share your plugin with the Paperclip community. Fill out the form and open a pull
+            request directly on GitHub — no account required here.
           </p>
         </div>
 
@@ -106,8 +106,8 @@ export default function SubmitPage() {
               },
               {
                 num: "03",
-                title: "We open a PR",
-                desc: "A pull request is created automatically for review and merge.",
+                title: "Open a PR on GitHub",
+                desc: "We pre-fill the pull request — just click commit on GitHub.",
               },
             ].map((step) => (
               <div
@@ -215,12 +215,12 @@ export default function SubmitPage() {
           >
             You can also submit a plugin by manually opening a pull request to{" "}
             <a
-              href="https://github.com/lacymorrow/paperclip-hub"
+              href="https://github.com/paperclipai/paperclip-hub"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "var(--paper)", textDecoration: "underline" }}
             >
-              lacymorrow/paperclip-hub
+              paperclipai/paperclip-hub
             </a>
             .
           </p>

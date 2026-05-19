@@ -1,8 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ExternalLink, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { ExternalLink } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,14 +23,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import {
   CAPABILITIES,
   CATEGORIES,
   type PluginSubmissionData,
   pluginSubmissionSchema,
 } from "@/server/actions/plugin-submission.schema";
-import { submitPlugin } from "@/server/actions/plugin-submission";
+
+const REGISTRY_OWNER = "paperclipai";
+const REGISTRY_REPO = "paperclip-hub";
+const REGISTRY_BRANCH = "main";
+const REGISTRY_PLUGIN_PATH = "registry/plugins";
 
 const CATEGORY_LABELS: Record<(typeof CATEGORIES)[number], string> = {
   auth: "Auth",
@@ -57,15 +59,47 @@ const CAPABILITY_LABELS: Record<(typeof CAPABILITIES)[number], string> = {
   "tool.execute.after": "Tool After",
 };
 
-interface PluginSubmissionFormProps {
-  githubUsername?: string;
+function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
+  const safeFilename = data.npmPackage.replace(/\//g, "-");
+  const filePath = `${REGISTRY_PLUGIN_PATH}/${safeFilename}.json`;
+
+  const pluginJson = {
+    $schema: "../schema.json",
+    name: data.name,
+    npmPackage: data.npmPackage,
+    description: data.description,
+    category: data.category,
+    capabilities: data.capabilities,
+    ...(data.sourceRepo ? { sourceRepo: data.sourceRepo } : {}),
+  };
+  const fileContent = `${JSON.stringify(pluginJson, null, 2)}\n`;
+
+  const commitMessage = `feat(registry): add ${data.name} (${data.npmPackage})`;
+  const prBody = [
+    "## Plugin Submission",
+    "",
+    `**Package:** \`${data.npmPackage}\``,
+    `**Description:** ${data.description}`,
+    `**Category:** ${data.category}`,
+    `**Capabilities:** ${data.capabilities.join(", ")}`,
+    data.sourceRepo ? `**Source:** ${data.sourceRepo}` : "",
+    "",
+    "Submitted via the [Paperclip Hub](https://cliphub.fyi/submit) plugin submission form.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const params = new URLSearchParams({
+    filename: filePath,
+    value: fileContent,
+    message: commitMessage,
+    description: prBody,
+  });
+
+  return `https://github.com/${REGISTRY_OWNER}/${REGISTRY_REPO}/new/${REGISTRY_BRANCH}?${params.toString()}`;
 }
 
-export function PluginSubmissionForm({ githubUsername: initialUsername }: PluginSubmissionFormProps) {
-  const { toast } = useToast();
-  const [prUrl, setPrUrl] = useState<string | null>(null);
-  const [githubUsername, setGithubUsername] = useState(initialUsername ?? "");
-
+export function PluginSubmissionForm() {
   const form = useForm<PluginSubmissionData>({
     resolver: zodResolver(pluginSubmissionSchema),
     defaultValues: {
@@ -78,70 +112,9 @@ export function PluginSubmissionForm({ githubUsername: initialUsername }: Plugin
     },
   });
 
-  const isSubmitting = form.formState.isSubmitting;
-
-  async function onSubmit(data: PluginSubmissionData) {
-    const result = await submitPlugin(data);
-    if (result.success && result.prUrl) {
-      setPrUrl(result.prUrl);
-      form.reset();
-    } else {
-      toast({
-        title: "Submission failed",
-        description: result.error ?? "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    }
-  }
-
-  if (prUrl) {
-    return (
-      <div className="rounded-xl border bg-green-50 dark:bg-green-950/20 p-8 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-          <svg
-            className="h-6 w-6 text-green-600 dark:text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h2 className="text-xl font-bold text-green-900 dark:text-green-100">
-          Pull request opened!
-        </h2>
-        <p className="mt-2 text-sm text-green-700 dark:text-green-300">
-          Your plugin submission has been submitted for review. We&apos;ll merge it once it passes
-          review.
-        </p>
-        <a
-          href={prUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700"
-        >
-          View pull request
-          <ExternalLink className="h-4 w-4" />
-        </a>
-        <p className="mt-4 text-xs text-green-600 dark:text-green-400">
-          Submitting as{" "}
-          <a
-            href={`https://github.com/${githubUsername}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            @{githubUsername}
-          </a>
-        </p>
-        <button
-          onClick={() => setPrUrl(null)}
-          className="mt-3 text-xs text-green-600 dark:text-green-400 underline hover:no-underline"
-        >
-          Submit another plugin
-        </button>
-      </div>
-    );
+  function onSubmit(data: PluginSubmissionData) {
+    const url = buildGitHubNewFileUrl(data);
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -252,9 +225,7 @@ export function PluginSubmissionForm({ githubUsername: initialUsername }: Plugin
                             onCheckedChange={(checked) => {
                               const current = field.value ?? [];
                               field.onChange(
-                                checked
-                                  ? [...current, cap]
-                                  : current.filter((v) => v !== cap)
+                                checked ? [...current, cap] : current.filter((v) => v !== cap)
                               );
                             }}
                           />
@@ -286,31 +257,9 @@ export function PluginSubmissionForm({ githubUsername: initialUsername }: Plugin
           )}
         />
 
-        <div>
-          <label className="text-sm font-medium leading-none" htmlFor="github-username">
-            GitHub username
-          </label>
-          <Input
-            id="github-username"
-            placeholder="your-github-username"
-            value={githubUsername}
-            onChange={(e) => setGithubUsername(e.target.value)}
-            className="mt-2"
-          />
-          <p className="mt-1.5 text-[0.8rem] text-muted-foreground">
-            The PR will be attributed to this GitHub account.
-          </p>
-        </div>
-
-        <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating pull request...
-            </>
-          ) : (
-            "Submit plugin"
-          )}
+        <Button type="submit" className="w-full sm:w-auto">
+          Open pull request on GitHub
+          <ExternalLink className="ml-2 h-4 w-4" />
         </Button>
       </form>
     </Form>

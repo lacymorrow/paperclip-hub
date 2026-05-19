@@ -1,9 +1,9 @@
 "use server";
 
-import crypto from "crypto";
+import crypto from "node:crypto";
+import { promisify } from "node:util";
 import { sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { promisify } from "util";
 import { z } from "zod";
 import { db } from "@/server/db";
 import { permissions, rolePermissions, roles, users } from "@/server/db/schema";
@@ -72,7 +72,7 @@ export async function configureSetup(input: SetupInput) {
     // Test database connection
     try {
       await db?.execute(sql`SELECT 1`);
-    } catch (error) {
+    } catch (_error) {
       throw new Error("Failed to connect to database");
     }
 

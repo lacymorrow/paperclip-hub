@@ -101,7 +101,7 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const { className, ...rest } = props;
 
-  const groupElements = groups.map((element, index) => {
+  const groupElements = groups.map((element, _index) => {
     if (element.type === "group") {
       const group = element.content;
       return (
@@ -114,7 +114,7 @@ export const Footer: React.FC<FooterProps> = ({
             <h3 className="mb-2 font-semibold">{group.header.label}</h3>
           )}
           <ul className="space-y-2">
-            {group.items.map((item, itemIndex) => {
+            {group.items.map((item, _itemIndex) => {
               if (item && typeof item === "object" && "href" in item && "label" in item) {
                 return (
                   <li key={uuid()}>

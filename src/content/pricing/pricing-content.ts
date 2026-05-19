@@ -54,5 +54,3 @@ export const oneTimePlans: PricingPlan[] = [
   },
   singlePlan,
 ];
-
-

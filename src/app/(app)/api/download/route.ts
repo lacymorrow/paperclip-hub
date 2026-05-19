@@ -1,5 +1,5 @@
-import { createReadStream } from "fs";
-import { stat } from "fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
 import { type NextRequest, NextResponse } from "next/server";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";

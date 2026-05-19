@@ -15,7 +15,7 @@ export default function withBlog(nextConfig: NextConfig): NextConfig {
     if (blogFiles.some((file) => file.endsWith(".mdx") || file.endsWith(".md"))) {
       hasBlog = true;
     }
-  } catch (error) {
+  } catch (_error) {
     // If the directory doesn't exist, we can ignore the error.
   }
 

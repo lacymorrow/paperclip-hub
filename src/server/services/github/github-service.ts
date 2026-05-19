@@ -392,7 +392,7 @@ async function checkActiveDeployments(githubUsername: string): Promise<boolean> 
 /**
  * Get OAuth token scopes
  */
-async function getTokenScopes(token: string): Promise<string[]> {
+async function _getTokenScopes(token: string): Promise<string[]> {
   if (!isGitHubServiceEnabled()) {
     logger.debug("GitHub Service disabled, skipping getTokenScopes.");
     return [];

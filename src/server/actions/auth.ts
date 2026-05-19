@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { createServerAction } from "zsa";
 import { BASE_URL } from "@/config/base-url";
-import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { resend } from "@/lib/resend";

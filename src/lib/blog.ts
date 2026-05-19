@@ -1,12 +1,11 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
 import matter from "gray-matter";
-import path from "path";
 import {
   type BlogAuthor,
   convertLegacyAuthor,
   defaultAuthor,
   getAuthorById,
-  getAuthorByName,
 } from "@/config/blog-authors";
 
 export interface BlogPost {

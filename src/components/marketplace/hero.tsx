@@ -20,19 +20,44 @@ export const Hero = () => (
         </span>
       </h1>
       <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-        Discover plugins that connect your agents to the tools you already use.
-        Connectors, automations, UI extensions, and more — built by the community.
+        Discover plugins that connect your agents to the tools you already use. Connectors,
+        automations, UI extensions, and more — built by the community.
       </p>
       <Suspense fallback={<div className="h-12" />}>
         <SearchBar className="mx-auto max-w-xl" />
       </Suspense>
       <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground flex-wrap">
         <span>Popular:</span>
-        <a href="/plugins?category=auth" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Auth</a>
-        <a href="/plugins?category=memory" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Memory</a>
-        <a href="/plugins?category=observability" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Observability</a>
-        <a href="/plugins?category=tools" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Tools</a>
-        <a href="/plugins?category=integration" className="underline-offset-4 hover:underline hover:text-foreground transition-colors">Integrations</a>
+        <a
+          href="/plugins?category=auth"
+          className="underline-offset-4 hover:underline hover:text-foreground transition-colors"
+        >
+          Auth
+        </a>
+        <a
+          href="/plugins?category=memory"
+          className="underline-offset-4 hover:underline hover:text-foreground transition-colors"
+        >
+          Memory
+        </a>
+        <a
+          href="/plugins?category=observability"
+          className="underline-offset-4 hover:underline hover:text-foreground transition-colors"
+        >
+          Observability
+        </a>
+        <a
+          href="/plugins?category=tools"
+          className="underline-offset-4 hover:underline hover:text-foreground transition-colors"
+        >
+          Tools
+        </a>
+        <a
+          href="/plugins?category=integration"
+          className="underline-offset-4 hover:underline hover:text-foreground transition-colors"
+        >
+          Integrations
+        </a>
       </div>
     </div>
   </section>

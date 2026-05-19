@@ -1,7 +1,7 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { fadeInScale, hoverScale } from "./animations";

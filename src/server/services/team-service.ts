@@ -176,7 +176,7 @@ export class TeamService extends BaseService<typeof teams> {
       // Soft delete extra personal teams
       await Promise.all(
         teamsToDelete.map((team) =>
-          db!.update(teams).set({ deletedAt: new Date() }).where(eq(teams.id, team.id))
+          db?.update(teams).set({ deletedAt: new Date() }).where(eq(teams.id, team.id))
         )
       );
 
@@ -505,37 +505,6 @@ export class TeamService extends BaseService<typeof teams> {
       return this.createPersonalTeam(userId);
     }
     return personalTeam;
-  }
-
-  /**
-   * Finds a team by ID and includes its members.
-   * @param teamId - The ID of the team.
-   * @returns The team with its members or null if not found.
-   */
-  private async findByIdWithMembers(teamId: string) {
-    try {
-      if (!db) {
-        logger.warn("Database not initialized when finding team with members", { teamId });
-        return null;
-      }
-
-      return db.query.teams.findFirst({
-        where: eq(teams.id, teamId),
-        with: {
-          members: {
-            with: {
-              user: true,
-            },
-          },
-        },
-      });
-    } catch (error) {
-      logger.error("Error finding team with members", {
-        teamId,
-        error: error instanceof Error ? error.message : String(error),
-      });
-      return null;
-    }
   }
 }
 // Export a singleton instance

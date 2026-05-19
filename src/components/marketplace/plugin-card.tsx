@@ -37,12 +37,36 @@ const DARK_CATEGORY_META: Record<string, { bg: string; color: string }> = {
 };
 
 const DARK_BADGE_STYLES: Record<string, { background: string; color: string; border: string }> = {
-  auth: { background: "rgba(99,102,241,0.12)", color: "#818CF8", border: "1px solid rgba(99,102,241,0.2)" },
-  provider: { background: "rgba(236,72,153,0.12)", color: "#F472B6", border: "1px solid rgba(236,72,153,0.2)" },
-  tools: { background: "rgba(245,158,11,0.12)", color: "#FBBF24", border: "1px solid rgba(245,158,11,0.2)" },
-  integration: { background: "rgba(16,185,129,0.12)", color: "#34D399", border: "1px solid rgba(16,185,129,0.2)" },
-  observability: { background: "rgba(244,63,94,0.12)", color: "#FB7185", border: "1px solid rgba(244,63,94,0.2)" },
-  memory: { background: "rgba(6,182,212,0.12)", color: "#22D3EE", border: "1px solid rgba(6,182,212,0.2)" },
+  auth: {
+    background: "rgba(99,102,241,0.12)",
+    color: "#818CF8",
+    border: "1px solid rgba(99,102,241,0.2)",
+  },
+  provider: {
+    background: "rgba(236,72,153,0.12)",
+    color: "#F472B6",
+    border: "1px solid rgba(236,72,153,0.2)",
+  },
+  tools: {
+    background: "rgba(245,158,11,0.12)",
+    color: "#FBBF24",
+    border: "1px solid rgba(245,158,11,0.2)",
+  },
+  integration: {
+    background: "rgba(16,185,129,0.12)",
+    color: "#34D399",
+    border: "1px solid rgba(16,185,129,0.2)",
+  },
+  observability: {
+    background: "rgba(244,63,94,0.12)",
+    color: "#FB7185",
+    border: "1px solid rgba(244,63,94,0.2)",
+  },
+  memory: {
+    background: "rgba(6,182,212,0.12)",
+    color: "#22D3EE",
+    border: "1px solid rgba(6,182,212,0.2)",
+  },
 };
 
 function formatInstalls(n: number): string {
@@ -84,8 +108,7 @@ export const PluginCard = ({ plugin, href, dark }: PluginCardProps) => {
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl"
           style={{
-            background:
-              "linear-gradient(135deg, rgba(124,107,255,0.05) 0%, transparent 50%)",
+            background: "linear-gradient(135deg, rgba(124,107,255,0.05) 0%, transparent 50%)",
           }}
           aria-hidden="true"
         />
@@ -191,9 +214,7 @@ export const PluginCard = ({ plugin, href, dark }: PluginCardProps) => {
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-            {plugin.description}
-          </p>
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{plugin.description}</p>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <ArrowDownToLine className="h-3.5 w-3.5" />

@@ -8,7 +8,7 @@
  *   build-time configuration to inject values via Next.js `env`.
  */
 
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { BASE_URL } from "./base-url";
 
 export function getMasterAppSecret(): string {

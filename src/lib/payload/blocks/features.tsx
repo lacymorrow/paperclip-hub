@@ -70,7 +70,7 @@ export const FeaturesBlock: Block = {
       ],
       admin: {
         description: "Number of columns in grid layout",
-        condition: (data, siblingData) => siblingData?.layout === "grid",
+        condition: (_data, siblingData) => siblingData?.layout === "grid",
       },
     },
   ],

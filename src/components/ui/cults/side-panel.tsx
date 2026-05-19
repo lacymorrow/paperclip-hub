@@ -33,7 +33,7 @@ const sectionVariants = {
 const sharedTransition = { duration: 0.6, ease: "easeInOut" };
 
 export const SidePanel = forwardRef<HTMLDivElement, PanelContainerProps>(
-  ({ panelOpen, handlePanelOpen, className, renderButton, children }, ref) => {
+  ({ panelOpen, handlePanelOpen, className, renderButton, children }, _ref) => {
     const [measureRef, bounds] = useMeasure();
 
     return (
@@ -65,7 +65,7 @@ export const SidePanel = forwardRef<HTMLDivElement, PanelContainerProps>(
                       panelOpen ? "pr-3" : ""
                     )}
                   >
-                    {renderButton && renderButton(handlePanelOpen)}
+                    {renderButton?.(handlePanelOpen)}
                   </div>
 
                   {panelOpen && (

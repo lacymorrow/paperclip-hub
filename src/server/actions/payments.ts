@@ -30,15 +30,12 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { rateLimits } from "@/config/rate-limits";
-import { routes } from "@/config/routes";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { redirect } from "@/lib/utils/redirect";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
 import { getSession, requireAdmin } from "@/server/lib/auth";
 import { getProvider } from "@/server/providers";
-import { isAdmin } from "@/server/services/admin-service";
 import { PaymentService } from "@/server/services/payment-service";
 import { RateLimitService } from "@/server/services/rate-limit-service";
 import type { ImportProvider, ImportStats } from "@/types/payments";
@@ -484,7 +481,7 @@ export async function refreshAllPayments(): Promise<{
   }
 }
 
-export async function createPayment(data: {
+export async function createPayment(_data: {
   provider: "stripe" | "lemonsqueezy" | "polar";
   email?: string;
   productId?: string;
@@ -493,7 +490,7 @@ export async function createPayment(data: {
   amount?: number;
 }): Promise<{ success: boolean; error?: string; url?: string }> {
   try {
-    const session = await getSession();
+    const _session = await getSession();
     // TODO: Implement the rest of the function
     return { success: false, error: "Not implemented" };
   } catch (error) {

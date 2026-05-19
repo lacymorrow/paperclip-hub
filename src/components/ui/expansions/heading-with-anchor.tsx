@@ -84,27 +84,25 @@ const BaseHeading = ({
 }: BaseHeadingProps) => {
   const Comp = asChild ? SlotPrimitive.Slot : variant;
   return (
-    <>
-      <Comp
-        id={anchor}
-        {...props}
-        className={cn(
-          anchor && "flex scroll-m-20 items-center gap-1", // modify `scroll-m-20` according to your header height.
-          anchorAlignment === "spaced" && "justify-between",
-          anchorVisibility === "hover" && "group",
-          headingVariants({ variant, className })
-        )}
-      >
-        {children}
-        {anchor && (
-          <Anchor
-            anchor={anchor}
-            anchorVisibility={anchorVisibility}
-            disableCopyToClipboard={disableCopyToClipboard}
-          />
-        )}
-      </Comp>
-    </>
+    <Comp
+      id={anchor}
+      {...props}
+      className={cn(
+        anchor && "flex scroll-m-20 items-center gap-1", // modify `scroll-m-20` according to your header height.
+        anchorAlignment === "spaced" && "justify-between",
+        anchorVisibility === "hover" && "group",
+        headingVariants({ variant, className })
+      )}
+    >
+      {children}
+      {anchor && (
+        <Anchor
+          anchor={anchor}
+          anchorVisibility={anchorVisibility}
+          disableCopyToClipboard={disableCopyToClipboard}
+        />
+      )}
+    </Comp>
   );
 };
 

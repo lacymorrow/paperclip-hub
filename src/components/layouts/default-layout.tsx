@@ -34,7 +34,6 @@ export const DefaultLayout = async ({
           {resolvedSlots.map(([key, slot]) => (
             <React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
           ))}
-
         </AppRouterLayout>
 
         {/* Add FontSelector only in development */}

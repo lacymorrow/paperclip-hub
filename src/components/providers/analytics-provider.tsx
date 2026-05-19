@@ -10,23 +10,21 @@ import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
 
 export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
   return (
-    <>
-      <PaperclipStatsigProvider>
-        {/* Web Vitals - Above children to track page metrics */}
-        <WebVitals />
+    <PaperclipStatsigProvider>
+      {/* Web Vitals - Above children to track page metrics */}
+      <WebVitals />
 
-        {children}
+      {children}
 
-        {/* Metrics - Below children to avoid blocking */}
-        <SpeedInsights />
+      {/* Metrics - Below children to avoid blocking */}
+      <SpeedInsights />
 
-        {/* Analytics */}
-        <GoogleAnalytics />
-        <GoogleTagManager />
-        <UmamiAnalytics />
-        <DataFastAnalytics />
-        <VercelAnalytics />
-      </PaperclipStatsigProvider>
-    </>
+      {/* Analytics */}
+      <GoogleAnalytics />
+      <GoogleTagManager />
+      <UmamiAnalytics />
+      <DataFastAnalytics />
+      <VercelAnalytics />
+    </PaperclipStatsigProvider>
   );
 };

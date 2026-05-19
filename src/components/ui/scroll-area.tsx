@@ -101,7 +101,6 @@ const ScrollArea = React.forwardRef<
               ref={viewportRef}
               data-slot="scroll-area-viewport"
               className={cn("size-full overflow-auto rounded-[inherit]", viewportClassName)}
-              tabIndex={0}
             >
               {children}
             </div>

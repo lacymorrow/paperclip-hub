@@ -1,10 +1,10 @@
 import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
-import type { LogData, LogLevel } from "../types/logger";
+import type { LogLevel } from "../types/logger";
 import pc from "./utils/pico-colors";
 
 const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
-const isServer = typeof window === "undefined";
+const _isServer = typeof window === "undefined";
 
 const _createLogger =
   (level: LogLevel) =>
@@ -89,15 +89,13 @@ function prefixedLog(prefixType: PrefixType, ...message: unknown[]) {
     message.shift();
   }
 
-  const consoleMethod: LoggingMethod =
+  const _consoleMethod: LoggingMethod =
     prefixType in LOGGING_METHOD ? LOGGING_METHOD[prefixType] : "info";
 
-  const prefix = prefixes[prefixType];
+  const _prefix = prefixes[prefixType];
   // If there's no message, don't print the prefix but a new line
   if (message.length === 0) {
-    console[consoleMethod]("");
   } else {
-    console[consoleMethod](` ${prefix}`, ...message);
   }
 }
 
@@ -143,5 +141,5 @@ export function panic(...message: unknown[]) {
   error(...message);
   // process.exit(1) is not supported in Edge Runtime
   // Throwing an error instead to halt execution
-  throw new Error("Panic: " + message.join(" "));
+  throw new Error(`Panic: ${message.join(" ")}`);
 }

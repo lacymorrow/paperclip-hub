@@ -235,24 +235,20 @@ export const UserMenu = ({
             </Avatar>
           </Button>
         </UserMenuDropdown>
-      ) : (
-        <>
-          {pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
-            <Link
-              href={signInRedirectUrl}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "rounded-full cursor-pointer"
-              )}
-            >
-              <UserIcon className="size-6" />
-            </Link>
-          ) : (
-            <Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
-              <UserIcon className="size-6" />
-            </Button>
+      ) : pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
+        <Link
+          href={signInRedirectUrl}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "icon" }),
+            "rounded-full cursor-pointer"
           )}
-        </>
+        >
+          <UserIcon className="size-6" />
+        </Link>
+      ) : (
+        <Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
+          <UserIcon className="size-6" />
+        </Button>
       )}
     </div>
   );

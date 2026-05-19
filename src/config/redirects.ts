@@ -41,7 +41,10 @@ export const redirects = async (): Promise<Redirect[]> => {
   return [
     ...createRedirects(["/plugins"], "/", true),
     ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
-    ...createRedirects(["/join", "/signup", "/sign-up", "/sign-in", "/login", "/log-in", "/signin"], routes.home),
+    ...createRedirects(
+      ["/join", "/signup", "/sign-up", "/sign-in", "/login", "/log-in", "/signin"],
+      routes.home
+    ),
     ...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
   ];
 };

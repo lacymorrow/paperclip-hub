@@ -116,7 +116,7 @@ export class ContainerManager {
 
       // Process template files for initial file system setup
       const templateFiles = await processTemplateFiles(this.templateBaseDir);
-      const templateFileSystem = new Map(templateFiles.map((file) => [file.path, file.content]));
+      const _templateFileSystem = new Map(templateFiles.map((file) => [file.path, file.content]));
 
       // Boot the WebContainer instance
       this.container = await WebContainer.boot();
@@ -249,14 +249,6 @@ export class ContainerManager {
     await this.container.fs.writeFile(path, content);
   }
 
-  // Make sure components.json exists at the root
-  private async ensureComponentsJsonExists(): Promise<void> {
-    // Import the shared utility function
-    const { ensureComponentsJsonExists } = await import("./shared-utils");
-    // Use the shared implementation
-    await ensureComponentsJsonExists(this.container, (path) => this.readTemplateFile(path));
-  }
-
   private async readTemplateFile(filePath: string): Promise<string | Uint8Array | null> {
     try {
       // In the browser environment, we need to fetch the file
@@ -326,7 +318,7 @@ export class ContainerManager {
           try {
             await this.container.fs.mkdir(directoryPath, { recursive: true });
             logInfo(`Created directory ${directoryPath} in container`);
-          } catch (err) {
+          } catch (_err) {
             // Directory may already exist
             logInfo(`Note: Directory ${directoryPath} may already exist in container`);
           }
@@ -436,7 +428,7 @@ export class ContainerManager {
               if (dirPath) {
                 try {
                   await this.container.fs.mkdir(dirPath, { recursive: true });
-                } catch (err) {
+                } catch (_err) {
                   // Ignore if directory already exists
                   logInfo(`Note: Directory ${dirPath} may already exist`);
                 }
@@ -799,7 +791,7 @@ export class ContainerManager {
         ]);
 
         logInfo(`${description} exit code: ${exitCode}`);
-      } catch (e) {
+      } catch (_e) {
         // If we can't get the exit code but have completion indicators, that's fine
         if (isComplete) {
           logInfo(
@@ -815,251 +807,6 @@ export class ContainerManager {
         `${description} failed: ${error instanceof Error ? error.message : String(error)}`
       );
     }
-  }
-
-  // Process all files from the shadcn template
-  private async processTemplateFiles(projectStructure: string): Promise<ContainerFile[]> {
-    const files: ContainerFile[] = [];
-    const processedPaths = new Set<string>();
-
-    logInfo(`Processing template files for '${projectStructure}' structure`);
-
-    // First, let's get the most important configuration files
-    const configFiles = [
-      "components.json",
-      "tailwind.config.js",
-      "tailwind.config.ts",
-      "next.config.js",
-      "next.config.ts",
-      "tsconfig.json",
-      "globals.css", // Look for this in various locations
-      "global.css", // Alternative naming
-      "package.json", // Get updated package.json
-    ];
-
-    // Check root directory first
-    for (const file of configFiles) {
-      try {
-        const content = await this.container.fs.readFile(file, "utf-8");
-        logInfo(`Found config file ${file}:`, `${content.substring(0, 100)}...`);
-        files.push({
-          path: file,
-          content: content,
-        });
-      } catch (err) {
-        // Try different locations for CSS files
-        if (file.endsWith(".css")) {
-          const possibleCssPaths = [
-            "app/globals.css",
-            "src/app/globals.css",
-            `styles/${file}`,
-            `src/styles/${file}`,
-            `app/styles/${file}`,
-            `src/app/styles/${file}`,
-          ];
-
-          for (const cssPath of possibleCssPaths) {
-            try {
-              const content = await this.container.fs.readFile(cssPath, "utf-8");
-              logInfo(`Found CSS file at ${cssPath}:`, `${content.substring(0, 100)}...`);
-              files.push({
-                path: cssPath,
-                content: content,
-              });
-              break; // Found one, stop looking
-            } catch {
-              // Continue trying other paths
-            }
-          }
-        }
-      }
-    }
-
-    // Common directory paths to check for theme files
-    const themeFilePaths = [
-      "components/ui/theme.ts",
-      "components/ui/theme.js",
-      "src/components/ui/theme.ts",
-      "src/components/ui/theme.js",
-      "lib/theme.ts",
-      "lib/theme.js",
-      "src/lib/theme.ts",
-      "src/lib/theme.js",
-      "styles/theme.ts",
-      "styles/theme.js",
-      "src/styles/theme.ts",
-      "src/styles/theme.js",
-    ];
-
-    // Check for theme configuration files
-    for (const themePath of themeFilePaths) {
-      try {
-        const content = await this.container.fs.readFile(themePath, "utf-8");
-        logInfo(`Found theme file at ${themePath}:`, `${content.substring(0, 100)}...`);
-        files.push({
-          path: themePath,
-          content: content,
-        });
-      } catch {
-        // Continue trying other paths
-      }
-    }
-
-    // Now look for all component files
-    const componentPaths = [
-      "components",
-      "src/components",
-      "app/components",
-      "src/app/components",
-      "ui",
-      "src/ui",
-      "app/ui",
-      "src/app/ui",
-      "lib",
-      "src/lib",
-      "app/lib",
-      "src/app/lib",
-    ];
-
-    // Start recursive file processing
-    logInfo("Starting recursive file processing");
-
-    // Helper function to recursively process files
-    const processDirectory = async (dirPath: string) => {
-      try {
-        // Skip if already processed
-        if (processedPaths.has(dirPath)) {
-          return;
-        }
-        processedPaths.add(dirPath);
-
-        logInfo(`Processing directory: ${dirPath}`);
-        const entries = await this.container.fs.readdir(dirPath, { recursive: false });
-        logInfo(`Found ${entries.length} items in ${dirPath}`);
-
-        for (const entry of entries) {
-          // Skip if entry is null or undefined
-          if (!entry?.name) {
-            logInfo(`Skipping invalid entry in ${dirPath}`);
-            continue;
-          }
-
-          const fullPath = `${dirPath}/${entry.name}`;
-
-          if (processedPaths.has(fullPath)) {
-            logInfo(`Skipping already processed path: ${fullPath}`);
-            continue;
-          }
-
-          processedPaths.add(fullPath);
-
-          try {
-            // Try to get file stats
-            const stats = await this.container.fs.stat(fullPath);
-            const isDirectory = stats.isDirectory();
-
-            if (isDirectory) {
-              // Process subdirectory recursively
-              await processDirectory(fullPath);
-            } else {
-              // Read file content
-              try {
-                const content = await this.container.fs.readFile(fullPath, "utf-8");
-
-                // Create target path based on project structure
-                let targetPath = fullPath;
-
-                // If the path needs adjustment based on project structure
-                if (fullPath.startsWith("app/") && projectStructure === "src/app") {
-                  targetPath = `src/${fullPath}`;
-                  logInfo(`Adjusting path from ${fullPath} to ${targetPath} for src/app structure`);
-                } else if (fullPath.startsWith("src/app/") && projectStructure === "app") {
-                  targetPath = fullPath.substring(4); // Remove "src/"
-                  logInfo(`Adjusting path from ${fullPath} to ${targetPath} for app structure`);
-                }
-
-                logInfo(`Adding file: ${targetPath} (${content.length} bytes)`);
-                files.push({
-                  path: targetPath,
-                  content: content,
-                });
-              } catch (readErr) {
-                logInfo(
-                  `Error reading file ${fullPath}:`,
-                  readErr instanceof Error ? readErr.message : String(readErr)
-                );
-              }
-            }
-          } catch (statErr) {
-            logInfo(
-              `Error getting stats for ${fullPath}:`,
-              statErr instanceof Error ? statErr.message : String(statErr)
-            );
-          }
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        logInfo(`Error processing directory ${dirPath}:`, errorMessage);
-        // Don't throw an error for missing directories - just log and continue
-      }
-    };
-
-    // Try to process each component directory if it exists
-    for (const compPath of componentPaths) {
-      if (await this.fileExists(compPath)) {
-        logInfo(`Found component directory: ${compPath}`);
-        await processDirectory(compPath);
-      }
-    }
-
-    // If no files were found at all, check if we should generate minimal shadcn files
-    if (files.length === 0) {
-      logInfo("No shadcn files found. The initialization likely failed or was interrupted.");
-      logInfo("Generating minimal shadcn configuration files for manual setup...");
-
-      // Add minimal components.json if not found
-      if (!files.some((f) => f.path === "components.json")) {
-        const componentsJson = {
-          $schema: "https://ui.shadcn.com/schema.json",
-          style: "default",
-          rsc: true,
-          tsx: true,
-          tailwind: {
-            config: "tailwind.config.ts",
-            css: "src/app/globals.css",
-            baseColor: "neutral",
-            cssVariables: true,
-          },
-          aliases: {
-            components: "@/components",
-            utils: "@/lib/utils",
-          },
-        };
-
-        files.push({
-          path: "components.json",
-          content: JSON.stringify(componentsJson, null, 2),
-        });
-
-        logInfo("Generated components.json file");
-      }
-
-      // Add minimal utils file if not found
-      const utilsFile = "src/lib/utils.ts";
-      if (!files.some((f) => f.path === utilsFile)) {
-        const utilsContent = `import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-`;
-      }
-    }
-
-    logInfo(`Processed ${files.length} files total`);
-    logInfo("Template file processing complete");
-    return files;
   }
 
   // Take a snapshot of the file system
@@ -1111,11 +858,11 @@ export function cn(...inputs: ClassValue[]) {
           try {
             // Try to determine if it's a directory by attempting to read it
             try {
-              const subEntries = await this.container.fs.readdir(fullPath);
+              const _subEntries = await this.container.fs.readdir(fullPath);
               // If we get here, it's a directory
               logInfo(`Found directory: ${fullPath}`);
               await processDirectory(fullPath);
-            } catch (readError) {
+            } catch (_readError) {
               // If we can't read it as a directory, assume it's a file
               // Skip binary files based on extension
               const extension = fullPath.split(".").pop()?.toLowerCase() || "";
@@ -1330,7 +1077,7 @@ export function cn(...inputs: ClassValue[]) {
             return true;
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Continue to the next path
       }
     }

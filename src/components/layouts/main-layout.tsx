@@ -15,12 +15,10 @@ export default function MainLayout({
   className?: string;
 }) {
   return (
-    <>
-      <div className={cn("", className)}>
-        {header}
-        {children}
-        {footer}
-      </div>
-    </>
+    <div className={cn("", className)}>
+      {header}
+      {children}
+      {footer}
+    </div>
   );
 }

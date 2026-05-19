@@ -1,7 +1,7 @@
 "use server";
 
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 // Detect whether the project uses /app or /src/app structure
 export async function detectDirectoryStructure(): Promise<string> {

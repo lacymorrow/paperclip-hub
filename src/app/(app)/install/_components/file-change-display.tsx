@@ -34,7 +34,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
   const modifiedFiles = changedFiles.length - newFiles;
 
   // Function to get the file extension
-  const getFileExtension = (filePath: string) => {
+  const _getFileExtension = (filePath: string) => {
     const parts = filePath.split(".");
     return parts.length > 1 ? parts[parts.length - 1] : "";
   };

@@ -558,7 +558,7 @@ export const processPolarWebhook = async (event: any) => {
       case "checkout.updated":
         if (event.data.status === "succeeded") {
           // Convert amount to integer cents
-          const amountInCents = convertPriceToIntegerCents(event.data.amount);
+          const _amountInCents = convertPriceToIntegerCents(event.data.amount);
 
           // Create payment record
           // Similar to:

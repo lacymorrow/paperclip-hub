@@ -30,7 +30,6 @@ const createRichText = (text: string) => ({
 export const seedFAQs = async () => {
   const payload = await getPayloadClient();
   if (!payload) {
-    console.debug("Payload not available, skipping FAQs seeding");
     return [];
   }
 

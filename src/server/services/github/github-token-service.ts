@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { accounts, users } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 
 /**
  * Validates a GitHub token by making a lightweight API call.

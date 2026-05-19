@@ -15,10 +15,7 @@ export async function POST(request: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const body = (await request.json()) as CreateRequestBody;
@@ -27,7 +24,7 @@ export async function POST(request: Request) {
     if (!projectName || typeof projectName !== "string") {
       return NextResponse.json(
         { success: false, error: "projectName is required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -36,26 +33,22 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "projectName must only contain letters, numbers, hyphens, and underscores",
+          error: "projectName must only contain letters, numbers, hyphens, and underscores",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // Get the GitHub token from the user's accounts
     const githubAccount = await db?.query.accounts.findFirst({
       where: (accounts, { and, eq }) =>
-        and(
-          eq(accounts.userId, session.user.id),
-          eq(accounts.provider, "github"),
-        ),
+        and(eq(accounts.userId, session.user.id), eq(accounts.provider, "github")),
     });
 
     if (!githubAccount?.access_token) {
       return NextResponse.json(
         { success: false, error: "GitHub account not connected" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -88,32 +81,26 @@ export async function POST(request: Request) {
 
     const vercelAccount = await db?.query.accounts.findFirst({
       where: (accounts, { and, eq }) =>
-        and(
-          eq(accounts.userId, session.user.id),
-          eq(accounts.provider, "vercel"),
-        ),
+        and(eq(accounts.userId, session.user.id), eq(accounts.provider, "vercel")),
     });
 
     if (vercelAccount?.access_token) {
       try {
-        const createProjectResponse = await fetch(
-          "https://api.vercel.com/v9/projects",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${vercelAccount.access_token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: projectName,
-              gitRepository: {
-                type: "github",
-                repo: repoResponse.data.full_name,
-              },
-              framework: "nextjs",
-            }),
+        const createProjectResponse = await fetch("https://api.vercel.com/v9/projects", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${vercelAccount.access_token}`,
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({
+            name: projectName,
+            gitRepository: {
+              type: "github",
+              repo: repoResponse.data.full_name,
+            },
+            framework: "nextjs",
+          }),
+        });
 
         if (createProjectResponse.ok) {
           const project = await createProjectResponse.json();
@@ -138,10 +125,9 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Failed to create project",
+        error: error instanceof Error ? error.message : "Failed to create project",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

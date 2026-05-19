@@ -55,7 +55,7 @@ export async function handleAuthRequest(request: Request): Promise<Response> {
 /**
  * Validate session token
  */
-export function validateSession(sessionToken: string) {
+export function validateSession(_sessionToken: string) {
   try {
     // TODO: Implement session validation based on Better Auth API
     return null;

@@ -111,7 +111,7 @@ function parseConventional(message: string): ParsedCommit | null {
   const match = message.match(/^(\w+)(?:\(([^)]+)\))?(!?):\s*(.+)/);
   if (!match) return null;
   return {
-    type: match[1]!.toLowerCase(),
+    type: match[1]?.toLowerCase(),
     scope: match[2] ?? null,
     subject: match[4]!,
     breaking: match[3] === "!",
@@ -153,7 +153,7 @@ function groupCommits(commits: GitHubCommit[], tagMap: Map<string, string>): Com
     const tag = tagMap.get(commit.sha);
     if (tag && currentGroup.length > 0) {
       // Close previous group as "Recent Updates"
-      const newestDate = currentGroup[0]!.commit.author.date;
+      const newestDate = currentGroup[0]?.commit.author.date;
       const groupLabel = currentTag ?? "Recent Updates";
       const groupSlug = currentTag
         ? currentTag.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase()
@@ -174,7 +174,7 @@ function groupCommits(commits: GitHubCommit[], tagMap: Map<string, string>): Com
 
   // Final group
   if (currentGroup.length > 0) {
-    const newestDate = currentGroup[0]!.commit.author.date;
+    const newestDate = currentGroup[0]?.commit.author.date;
     const groupLabel = currentTag ?? "Recent Updates";
     const groupSlug = currentTag
       ? currentTag.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase()
@@ -191,7 +191,7 @@ function groupCommits(commits: GitHubCommit[], tagMap: Map<string, string>): Com
 
   // If no tags at all, keep everything as one "Recent Updates" group
   if (tagMap.size === 0 && commits.length > 0) {
-    const newestDate = commits[0]!.commit.author.date;
+    const newestDate = commits[0]?.commit.author.date;
     return [
       {
         label: "Recent Updates",
@@ -222,7 +222,7 @@ function renderEntry(group: CommitGroup): ChangelogEntry {
     if (parsed) {
       const label = TYPE_LABELS[parsed.type] ?? "Other";
       if (!buckets.has(label)) buckets.set(label, []);
-      buckets.get(label)!.push(parsed.subject);
+      buckets.get(label)?.push(parsed.subject);
     } else {
       uncategorized.push(firstLine);
     }

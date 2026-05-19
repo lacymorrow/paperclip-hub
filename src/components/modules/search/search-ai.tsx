@@ -6,7 +6,6 @@ import {
   ChevronUp,
   CircleArrowRight,
   Code,
-  CornerRightDown,
   Frown,
   HelpCircle,
   Loader,
@@ -34,7 +33,7 @@ import { cn } from "@/lib/utils";
 
 const MIN_HEIGHT = 48;
 const MAX_HEIGHT = 120;
-const MAX_SECTION_HEIGHT = 400;
+const _MAX_SECTION_HEIGHT = 400;
 const PREVIEW_LINES = 2;
 
 const SEARCH_SUGGESTIONS = [

@@ -20,7 +20,7 @@ export const LoaderBouncingShapes = () => {
   useEffect(() => {
     const shapes = shapesRef.current.filter(Boolean);
 
-    shapes.forEach((shape, index) => {
+    shapes.forEach((shape, _index) => {
       if (!shape) return;
 
       const interval = setInterval(() => {

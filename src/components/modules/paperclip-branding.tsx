@@ -32,9 +32,7 @@ export const PaperclipBranding = () => {
       <meta name="made-with" content="cliphub.fyi" />
       <link rel="author" href="/humans.txt" />
       {/* Styled console attribution — bypasses Next.js removeConsole since it's an inline script */}
-      <script
-        dangerouslySetInnerHTML={{ __html: consoleScript }}
-      />
+      <script dangerouslySetInnerHTML={{ __html: consoleScript }} />
     </>
   );
 };

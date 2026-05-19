@@ -38,7 +38,7 @@ import { siteConfig } from "@/config/site-config";
 // Filter the icon libraries to only include valid React components
 function filterForMDXComponents(module: Record<string, any>): MDXComponents {
   return Object.fromEntries(
-    Object.entries(module).filter(([key, value]) => {
+    Object.entries(module).filter(([_key, value]) => {
       // Only include valid React component types
       return isValidElementType(value);
     })

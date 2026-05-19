@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { processStripeWebhook, verifyStripeWebhookSignature } from "@/lib/stripe";
+import { verifyStripeWebhookSignature } from "@/lib/stripe";
 import { PaymentService } from "@/server/services/payment-service";
 import { userService } from "@/server/services/user-service";
 

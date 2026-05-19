@@ -23,12 +23,7 @@ export function GitHubSignInButton({ callbackUrl = "/", className }: GitHubSignI
   };
 
   return (
-    <Button
-      size="lg"
-      onClick={() => void handleClick()}
-      disabled={isLoading}
-      className={className}
-    >
+    <Button size="lg" onClick={() => void handleClick()} disabled={isLoading} className={className}>
       {isLoading ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : (

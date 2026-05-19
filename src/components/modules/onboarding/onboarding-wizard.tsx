@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
-import { Link } from "@/components/primitives/link";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";

@@ -6,7 +6,7 @@
  */
 
 import type {} from "@payloadcms/db-postgres";
-import { relations, sql } from "@payloadcms/db-postgres/drizzle";
+import { relations } from "@payloadcms/db-postgres/drizzle";
 import {
   boolean,
   foreignKey,
@@ -111,7 +111,7 @@ export const users_sessions = db_schema.table(
     _orderIdx: index("users_sessions_order_idx").on(columns._order),
     _parentIDIdx: index("users_sessions_parent_id_idx").on(columns._parentID),
     _parentIDFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns._parentID],
       foreignColumns: [users.id],
       name: "users_sessions_parent_id_fk",
     }).onDelete("cascade"),
@@ -182,7 +182,7 @@ export const pages_blocks_hero = db_schema.table(
     _pathIdx: index("pages_blocks_hero_path_idx").on(columns._path),
     pages_blocks_hero_image_idx: index("pages_blocks_hero_image_idx").on(columns.image),
     _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns._parentID],
       foreignColumns: [pages.id],
       name: "pages_blocks_hero_parent_id_fk",
     }).onDelete("cascade"),
@@ -206,7 +206,7 @@ export const pages_blocks_content = db_schema.table(
     _parentIDIdx: index("pages_blocks_content_parent_id_idx").on(columns._parentID),
     _pathIdx: index("pages_blocks_content_path_idx").on(columns._path),
     _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns._parentID],
       foreignColumns: [pages.id],
       name: "pages_blocks_content_parent_id_fk",
     }).onDelete("cascade"),
@@ -230,7 +230,7 @@ export const pages_blocks_features = db_schema.table(
     _parentIDIdx: index("pages_blocks_features_parent_id_idx").on(columns._parentID),
     _pathIdx: index("pages_blocks_features_path_idx").on(columns._path),
     _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns._parentID],
       foreignColumns: [pages.id],
       name: "pages_blocks_features_parent_id_fk",
     }).onDelete("cascade"),
@@ -254,7 +254,7 @@ export const pages_blocks_testimonials = db_schema.table(
     _parentIDIdx: index("pages_blocks_testimonials_parent_id_idx").on(columns._parentID),
     _pathIdx: index("pages_blocks_testimonials_path_idx").on(columns._path),
     _parentIdFk: foreignKey({
-      columns: [columns["_parentID"]],
+      columns: [columns._parentID],
       foreignColumns: [pages.id],
       name: "pages_blocks_testimonials_parent_id_fk",
     }).onDelete("cascade"),
@@ -319,17 +319,17 @@ export const pages_rels = db_schema.table(
       columns.testimonialsID
     ),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns.parent],
       foreignColumns: [pages.id],
       name: "pages_rels_parent_fk",
     }).onDelete("cascade"),
     featuresIdFk: foreignKey({
-      columns: [columns["featuresID"]],
+      columns: [columns.featuresID],
       foreignColumns: [features.id],
       name: "pages_rels_features_fk",
     }).onDelete("cascade"),
     testimonialsIdFk: foreignKey({
-      columns: [columns["testimonialsID"]],
+      columns: [columns.testimonialsID],
       foreignColumns: [testimonials.id],
       name: "pages_rels_testimonials_fk",
     }).onDelete("cascade"),
@@ -413,7 +413,7 @@ export const features_plans = db_schema.table(
     orderIdx: index("features_plans_order_idx").on(columns.order),
     parentIdx: index("features_plans_parent_idx").on(columns.parent),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns.parent],
       foreignColumns: [features.id],
       name: "features_plans_parent_fk",
     }).onDelete("cascade"),
@@ -532,12 +532,12 @@ export const rbac_rels = db_schema.table(
     pathIdx: index("rbac_rels_path_idx").on(columns.path),
     rbac_rels_rbac_id_idx: index("rbac_rels_rbac_id_idx").on(columns.rbacID),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns.parent],
       foreignColumns: [rbac.id],
       name: "rbac_rels_parent_fk",
     }).onDelete("cascade"),
     rbacIdFk: foreignKey({
-      columns: [columns["rbacID"]],
+      columns: [columns.rbacID],
       foreignColumns: [rbac.id],
       name: "rbac_rels_rbac_fk",
     }).onDelete("cascade"),
@@ -666,42 +666,42 @@ export const payload_locked_documents_rels = db_schema.table(
       "payload_locked_documents_rels_vercel_deployments_id_idx"
     ).on(columns["vercel-deploymentsID"]),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns.parent],
       foreignColumns: [payload_locked_documents.id],
       name: "payload_locked_documents_rels_parent_fk",
     }).onDelete("cascade"),
     usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
+      columns: [columns.usersID],
       foreignColumns: [users.id],
       name: "payload_locked_documents_rels_users_fk",
     }).onDelete("cascade"),
     pagesIdFk: foreignKey({
-      columns: [columns["pagesID"]],
+      columns: [columns.pagesID],
       foreignColumns: [pages.id],
       name: "payload_locked_documents_rels_pages_fk",
     }).onDelete("cascade"),
     mediaIdFk: foreignKey({
-      columns: [columns["mediaID"]],
+      columns: [columns.mediaID],
       foreignColumns: [media.id],
       name: "payload_locked_documents_rels_media_fk",
     }).onDelete("cascade"),
     faqsIdFk: foreignKey({
-      columns: [columns["faqsID"]],
+      columns: [columns.faqsID],
       foreignColumns: [faqs.id],
       name: "payload_locked_documents_rels_faqs_fk",
     }).onDelete("cascade"),
     featuresIdFk: foreignKey({
-      columns: [columns["featuresID"]],
+      columns: [columns.featuresID],
       foreignColumns: [features.id],
       name: "payload_locked_documents_rels_features_fk",
     }).onDelete("cascade"),
     testimonialsIdFk: foreignKey({
-      columns: [columns["testimonialsID"]],
+      columns: [columns.testimonialsID],
       foreignColumns: [testimonials.id],
       name: "payload_locked_documents_rels_testimonials_fk",
     }).onDelete("cascade"),
     rbacIdFk: foreignKey({
-      columns: [columns["rbacID"]],
+      columns: [columns.rbacID],
       foreignColumns: [rbac.id],
       name: "payload_locked_documents_rels_rbac_fk",
     }).onDelete("cascade"),
@@ -762,12 +762,12 @@ export const payload_preferences_rels = db_schema.table(
       columns.usersID
     ),
     parentFk: foreignKey({
-      columns: [columns["parent"]],
+      columns: [columns.parent],
       foreignColumns: [payload_preferences.id],
       name: "payload_preferences_rels_parent_fk",
     }).onDelete("cascade"),
     usersIdFk: foreignKey({
-      columns: [columns["usersID"]],
+      columns: [columns.usersID],
       foreignColumns: [users.id],
       name: "payload_preferences_rels_users_fk",
     }).onDelete("cascade"),

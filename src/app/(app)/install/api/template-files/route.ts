@@ -1,8 +1,8 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import path from "path";
-import { directoryCache, sanitizePath, TEMPLATE_BASE_DIR } from "../utils";
+import { directoryCache, sanitizePath } from "../utils";
 
 // Use a more specific template directory path that only includes necessary files
 // This prevents including the entire codebase in the serverless function

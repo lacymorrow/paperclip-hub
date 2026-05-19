@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { routes } from "@/config/routes";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import type { Deployment } from "@/server/db/schema";

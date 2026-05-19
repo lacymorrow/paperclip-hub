@@ -8,7 +8,6 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
 import { ErrorService } from "@/server/services/error-service";
@@ -47,7 +46,7 @@ export async function createApiKey(data: z.infer<typeof schemas.createApiKey>) {
 
     // Convert expiresIn to milliseconds if provided
     const expiresIn = data.expiresIn
-      ? Number.parseInt(data.expiresIn) * MILLISECONDS_IN_A_WEEK
+      ? Number.parseInt(data.expiresIn, 10) * MILLISECONDS_IN_A_WEEK
       : undefined;
 
     // Create the API key

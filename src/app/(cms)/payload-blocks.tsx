@@ -1,11 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type {
-  ContentBlock,
-  FeaturesBlock,
-  HeroBlock,
-  PageBlock,
-  TestimonialsBlock,
-} from "@/types/blocks";
+import type { PageBlock } from "@/types/blocks";
 import { Content } from "./content";
 import { Features } from "./features";
 import { Hero } from "./hero";

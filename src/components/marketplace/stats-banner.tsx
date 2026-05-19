@@ -1,5 +1,5 @@
-import type { Plugin } from "@/data/plugins";
 import { ArrowDownToLine, Package, Users } from "lucide-react";
+import type { Plugin } from "@/data/plugins";
 
 function formatNumber(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;

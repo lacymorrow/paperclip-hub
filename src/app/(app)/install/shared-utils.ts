@@ -3,7 +3,7 @@
  * This file contains only server-safe code (no browser APIs or client-specific functionality)
  */
 
-import path from "path";
+import path from "node:path";
 import { getAlternativePaths, getEssentialConfigFiles } from "./project-config";
 import type { ContainerFile } from "./types";
 
@@ -181,7 +181,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
       return content;
     }
     return null;
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }
@@ -213,7 +213,7 @@ export async function getDirectoryEntries(directoryPath = ""): Promise<any[]> {
     // Cache the directory listing
     directoryListingCache.set(normalizedPath, entries);
     return entries;
-  } catch (error) {
+  } catch (_error) {
     return [];
   }
 }
@@ -239,18 +239,18 @@ export function levenshteinDistance(a: string, b: string): number {
   for (let i = 1; i <= b.length; i++) {
     for (let j = 1; j <= a.length; j++) {
       if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i]![j] = matrix[i - 1]![j - 1]!;
+        matrix[i]![j] = matrix[i - 1]?.[j - 1]!;
       } else {
         matrix[i]![j] = Math.min(
-          matrix[i - 1]![j - 1]! + 1, // substitution
-          matrix[i]![j - 1]! + 1, // insertion
-          matrix[i - 1]![j]! + 1 // deletion
+          matrix[i - 1]?.[j - 1]! + 1, // substitution
+          matrix[i]?.[j - 1]! + 1, // insertion
+          matrix[i - 1]?.[j]! + 1 // deletion
         );
       }
     }
   }
 
-  return matrix[b.length]![a.length]!;
+  return matrix[b.length]?.[a.length]!;
 }
 
 /**
@@ -360,7 +360,7 @@ export async function importProjectFiles(
                   if (directory) {
                     try {
                       await container.fs.mkdir(directory, { recursive: true });
-                    } catch (mkdirErr) {
+                    } catch (_mkdirErr) {
                       // Directory may already exist, that's fine
                     }
                   }
@@ -381,7 +381,7 @@ export async function importProjectFiles(
                   if (directory) {
                     try {
                       await container.fs.mkdir(directory, { recursive: true });
-                    } catch (mkdirErr) {
+                    } catch (_mkdirErr) {
                       // Directory may already exist, that's fine
                     }
                   }
@@ -411,11 +411,11 @@ export async function importProjectFiles(
  */
 export async function ensureComponentsJsonExists(
   container: any,
-  readFile: (path: string) => Promise<string | Uint8Array | null>
+  _readFile: (path: string) => Promise<string | Uint8Array | null>
 ): Promise<void> {
   try {
     // Just check if components.json exists
-    const exists = await fileExistsInContainer(container, "components.json");
+    const _exists = await fileExistsInContainer(container, "components.json");
     // We do nothing with this information - we let shadcn create it if needed
   } catch (error) {
     // Don't throw, continue anyway
@@ -430,7 +430,7 @@ async function fileExistsInContainer(container: any, path: string): Promise<bool
   try {
     await container.fs.stat(path);
     return true;
-  } catch (err) {
+  } catch (_err) {
     return false;
   }
 }

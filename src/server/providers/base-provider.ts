@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
-import { db, schema } from "@/server/db";
+import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import {
   type CheckoutOptions,

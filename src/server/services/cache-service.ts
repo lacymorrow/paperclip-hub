@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { metrics, metricsService } from "./metrics-service";
 import { redisClient as redis } from "./redis-service"; // Import the shared client
@@ -27,7 +26,7 @@ export class CacheService {
     let rawData: string | Record<string, unknown> | null = null;
     try {
       const startTime = Date.now();
-      rawData = await redis!.get(`${this.prefix}:${key}`);
+      rawData = await redis?.get(`${this.prefix}:${key}`);
       await metricsService.recordTiming(metrics.cache.latency, startTime);
 
       if (rawData === null) {
@@ -86,9 +85,9 @@ export class CacheService {
       };
 
       if (config.ttl) {
-        await redis!.setex(`${this.prefix}:${key}`, config.ttl, JSON.stringify(entry));
+        await redis?.setex(`${this.prefix}:${key}`, config.ttl, JSON.stringify(entry));
       } else {
-        await redis!.set(`${this.prefix}:${key}`, JSON.stringify(entry));
+        await redis?.set(`${this.prefix}:${key}`, JSON.stringify(entry));
       }
     } catch (error) {
       logger.error("Failed to set cache", { key, error });
@@ -103,7 +102,7 @@ export class CacheService {
     if (!this.enabled) return;
 
     try {
-      await redis!.del(`${this.prefix}:${key}`);
+      await redis?.del(`${this.prefix}:${key}`);
     } catch (error) {
       logger.error("Failed to delete from cache", { key, error });
       await metricsService.incrementCounter(metrics.cache.errors);

@@ -4,7 +4,6 @@ import { getPayloadClient } from "@/lib/payload/payload";
 export const seedTestimonials = async () => {
   const payload = await getPayloadClient();
   if (!payload) {
-    console.debug("Payload not available, skipping testimonials seeding");
     return [];
   }
 

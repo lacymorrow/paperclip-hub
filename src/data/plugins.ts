@@ -40,7 +40,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
 
 export function filterPlugins(
   plugins: Plugin[],
-  { category, search, sort }: { category?: string; search?: string; sort?: string },
+  { category, search, sort }: { category?: string; search?: string; sort?: string }
 ): Plugin[] {
   let filtered = [...plugins];
 
@@ -51,19 +51,16 @@ export function filterPlugins(
   if (search) {
     const q = search.toLowerCase();
     filtered = filtered.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q),
+      (p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
     );
   }
 
   switch (sort) {
     case "newest":
       filtered.sort(
-        (a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime(),
+        (a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
       );
       break;
-    case "popular":
     default:
       filtered.sort((a, b) => b.installs - a.installs);
       break;

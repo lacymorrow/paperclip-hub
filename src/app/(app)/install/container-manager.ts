@@ -51,7 +51,7 @@ export class ContainerManager {
    * Load essential files only for the WebContainer
    * @param componentToInstall Optional component name to load dependencies for
    */
-  private async loadEssentialFiles(componentToInstall?: string): Promise<void> {
+  private async loadEssentialFiles(_componentToInstall?: string): Promise<void> {
     if (!this.container) {
       throw new Error("Container not initialized");
     }

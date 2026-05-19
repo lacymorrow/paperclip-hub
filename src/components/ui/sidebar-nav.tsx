@@ -39,7 +39,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   );
 }
 
-function LinkStatusDot() {
+function _LinkStatusDot() {
   const { pending } = useLinkStatus();
 
   if (pending) {

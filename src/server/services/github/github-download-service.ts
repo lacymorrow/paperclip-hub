@@ -5,12 +5,12 @@
  * and caches it for 1 hour
  */
 
-import { createWriteStream } from "fs";
-import { mkdir, readFile, stat, writeFile } from "fs/promises";
-import https from "https";
-import { tmpdir } from "os";
-import { join } from "path";
-import { pipeline } from "stream/promises";
+import { createWriteStream } from "node:fs";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import https from "node:https";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pipeline } from "node:stream/promises";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
@@ -73,7 +73,7 @@ async function makeGitHubRequest(url: string): Promise<{
                 headers: response.headers,
                 data: data ? JSON.parse(data) : null,
               });
-            } catch (e) {
+            } catch (_e) {
               reject(new Error("Failed to parse response"));
             }
           });

@@ -54,4 +54,3 @@ export function routeRedirect(
   logger.info(`routeRedirect: Redirecting to ${url}`);
   return NextResponse.redirect(url);
 }
-

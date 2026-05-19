@@ -192,7 +192,7 @@ export const siteConfig: SiteConfig = {
   url: "https://cliphub.fyi",
   ogImage: "/app/og-image.png",
   description:
-    "The plugin marketplace for Paperclip. Discover connectors, automations, and extensions built by the community.",
+    "The plugin registry for Paperclip. Discover connectors, automations, and extensions built by the community.",
 
   branding: {
     projectName: "Paperclip Hub",
@@ -284,7 +284,7 @@ export const siteConfig: SiteConfig = {
       "Paperclip",
       "AI agents",
       "plugins",
-      "marketplace",
+      "registry",
       "connectors",
       "automation",
       "developer tools",

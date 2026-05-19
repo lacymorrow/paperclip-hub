@@ -21,10 +21,10 @@ jobs:
         run: |
           echo 'Skipping Auto Fix Issues: OPENAI_API_KEY not set'
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
 
@@ -79,3 +79,4 @@ jobs:
             I've created a PR with an AI-generated fix: #${{ steps.create_pr.outputs.pull-request-number }}
 
             Please review the changes and provide feedback.
+

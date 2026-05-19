@@ -215,7 +215,7 @@ export const siteConfig: SiteConfig = {
     twitter_follow: "https://twitter.com/intent/follow?screen_name=paperclipai",
     x: "https://x.com/paperclipai",
     x_follow: "https://x.com/intent/follow?screen_name=paperclipai",
-    github: "https://github.com/paperclipai/paperclip-hub",
+    github: "https://github.com/lacymorrow/paperclip-hub",
   },
 
   social: {
@@ -232,9 +232,9 @@ export const siteConfig: SiteConfig = {
   },
 
   repo: {
-    owner: "paperclipai",
+    owner: "lacymorrow",
     name: "paperclip-hub",
-    url: "https://github.com/paperclipai/paperclip-hub",
+    url: "https://github.com/lacymorrow/paperclip-hub",
     format: {
       // Placeholder format functions - assigned below
       clone: () => "",

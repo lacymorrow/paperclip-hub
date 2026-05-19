@@ -71,6 +71,8 @@ function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
     category: data.category,
     capabilities: data.capabilities,
     ...(data.sourceRepo ? { sourceRepo: data.sourceRepo } : {}),
+    author: "GITHUB_USERNAME",
+    submittedAt: new Date().toISOString(),
   };
   const fileContent = `${JSON.stringify(pluginJson, null, 2)}\n`;
 

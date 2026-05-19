@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { openai } from "@/lib/open-ai";
+import { auth } from "@/server/auth";
 import { DocsSearchService } from "@/server/services/docs-search";
 import { ErrorService } from "@/server/services/error-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
@@ -41,6 +42,11 @@ const searchRequestSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
     // Extract client IP for rate limiting
     // Try to get IP from various headers in order of reliability
     const forwardedFor = req.headers.get("x-forwarded-for");

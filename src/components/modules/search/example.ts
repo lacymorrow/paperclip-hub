@@ -60,11 +60,6 @@ export const docsConfig: DocsConfig = {
           items: [],
           label: "Updated",
         },
-        {
-          title: "Changelog",
-          href: `${routes.docs}/changelog`,
-          items: [],
-        },
       ],
     },
     {

@@ -474,7 +474,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               Just <em>off the press.</em>
             </h2>
           </div>
-          <Link href="/changelog">full changelog →</Link>
+          <span className="text-muted-foreground">freshly shipped</span>
         </div>
         <div className="hc-recent-row">
           {recent.map((p) => (

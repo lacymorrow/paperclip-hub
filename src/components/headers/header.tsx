@@ -103,7 +103,6 @@ export const Header: React.FC<HeaderProps> = ({
   if (variant === "minimal") {
     const minimalLinks: NavLink[] = [
       { href: routes.blog, label: "Blog" },
-      { href: "/changelog", label: "Changelog" },
       { href: routes.docs, label: "Docs" },
     ];
 

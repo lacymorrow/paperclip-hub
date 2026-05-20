@@ -995,60 +995,6 @@
       "docs": "Legal pages (privacy policy, terms of service, EULA, legal info) with MDX content and shared layout. Customize the content in each `.mdx` file after installation."
     },
     {
-      "name": "changelog",
-      "type": "registry:block",
-      "title": "Changelog",
-      "description": "Auto-generated changelog from GitHub commits and tags with timeline view and individual entry pages.",
-      "categories": [
-        "shipkit",
-        "changelog"
-      ],
-      "dependencies": [
-        "react-markdown",
-        "remark-gfm",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button"
-      ],
-      "files": [
-        {
-          "path": "src/app/(app)/changelog/layout.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/changelog/layout.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/page.tsx",
-          "type": "registry:page",
-          "target": "~/src/app/(app)/changelog/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/changelog/loading.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/[...slug]/page.tsx",
-          "type": "registry:page",
-          "target": "~/src/app/(app)/changelog/[...slug]/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/[...slug]/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/changelog/[...slug]/loading.tsx"
-        },
-        {
-          "path": "src/lib/changelog.ts",
-          "type": "registry:lib",
-          "target": "~/src/lib/changelog.ts"
-        }
-      ],
-      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_TOKEN` for higher API rate limits."
-    },
-    {
       "name": "contact",
       "type": "registry:block",
       "title": "Contact",

@@ -17,7 +17,7 @@ The Paperclip Hub is the official plugin registry for [Paperclip](https://paperc
 
 - **Browse & Search** — Filter plugins by category, sort by installs or date, and search by name or keyword
 - **One-line Install** — `paperclip plugin add <name>` wires any plugin into your team in seconds
-- **Plugin Detail Pages** — README, capabilities, versions, and changelog for every plugin
+- **Plugin Detail Pages** — README, capabilities, and versions for every plugin
 
 ![Plugin detail page](https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-plugin.png)
 

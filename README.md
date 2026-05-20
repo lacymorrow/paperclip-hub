@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" alt="Paperclip Hub" width="80" />
+  <img src="https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/logo.png" alt="Paperclip Hub" width="80" />
   <h1>Paperclip Hub</h1>
   <p><strong>A curated registry for autonomous teams.</strong></p>
   <p>Connectors, providers, tools, and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.</p>
@@ -7,7 +7,7 @@
 
 ---
 
-![Paperclip Hub — home page](public/app/screenshots/screenshot-desktop.png)
+![Paperclip Hub — home page](https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-desktop.png)
 
 ## What is Paperclip Hub?
 
@@ -19,13 +19,13 @@ The Paperclip Hub is the official plugin registry for [Paperclip](https://paperc
 - **One-line Install** — `paperclip plugin add <name>` wires any plugin into your team in seconds
 - **Plugin Detail Pages** — README, capabilities, versions, and changelog for every plugin
 
-![Plugin detail page](public/app/screenshots/screenshot-plugin.png)
+![Plugin detail page](https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-plugin.png)
 
 - **Submit a Plugin** — Any npm package with a Paperclip manifest is indexed nightly — no review queue, no waitlist
 - **Mobile-ready** — Full responsive UI across devices
 
 <div align="center">
-  <img src="public/app/screenshots/screenshot-mobile.png" alt="Paperclip Hub on mobile" width="320" />
+  <img src="https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-mobile.png" alt="Paperclip Hub on mobile" width="320" />
 </div>
 
 ## Stack

@@ -354,33 +354,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       {/* Body — grid + sidebar */}
       <div className="hc-body">
         {grid.length === 0 ? (
-          <div
-            style={{
-              border: "1px dashed var(--bd-2)",
-              padding: "48px",
-              background: "var(--paper)",
-              fontFamily: "var(--hub-font-serif)",
-              fontStyle: "italic",
-              fontSize: 22,
-              color: "var(--ink-2)",
-              textAlign: "center",
-            }}
-          >
+          <div className="hc-empty-state">
             No plugins found. Try adjusting the filters.
-            <div style={{ marginTop: 16 }}>
-              <Link
-                href="/"
-                style={{
-                  fontStyle: "normal",
-                  fontSize: 14,
-                  fontFamily: "var(--hub-font-sans)",
-                  color: "var(--ink-1)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: "3px",
-                }}
-              >
-                Clear all filters
-              </Link>
+            <div className="hc-empty-clear">
+              <Link href="/">Clear all filters</Link>
             </div>
           </div>
         ) : (

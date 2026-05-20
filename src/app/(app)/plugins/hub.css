@@ -1373,6 +1373,28 @@
 }
 .hub-c1 .hc-d-empty a:hover { color: var(--accent); }
 
+/* Empty state (grid) */
+.hub-c1 .hc-empty-state {
+  border: 1px dashed var(--bd-2);
+  padding: 48px;
+  background: var(--paper);
+  font-family: var(--hub-font-serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-2);
+  text-align: center;
+}
+.hub-c1 .hc-empty-clear { margin-top: 16px; }
+.hub-c1 .hc-empty-clear a {
+  font-style: normal;
+  font-size: 14px;
+  font-family: var(--hub-font-sans);
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hub-c1 .hc-empty-clear a:hover { color: var(--accent); }
+
 /* Detail sidebar */
 .hub-c1 .hc-d-side { display: flex; flex-direction: column; gap: 22px; }
 .hub-c1 .hc-d-side-card {

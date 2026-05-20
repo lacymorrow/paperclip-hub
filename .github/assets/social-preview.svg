@@ -51,7 +51,7 @@
 		<text x="24" y="36"
 			font-family="Inter" font-size="22" font-weight="600"
 			fill="#1a2235" letter-spacing="-0.2">
-			<tspan fill="#5a6478">$ </tspan>paperclip plugin add <tspan fill="#e25a4a">&lt;name&gt;</tspan>
+			<tspan fill="#5a6478">$ </tspan>paperclip plugin install <tspan fill="#e25a4a">&lt;name&gt;</tspan>
 		</text>
 	</g>
 

@@ -76,7 +76,7 @@ export async function getPlugins(): Promise<Plugin[]> {
         version: npm.version,
         capabilities: rp.capabilities,
         sourceRepo: rp.sourceRepo,
-        installCommand: `npx paperclipai@latest plugin add ${rp.npmPackage}`,
+        installCommand: `npx paperclipai@latest plugin install ${rp.npmPackage}`,
         submittedAt: rp.submittedAt,
       };
     })

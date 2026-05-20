@@ -76,7 +76,6 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
   const allPlugins = await getPlugins();
 
   const cliCommand = plugin.installCommand;
-  const npmCommand = `install ${plugin.npmPackage}`;
 
   const related = allPlugins
     .filter((p) => p.category === plugin.category && p.slug !== plugin.slug)
@@ -249,7 +248,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
           </div>
         </div>
         <div>
-          <InstallCard cliCommand={cliCommand} npmCommand={npmCommand} pluginName={plugin.name} />
+          <InstallCard cliCommand={cliCommand} pluginName={plugin.name} />
         </div>
       </section>
 

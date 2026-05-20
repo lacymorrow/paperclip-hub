@@ -1058,11 +1058,14 @@
   padding: 12px 14px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px dashed rgba(255, 255, 255, 0.18);
+  cursor: pointer;
 }
 .hub-c1 .hc-d-install-cmd .prompt {
   font-family: var(--hub-font-mono);
   font-size: 13px;
   color: var(--accent);
+  user-select: none;
+  pointer-events: none;
 }
 .hub-c1 .hc-d-install-cmd .cmd {
   font-family: var(--hub-font-mono);

@@ -65,8 +65,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const featured = pickFeatured(allPlugins);
   const isSearching = Boolean(params.q);
+  const isFiltered = activeCategory !== "all";
   const baseResults =
-    featured && !isSearching ? results.filter((p) => p.slug !== featured.slug) : results;
+    featured && !isSearching && !isFiltered
+      ? results.filter((p) => p.slug !== featured.slug)
+      : results;
   const grid = baseResults.slice(0, isSearching ? 24 : 8);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);

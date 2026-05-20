@@ -59,4 +59,3 @@ docs/**
 .env.test
 CLAUDE.md
 TODO.md
-CHANGELOG.md

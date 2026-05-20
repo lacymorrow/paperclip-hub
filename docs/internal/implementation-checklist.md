@@ -12,7 +12,7 @@ description: "A comprehensive checklist for implementing multi-zone architecture
 - [ ] **Review current shipkit.io routes** - Identify which routes to move to zones
 - [ ] **Define zone responsibilities**:
   - [ ] Main app: Marketing, dashboard, auth, pricing, features
-  - [ ] Docs zone: API docs, guides, tutorials, changelog
+  - [ ] Docs zone: API docs, guides, tutorials
   - [ ] Blog zone: Articles, announcements, case studies
   - [ ] UI zone: Component gallery, design system, templates
   - [ ] Tools zone: API tester, validators, generators

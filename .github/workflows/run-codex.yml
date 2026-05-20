@@ -6,7 +6,7 @@ on:
       prompt:
         description: 'Prompt for Codex CLI'
         required: true
-        default: 'update CHANGELOG for next release'
+        default: 'review and improve code quality'
       approvalMode:
         description: 'Approval mode (suggest, auto-edit, full-auto)'
         required: false

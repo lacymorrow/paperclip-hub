@@ -128,33 +128,6 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
       </>
     );
 
-  const changelogTab = (
-    <p className="hc-d-empty">
-      The Hub doesn't ingest changelogs yet.{" "}
-      {releasesUrl ? (
-        <>
-          See{" "}
-          <a href={releasesUrl} target="_blank" rel="noreferrer">
-            {sourceHost}/releases
-          </a>{" "}
-          for the maintained changelog.
-        </>
-      ) : (
-        <>
-          Browse{" "}
-          <a
-            href={`https://www.npmjs.com/package/${plugin.npmPackage}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {plugin.npmPackage} on npm
-          </a>{" "}
-          for past releases.
-        </>
-      )}
-    </p>
-  );
-
   const tabs = [
     {
       key: "readme",
@@ -205,11 +178,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
       key: "versions",
       label: plugin.version === "unknown" ? "Versions" : "Versions · 1",
       content: versionTab,
-    },
-    {
-      key: "changelog",
-      label: "Changelog",
-      content: changelogTab,
     },
   ];
 

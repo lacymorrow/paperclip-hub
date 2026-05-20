@@ -7,7 +7,6 @@ cleanup:
   files:
     - .github/template-cleanup/
     - .github/FUNDING.yml
-    - CHANGELOG.md
     - CODEOWNERS
 
   # Directories to be removed

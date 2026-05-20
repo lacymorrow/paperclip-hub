@@ -364,6 +364,21 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             }}
           >
             No plugins found. Try adjusting the filters.
+            <div style={{ marginTop: 16 }}>
+              <Link
+                href="/"
+                style={{
+                  fontStyle: "normal",
+                  fontSize: 14,
+                  fontFamily: "var(--hub-font-sans)",
+                  color: "var(--ink-1)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: "3px",
+                }}
+              >
+                Clear all filters
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="hc-grid">

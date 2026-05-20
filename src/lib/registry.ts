@@ -2,6 +2,10 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "@/data/plugins";
 
+function toSlug(npmPackage: string): string {
+  return npmPackage.replace(/^@/, "").replace(/\//g, "-");
+}
+
 interface RegistryPlugin {
   name: string;
   npmPackage: string;
@@ -59,7 +63,7 @@ export async function getPlugins(): Promise<Plugin[]> {
       const npm = await fetchNpmData(rp.npmPackage);
       return {
         id: rp.npmPackage,
-        slug: rp.npmPackage,
+        slug: toSlug(rp.npmPackage),
         name: rp.name,
         npmPackage: rp.npmPackage,
         description: rp.description,

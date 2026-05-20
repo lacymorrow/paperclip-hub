@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type { Plugin } from "@/data/plugins";
 
 function toSlug(npmPackage: string): string {
-  return npmPackage.replace(/^@/, "").replace(/\//g, "-");
+  return (npmPackage || "").toLowerCase().replace(/^@/, "").replace(/\//g, "-");
 }
 
 interface RegistryPlugin {
@@ -81,6 +81,17 @@ export async function getPlugins(): Promise<Plugin[]> {
       };
     })
   );
+
+  const seen = new Map<string, string>();
+  for (const p of plugins) {
+    const prev = seen.get(p.slug);
+    if (prev) {
+      console.warn(
+        `[registry] slug collision: "${p.slug}" maps to both "${prev}" and "${p.npmPackage}"`
+      );
+    }
+    seen.set(p.slug, p.npmPackage);
+  }
 
   _cache = plugins;
   return plugins;

@@ -30,7 +30,7 @@ import {
   pluginSubmissionSchema,
 } from "@/server/actions/plugin-submission.schema";
 
-const REGISTRY_OWNER = "paperclipai";
+const REGISTRY_OWNER = "lacymorrow";
 const REGISTRY_REPO = "paperclip-hub";
 const REGISTRY_BRANCH = "main";
 const REGISTRY_PLUGIN_PATH = "registry/plugins";

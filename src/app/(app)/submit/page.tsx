@@ -215,12 +215,12 @@ export default function SubmitPage() {
           >
             You can also submit a plugin by manually opening a pull request to{" "}
             <a
-              href="https://github.com/paperclipai/paperclip-hub"
+              href="https://github.com/lacymorrow/paperclip-hub"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "var(--paper)", textDecoration: "underline" }}
             >
-              paperclipai/paperclip-hub
+              lacymorrow/paperclip-hub
             </a>
             .
           </p>

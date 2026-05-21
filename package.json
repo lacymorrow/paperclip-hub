@@ -4,7 +4,7 @@
   "homepage": "https://cliphub.fyi",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lacymorrow/paperclip-hub"
+    "url": "git+https://github.com/lacymorrow/paperclip-hub.git"
   },
   "shipkit": {
     "bones": "0.2.1"

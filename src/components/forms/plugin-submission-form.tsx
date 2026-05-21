@@ -37,13 +37,11 @@ const REGISTRY_PLUGIN_PATH = "registry/plugins";
 
 const CATEGORY_LABELS: Record<(typeof CATEGORIES)[number], string> = {
   auth: "Auth",
-  tools: "Tools",
-  chat: "Chat",
   provider: "Provider",
-  connector: "Connector",
-  workspace: "Workspace",
-  automation: "Automation",
-  ui: "UI Extension",
+  tools: "Tools",
+  integration: "Integration",
+  observability: "Observability",
+  memory: "Memory",
   other: "Other",
 };
 
@@ -59,8 +57,25 @@ const CAPABILITY_LABELS: Record<(typeof CAPABILITIES)[number], string> = {
   "tool.execute.after": "Tool After",
 };
 
-function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
-  const safeFilename = data.npmPackage.replace(/\//g, "-");
+// Derive the registry filename slug from the npm package name.
+// Strips the npm scope so `@scope/pkg` and `pkg` produce the same `pkg.json`
+// filename, matching existing registry convention.
+export function deriveRegistryFilename(npmPackage: string): string {
+  return npmPackage.replace(/^@[^/]+\//, "");
+}
+
+function resolveCollisionFilename(baseSlug: string, taken: Set<string>): string {
+  if (!taken.has(baseSlug)) return baseSlug;
+  for (let i = 2; i < 1000; i += 1) {
+    const candidate = `${baseSlug}-${i}`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `${baseSlug}-${Date.now()}`;
+}
+
+function buildGitHubNewFileUrl(data: PluginSubmissionData, existingSlugs: string[]): string {
+  const baseSlug = deriveRegistryFilename(data.npmPackage);
+  const safeFilename = resolveCollisionFilename(baseSlug, new Set(existingSlugs));
   const filePath = `${REGISTRY_PLUGIN_PATH}/${safeFilename}.json`;
 
   const pluginJson = {
@@ -71,7 +86,7 @@ function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
     category: data.category,
     capabilities: data.capabilities,
     ...(data.sourceRepo ? { sourceRepo: data.sourceRepo } : {}),
-    author: "GITHUB_USERNAME",
+    author: data.authorGithubHandle,
     submittedAt: new Date().toISOString(),
   };
   const fileContent = `${JSON.stringify(pluginJson, null, 2)}\n`;
@@ -84,6 +99,7 @@ function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
     `**Description:** ${data.description}`,
     `**Category:** ${data.category}`,
     `**Capabilities:** ${data.capabilities.join(", ")}`,
+    `**Author:** @${data.authorGithubHandle}`,
     data.sourceRepo ? `**Source:** ${data.sourceRepo}` : "",
     "",
     "Submitted via the [Paperclip Hub](https://cliphub.fyi/submit) plugin submission form.",
@@ -101,7 +117,11 @@ function buildGitHubNewFileUrl(data: PluginSubmissionData): string {
   return `https://github.com/${REGISTRY_OWNER}/${REGISTRY_REPO}/new/${REGISTRY_BRANCH}?${params.toString()}`;
 }
 
-export function PluginSubmissionForm() {
+interface PluginSubmissionFormProps {
+  existingSlugs?: string[];
+}
+
+export function PluginSubmissionForm({ existingSlugs = [] }: PluginSubmissionFormProps) {
   const form = useForm<PluginSubmissionData>({
     resolver: zodResolver(pluginSubmissionSchema),
     defaultValues: {
@@ -110,12 +130,13 @@ export function PluginSubmissionForm() {
       description: "",
       category: undefined,
       capabilities: [],
+      authorGithubHandle: "",
       sourceRepo: "",
     },
   });
 
   function onSubmit(data: PluginSubmissionData) {
-    const url = buildGitHubNewFileUrl(data);
+    const url = buildGitHubNewFileUrl(data, existingSlugs);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -240,6 +261,21 @@ export function PluginSubmissionForm() {
                   />
                 ))}
               </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="authorGithubHandle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Your GitHub handle</FormLabel>
+              <FormControl>
+                <Input placeholder="octocat" {...field} />
+              </FormControl>
+              <FormDescription>Used as the plugin author in the registry entry.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -14,13 +14,11 @@ export const CAPABILITIES = [
 
 export const CATEGORIES = [
   "auth",
-  "tools",
-  "chat",
   "provider",
-  "connector",
-  "workspace",
-  "automation",
-  "ui",
+  "tools",
+  "integration",
+  "observability",
+  "memory",
   "other",
 ] as const;
 
@@ -39,6 +37,11 @@ export const pluginSubmissionSchema = z.object({
     errorMap: () => ({ message: "Please select a valid category" }),
   }),
   capabilities: z.array(z.enum(CAPABILITIES)).min(1, "At least one capability is required"),
+  authorGithubHandle: z
+    .string()
+    .min(1, "GitHub handle is required")
+    .max(39, "GitHub handle is too long")
+    .regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/, "Invalid GitHub username"),
   sourceRepo: z
     .string()
     .url("Must be a valid URL")

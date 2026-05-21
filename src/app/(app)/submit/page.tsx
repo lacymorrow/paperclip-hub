@@ -1,9 +1,23 @@
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
 
 import "../plugins/hub.css";
+
+function getExistingRegistrySlugs(): string[] {
+  try {
+    const dir = join(process.cwd(), "registry", "plugins");
+    return readdirSync(dir)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => f.replace(/\.json$/, ""));
+  } catch {
+    return [];
+  }
+}
 
 export const metadata: Metadata = {
   title: "Submit a Plugin — Paperclip Hub",
@@ -12,6 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitPage() {
+  const existingSlugs = getExistingRegistrySlugs();
   return (
     <div className="hub-c1">
       {/* Header */}
@@ -180,7 +195,7 @@ export default function SubmitPage() {
           >
             Plugin details
           </div>
-          <PluginSubmissionForm />
+          <PluginSubmissionForm existingSlugs={existingSlugs} />
         </div>
 
         {/* CLI alternative */}

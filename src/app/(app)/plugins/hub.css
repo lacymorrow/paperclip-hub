@@ -233,9 +233,12 @@
   height: 44px;
   padding: 0 20px;
   font: 600 13px var(--hub-font-sans);
-  transition: background 0.15s;
+  transition: background-color 0.15s;
 }
-.hub-c1 .hc-hero-search button:hover { background: var(--accent); }
+.hub-c1 .hc-hero-search button:hover,
+.hub-c1 .hc-hero-search button:focus-visible {
+  background-color: var(--accent);
+}
 .hub-c1 .hc-hero-meta {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

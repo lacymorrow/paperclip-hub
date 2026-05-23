@@ -5,12 +5,12 @@
       "Bash(bun -e:*)",
       "Bash(bun run:*)",
       "Bash(bunx drizzle-kit push:*)",
-      "Bash(bunx drizzle-kit introspect:*)",
+      "Bash(bunx drizzle-kit pull:*)",
       "Bash(source:*)",
       "Bash(export DATABASE_URL:*)",
       "Bash(yes:*)",
       "Bash(npm view:*)",
-      "Bash(DEBUG=drizzle*)"
+      "Bash(DEBUG=drizzle* bunx drizzle-kit:*)"
     ]
   }
 }

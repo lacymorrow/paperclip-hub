@@ -266,20 +266,30 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                 <div className="hc-d-author">
                   <div className="avatar">{plugin.author.name[0]?.toUpperCase()}</div>
                   <div>
-                    <b>{plugin.author.name.toLowerCase()}</b>
+                    <a href={plugin.author.url} target="_blank" rel="noreferrer">
+                      <b>{plugin.author.name.toLowerCase()}</b>
+                    </a>
                     <small>Community publisher</small>
                   </div>
                 </div>
                 <div className="hc-d-provenance">
-                  {sourceHost && (
+                  {sourceHost && plugin.sourceRepo && (
                     <div className="row">
                       <span>Published from</span>
-                      <b>{sourceHost}</b>
+                      <a href={plugin.sourceRepo} target="_blank" rel="noreferrer">
+                        <b>{sourceHost}</b>
+                      </a>
                     </div>
                   )}
                   <div className="row">
                     <span>Package</span>
-                    <b>{plugin.npmPackage}</b>
+                    <a
+                      href={`https://www.npmjs.com/package/${plugin.npmPackage}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <b>{plugin.npmPackage}</b>
+                    </a>
                   </div>
                   <div className="row">
                     <span>Submitted</span>

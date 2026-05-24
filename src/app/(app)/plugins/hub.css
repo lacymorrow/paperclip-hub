@@ -1435,6 +1435,7 @@
   font-weight: 400;
 }
 .hub-c1 .hc-d-author b { font-size: 14px; display: block; font-weight: 600; }
+.hub-c1 .hc-d-author a:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .hub-c1 .hc-d-author small {
   font-family: var(--hub-font-mono);
   font-size: 10px;
@@ -1465,6 +1466,7 @@
   font-size: 10px;
 }
 .hub-c1 .hc-d-provenance .row b { color: var(--ink); font-weight: 600; }
+.hub-c1 .hc-d-provenance .row a:hover b { text-decoration: underline; text-underline-offset: 3px; }
 
 .hub-c1 .hc-d-author-link {
   display: block;

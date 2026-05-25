@@ -26,29 +26,19 @@ import { cn } from "@/lib/utils";
 // Popular docs for initial suggestions
 const POPULAR_DOCS = [
   {
-    title: "Introduction",
-    url: `${routes.docs}/introduction`,
-    description: "Get started with Paperclip Hub",
+    title: "Overview",
+    url: routes.docs,
+    description: "What Paperclip Hub is and how to use it",
   },
   {
-    title: "Quickstart Guide",
-    url: `${routes.docs}/quickstart`,
-    description: "Quick setup and deployment",
+    title: "Submit a Plugin",
+    url: `${routes.docs}/submitting/submit-a-plugin`,
+    description: "Add your plugin to the registry",
   },
   {
-    title: "Authentication",
-    url: `${routes.docs}/auth`,
-    description: "User authentication and authorization",
-  },
-  {
-    title: "Database",
-    url: `${routes.docs}/database`,
-    description: "Database setup and configuration",
-  },
-  {
-    title: "Deployment",
-    url: `${routes.docs}/deployment`,
-    description: "Deploy your application",
+    title: "Registry Schema",
+    url: `${routes.docs}/registry/schema`,
+    description: "Fields and categories for a registry entry",
   },
 ];
 
@@ -239,21 +229,21 @@ export function DocsSearch() {
         key={`result-${index}`}
         value={`result-${result.title}-${index}`}
         onSelect={() => handleResultSelect(result)}
-        className={cn("flex items-start gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-start gap-3 p-3", isSelected && "bg-accent")}
       >
-        <FileTextIcon className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
-        <div className="flex-1 min-w-0">
+        <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm truncate">{result.title}</span>
+            <span className="truncate text-sm font-medium">{result.title}</span>
             {result.section && (
               <Badge variant="outline" className="text-xs">
                 {result.section}
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{result.content}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{result.content}</p>
         </div>
-        <ChevronRightIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+        <ChevronRightIcon className="h-3 w-3 flex-shrink-0 text-muted-foreground" />
       </CommandItem>
     );
   };
@@ -267,11 +257,11 @@ export function DocsSearch() {
         key={`popular-${index}`}
         value={`popular-${doc.title}-${index}`}
         onSelect={() => handlePopularDocSelect(doc)}
-        className={cn("flex items-center gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-center gap-3 p-3", isSelected && "bg-accent")}
       >
         <FileTextIcon className="h-4 w-4 text-muted-foreground" />
         <div className="flex-1">
-          <span className="font-medium text-sm">{doc.title}</span>
+          <span className="text-sm font-medium">{doc.title}</span>
           <p className="text-xs text-muted-foreground">{doc.description}</p>
         </div>
       </CommandItem>
@@ -287,7 +277,7 @@ export function DocsSearch() {
         key={`recent-${index}`}
         value={`recent-${recentQuery}-${index}`}
         onSelect={() => handleRecentSearchSelect(recentQuery)}
-        className={cn("flex items-center gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-center gap-3 p-3", isSelected && "bg-accent")}
       >
         <ClockIcon className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm">{recentQuery}</span>
@@ -308,7 +298,7 @@ export function DocsSearch() {
       </div>
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
-        <div className="w-full h-[300px] flex flex-col">
+        <div className="flex h-[300px] w-full flex-col">
           <DialogTitle className="sr-only">Search Documentation</DialogTitle>
           <CommandInput
             ref={inputRef}

@@ -52,7 +52,7 @@ bun run analyze        # Analyze bundle size
 bun run build:registry # Build shadcn registry (npx shadcn build)
 ```
 
-Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
+Source: `registry.json` (project root). Output: `public/r/*.json`.
 
 ## Architecture Overview
 

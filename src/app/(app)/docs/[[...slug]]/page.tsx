@@ -30,8 +30,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const defaultMetadata = constructMetadata({
-    title: `Documentation - Build Better Apps Faster | ${siteConfig.title}`,
-    description: `Master app development with ${siteConfig.title}'s comprehensive documentation. Step-by-step guides, API references, and best practices for building production-ready applications.`,
+    title: `Documentation | ${siteConfig.title}`,
+    description: `Browse and search plugins, submit your own, and learn the registry format for ${siteConfig.title}.`,
     openGraph: {
       type: "article",
       siteName: `${siteConfig.title} Documentation`,
@@ -48,9 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return constructMetadata({
       title: `${doc.title} - ${siteConfig.title} Documentation`,
-      description:
-        doc.description ||
-        `Learn how to implement ${siteConfig.title} features and best practices in your app development workflow. Detailed guides and examples included.`,
+      description: doc.description || `${doc.title} — ${siteConfig.title} documentation.`,
       openGraph: {
         type: "article",
         siteName: `${siteConfig.title} Documentation`,

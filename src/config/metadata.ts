@@ -183,7 +183,7 @@ export const routeMetadata = {
       "Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.",
   },
   docs: {
-    title: `Documentation - Build Better Apps Faster | ${siteConfig.title}`,
-    description: `Comprehensive guides, API references, and examples to help you build production-ready apps with ${siteConfig.title}. From quick starts to advanced topics.`,
+    title: `Documentation | ${siteConfig.title}`,
+    description: `Browse and search plugins, submit your own, and learn the registry format for ${siteConfig.title}.`,
   },
 };

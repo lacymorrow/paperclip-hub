@@ -29,6 +29,15 @@ function sanitizeForPrompt(text: string): string {
   );
 }
 
+// Derive a stable rate-limit key for anonymous callers from forwarding headers.
+function getClientIp(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (forwarded) {
+    return forwarded;
+  }
+  return req.headers.get("x-real-ip") ?? "anonymous";
+}
+
 const searchRequestSchema = z.object({
   query: z.string().min(1, "Search query is required").max(500, "Search query is too long"),
   limit: z
@@ -42,12 +51,10 @@ const searchRequestSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Docs search is public — no session required. Rate-limit anonymous callers by IP,
+    // and authenticated callers by user id when a session is present.
     const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
-
-    const rateLimitKey = session.user.id;
+    const rateLimitKey = session?.user?.id ?? getClientIp(req);
 
     const aiSearchRateLimit = {
       requests: 10,

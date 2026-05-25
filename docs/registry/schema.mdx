@@ -1,0 +1,61 @@
+---
+title: Registry Schema
+description: The shape of a plugin entry in the Paperclip Hub registry.
+---
+
+# Registry Schema
+
+The hub's catalog is a set of JSON files under [`registry/plugins/`](https://github.com/lacymorrow/paperclip-hub/tree/main/registry/plugins) — one file per plugin, named for the plugin's slug (`<slug>.json`). Every entry is validated against [`registry/schema.json`](https://github.com/lacymorrow/paperclip-hub/blob/main/registry/schema.json); entries with unknown fields are rejected.
+
+## Fields
+
+| Field          | Required | Type     | Notes                                                       |
+| -------------- | -------- | -------- | ----------------------------------------------------------- |
+| `name`         | yes      | string   | Display name shown in the hub.                              |
+| `npmPackage`   | yes      | string   | npm package name. Scoped packages (`@scope/name`) are fine. |
+| `description`  | yes      | string   | What the plugin does. Max 300 characters.                   |
+| `category`     | yes      | enum     | Exactly one of the categories below.                        |
+| `capabilities` | yes      | string[] | One or more of the capabilities below. Must be unique.      |
+| `author`       | yes      | string   | GitHub handle or org of the author.                         |
+| `submittedAt`  | yes      | string   | ISO 8601 datetime of submission.                            |
+| `sourceRepo`   | no       | string   | URL of the plugin's source repository.                      |
+
+No other fields are allowed. Entries also include `"$schema": "../schema.json"` by convention, which turns on autocomplete and validation in most editors.
+
+## Categories
+
+Each plugin declares exactly one `category`. The browse UI filters on these:
+
+| Category        | For                             |
+| --------------- | ------------------------------- |
+| `auth`          | Authentication providers        |
+| `provider`      | Model and service providers     |
+| `tools`         | Tools the agent can call        |
+| `integration`   | Third-party integrations        |
+| `observability` | Logging, tracing, and analytics |
+| `memory`        | Memory and storage backends     |
+| `other`         | Anything that doesn't fit above |
+
+## Capabilities
+
+`capabilities` lists the Paperclip hook types a plugin implements. Pick one or more:
+
+`event` · `config` · `tool` · `auth` · `chat.message` · `chat.params` · `permission.ask` · `tool.execute.before` · `tool.execute.after`
+
+## Example
+
+```json
+{
+  "$schema": "../schema.json",
+  "name": "GitHub",
+  "npmPackage": "paperclip-github-plugin",
+  "description": "GitHub integration for Paperclip agents. Create branches, open pull requests, manage issues, and sync repository events.",
+  "category": "integration",
+  "capabilities": ["tool", "event"],
+  "sourceRepo": "https://github.com/alvarosanchez/paperclip-github-plugin",
+  "author": "alvarosanchez",
+  "submittedAt": "2026-04-12T00:00:00Z"
+}
+```
+
+To add an entry of your own, see [Submit a Plugin](/docs/submitting/submit-a-plugin).

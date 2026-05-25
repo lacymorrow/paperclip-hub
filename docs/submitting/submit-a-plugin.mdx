@@ -1,0 +1,31 @@
+---
+title: Submit a Plugin
+description: Add your plugin to the Paperclip Hub registry with a pull request.
+---
+
+# Submit a Plugin
+
+> The submission flow is still being finalized with the maintainers. The steps below describe the current registry pull-request flow.
+
+Plugins live in the hub's [registry](/docs/registry/schema). Submitting a plugin means adding a JSON entry to that registry — and the hub does that for you as a pre-filled pull request.
+
+## Steps
+
+1. **Build and publish your plugin.** Create your plugin and publish it as an npm package. For the Plugin SDK and manifest format, see [paperclip.ing](https://paperclip.ing).
+2. **Fill out the form.** On the [Submit page](/submit), enter your plugin's name, npm package, category, and capabilities.
+3. **Open the pull request.** The form pre-fills a new registry file and opens a pull request on GitHub — no hub account required (you do need a GitHub account to open the PR).
+4. **Review and merge.** A maintainer reviews the entry; once merged, your plugin appears in the hub.
+
+## From the CLI
+
+Prefer the terminal? The Paperclip CLI opens the same pull request:
+
+```bash
+paperclip plugin submit \
+  --name "My Plugin" \
+  --package my-plugin-npm \
+  --category tools \
+  --capabilities event,tool
+```
+
+Either path adds one `registry/plugins/<slug>.json` entry. See [Registry Schema](/docs/registry/schema) for the exact fields and allowed values.

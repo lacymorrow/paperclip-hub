@@ -59,6 +59,8 @@ export const redirects = async (): Promise<Redirect[]> => {
         "/docs/deployment/:path*",
         "/docs/internal",
         "/docs/internal/:path*",
+        "/docs/reference",
+        "/docs/reference/:path*",
       ] as Route[],
       routes.docs,
       true

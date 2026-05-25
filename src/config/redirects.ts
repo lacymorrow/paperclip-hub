@@ -41,6 +41,28 @@ export const redirects = async (): Promise<Redirect[]> => {
   return [
     ...createRedirects(["/plugins"], "/", true),
     ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
+    // Inherited ShipKit doc sections were pruned during the hub docs repurpose.
+    // Redirect their old URLs (and any sub-pages) to the docs home.
+    ...createRedirects(
+      [
+        "/docs/getting-started",
+        "/docs/getting-started/:path*",
+        "/docs/features",
+        "/docs/features/:path*",
+        "/docs/integrations",
+        "/docs/integrations/:path*",
+        "/docs/guides",
+        "/docs/guides/:path*",
+        "/docs/development",
+        "/docs/development/:path*",
+        "/docs/deployment",
+        "/docs/deployment/:path*",
+        "/docs/internal",
+        "/docs/internal/:path*",
+      ] as Route[],
+      routes.docs,
+      true
+    ),
     ...createRedirects(
       ["/join", "/signup", "/sign-up", "/sign-in", "/login", "/log-in", "/signin"],
       routes.home

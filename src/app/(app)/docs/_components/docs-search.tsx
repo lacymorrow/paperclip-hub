@@ -1,12 +1,7 @@
 "use client";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
-import {
-  ChevronRightIcon,
-  ClockIcon,
-  FileTextIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
+import { ChevronRightIcon, ClockIcon, FileTextIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +13,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
 import { type DocSearchResult, useDocsSearch } from "@/hooks/use-docs-search";
 import { cn } from "@/lib/utils";
@@ -70,6 +64,18 @@ export function DocsSearch() {
     } catch (error) {
       console.warn("Failed to load recent searches:", error);
     }
+  }, []);
+
+  // Open/close the dialog with ⌘K / Ctrl+K
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
   // Save search to recent searches
@@ -287,15 +293,29 @@ export function DocsSearch() {
 
   return (
     <>
-      <div className="relative w-full">
-        <MagnifyingGlassIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          className="h-9 w-full rounded-[0.5rem] bg-background pl-8 text-sm text-muted-foreground"
-          placeholder="Search docs..."
-          onClick={() => setOpen(true)}
-          readOnly
-        />
-      </div>
+      <button
+        type="button"
+        className="hc-sm-search"
+        onClick={() => setOpen(true)}
+        aria-label="Search documentation"
+      >
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <span>Search the docs…</span>
+        <span className="kbd">⌘K</span>
+      </button>
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <div className="flex h-[300px] w-full flex-col">

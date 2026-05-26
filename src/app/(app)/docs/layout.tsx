@@ -1,41 +1,65 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { Header } from "@/components/headers/header";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { getDocsNavigation } from "@/lib/docs";
+import { DocsSearch } from "./_components/docs-search";
 import { DocsSidebar } from "./_components/docs-sidebar";
+import "../plugins/hub.css";
 import "./styles.css";
-import { routes } from "@/config/routes";
 
 interface DocsLayoutProps {
   children: ReactNode;
 }
 
-export default async function DocsLayout({ children }: DocsLayoutProps) {
-  const navigation = await getDocsNavigation();
-  const navLinks = [
-    { href: routes.docs, label: "Docs" },
-    { href: routes.contact, label: "Contact" },
-  ];
+export default function DocsLayout({ children }: DocsLayoutProps) {
+  const navigation = getDocsNavigation();
 
   return (
-    <>
-      <Header navLinks={navLinks} variant="sticky" />
-      <div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)_220px] lg:grid-cols-[256px_minmax(0,1fr)_256px]">
-        {/* Sidebar */}
-        <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
-          <ScrollArea className="h-full py-6">
-            <div className="pl-8 pr-6 lg:pl-10">
-              <DocsSidebar navigation={navigation} />
-            </div>
-          </ScrollArea>
-        </aside>
+    <div className="hub-c1">
+      {/* Header — same shell as the home / submit pages */}
+      <header className="hc-header">
+        <Link href="/" className="hc-brand">
+          <span className="hc-brand-wm">
+            <b>Paper</b>clip
+          </span>
+          <span className="hc-brand-sub">Hub</span>
+        </Link>
+        <nav className="hc-nav">
+          <Link href="/">Browse</Link>
+          <Link href="/?sort=newest">Collections</Link>
+          <Link href="/?category=provider">Publishers</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="/docs" className="is-active">
+            Docs
+          </Link>
+        </nav>
+        <div className="hc-header-actions">
+          <DocsSearch />
+          <Link href="https://paperclip.ing" className="hc-btn">
+            Get Paperclip →
+          </Link>
+        </div>
+      </header>
 
-        {/* Main content */}
-        <main className="relative py-6 lg:py-8 container mx-auto w-full min-w-0">
-          {/* Content */}
-          {children}
-        </main>
+      {/* Body — sidebar + article */}
+      <div className="docs-shell">
+        <aside className="docs-aside">
+          <DocsSidebar navigation={navigation} />
+        </aside>
+        <main className="docs-main">{children}</main>
       </div>
-    </>
+
+      {/* Footer — same shell as the rest of the hub */}
+      <footer className="hc-foot">
+        <div className="l">
+          <b>Paperclip</b>
+          <span>The Hub — Docs</span>
+        </div>
+        <div className="r">
+          <Link href="/docs">Docs</Link>
+          <Link href="/submit">Submit</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
+        </div>
+      </footer>
+    </div>
   );
 }

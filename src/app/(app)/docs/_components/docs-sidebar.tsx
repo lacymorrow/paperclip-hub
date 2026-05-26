@@ -16,6 +16,9 @@ interface DocsSidebarProps {
   navigation: NavSection[];
 }
 
+// Drop a trailing slash so the active check matches regardless of trailing-slash config.
+const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
+
 export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
   const pathname = usePathname();
 
@@ -28,22 +31,19 @@ export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
       >
         {navigation.map((section) => (
           <AccordionItem key={section.title} value={section.title} className="border-none px-1">
-            <AccordionTrigger className="py-1.5 text-sm hover:no-underline">
-              <span className="font-medium text-foreground/70">{section.title}</span>
+            <AccordionTrigger className="py-1.5 hover:no-underline">
+              <span className="docs-nav-trigger">{section.title}</span>
             </AccordionTrigger>
             {section.items?.length && (
               <AccordionContent className="pb-1 pt-0">
-                <div className="ml-3 flex flex-col gap-1">
+                <div className="mt-1 flex flex-col gap-0.5">
                   {section.items.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "flex w-full items-center rounded-md px-2 py-1.5 text-sm transition-colors",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        pathname === item.href
-                          ? "font-medium text-foreground bg-accent"
-                          : "text-foreground/60"
+                        "docs-nav-link",
+                        normalizePath(pathname ?? "") === normalizePath(item.href) && "is-active"
                       )}
                     >
                       {item.title}

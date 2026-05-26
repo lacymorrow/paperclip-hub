@@ -30,12 +30,15 @@ function sanitizeForPrompt(text: string): string {
 }
 
 // Derive a stable rate-limit key for anonymous callers from forwarding headers.
+// Prefer x-real-ip: the trusted proxy sets it authoritatively, whereas the first
+// x-forwarded-for entry is client-controlled and can be spoofed to dodge limits.
 function getClientIp(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  if (forwarded) {
-    return forwarded;
+  const realIp = req.headers.get("x-real-ip")?.trim();
+  if (realIp) {
+    return realIp;
   }
-  return req.headers.get("x-real-ip") ?? "anonymous";
+  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return forwarded ?? "anonymous";
 }
 
 const searchRequestSchema = z.object({

@@ -66,21 +66,19 @@ export class DocsSearchService {
           let relativePath: string;
           if (baseReplacePath) {
             // Legacy path processing
-            relativePath = fullPath
-              .replace(process.cwd(), "")
-              .replace(baseReplacePath, "")
-              .replace(/\.(mdx?|md)$/, "")
-              .replace(/^\/+/, "");
+            relativePath = fullPath.replace(process.cwd(), "").replace(baseReplacePath, "");
           } else {
             // Root docs path processing
-            relativePath = fullPath
-              .replace(join(process.cwd(), "docs"), "")
-              .replace(/\.(mdx?|md)$/, "")
-              .replace(/^\/+/, "");
+            relativePath = fullPath.replace(join(process.cwd(), "docs"), "");
           }
 
-          // Normalize index files: "getting-started/index" -> "getting-started"
-          relativePath = relativePath.replace(/\/index$/, "");
+          // Normalize Windows separators to URL slashes, strip the extension and
+          // leading slashes, then collapse "section/index" -> "section".
+          relativePath = relativePath
+            .replace(/\\/g, "/")
+            .replace(/\.(mdx?|md)$/, "")
+            .replace(/^\/+/, "")
+            .replace(/\/index$/, "");
 
           // Avoid duplicates - prefer root docs over legacy
           if (!this.docsCache.has(relativePath)) {

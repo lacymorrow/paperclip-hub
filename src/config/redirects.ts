@@ -42,7 +42,8 @@ export const redirects = async (): Promise<Redirect[]> => {
     ...createRedirects(["/plugins"], "/", true),
     ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
     // Inherited ShipKit doc sections were pruned during the hub docs repurpose.
-    // Redirect their old URLs (and any sub-pages) to the docs home.
+    // Redirect their old URLs (and any sub-pages) to the docs home. Temporary (307)
+    // rather than permanent (308) so browsers don't cache them while the docs churn.
     ...createRedirects(
       [
         "/docs/features",
@@ -59,7 +60,7 @@ export const redirects = async (): Promise<Redirect[]> => {
         "/docs/internal/:path*",
       ] as Route[],
       routes.docs,
-      true
+      false
     ),
     ...createRedirects(
       ["/join", "/signup", "/sign-up", "/sign-in", "/login", "/log-in", "/signin"],

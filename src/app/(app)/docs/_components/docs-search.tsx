@@ -21,18 +21,28 @@ import { cn } from "@/lib/utils";
 const POPULAR_DOCS = [
   {
     title: "Overview",
-    url: routes.docs,
-    description: "What Paperclip Hub is and how to use it",
+    url: `${routes.docs}/getting-started/overview`,
+    description: "What Paperclip Hub is and how these docs are organized",
+  },
+  {
+    title: "Quickstart",
+    url: `${routes.docs}/getting-started/quickstart`,
+    description: "Find, install, and use a plugin",
+  },
+  {
+    title: "Browse Plugins",
+    url: `${routes.docs}/using-the-hub/browse-plugins`,
+    description: "Search and filter the directory",
   },
   {
     title: "Submit a Plugin",
-    url: `${routes.docs}/submitting/submit-a-plugin`,
-    description: "Add your plugin to the registry",
+    url: `${routes.docs}/plugin-authors/submit-a-plugin`,
+    description: "Publish your plugin to the hub",
   },
   {
     title: "Registry Schema",
     url: `${routes.docs}/registry/schema`,
-    description: "Fields and categories for a registry entry",
+    description: "Fields, categories, and capabilities",
   },
 ];
 

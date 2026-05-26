@@ -31,11 +31,13 @@ export interface NavItem {
   href: string;
   external?: boolean;
   description?: string;
+  order?: number;
 }
 
 export interface NavSection {
   title: string;
   items: NavItem[];
+  order?: number;
 }
 
 /*
@@ -299,6 +301,7 @@ function processDirectory(dir: string): NavSection[] {
                   title: title,
                   href: `/docs/${sectionPath}/${fileName}`,
                   description: data.description,
+                  order: typeof data.order === "number" ? data.order : undefined,
                 });
               }
             }
@@ -309,16 +312,31 @@ function processDirectory(dir: string): NavSection[] {
         }
 
         if (items.length > 0) {
+          // Sort items by explicit frontmatter `order`, falling back to title.
+          const sortedItems = items.sort(
+            (a, b) =>
+              (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY) ||
+              a.title.localeCompare(b.title)
+          );
           sections.push({
             title: entry.name
               .split("-")
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
               .join(" "),
-            items: items.sort((a, b) => a.title.localeCompare(b.title)),
+            items: sortedItems,
+            // Section order = its lowest item order, so one `order` field drives both.
+            order: sortedItems[0]?.order,
           });
         }
       }
     }
+
+    // Order sections by their lowest item order, then alphabetically.
+    sections.sort(
+      (a, b) =>
+        (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY) ||
+        a.title.localeCompare(b.title)
+    );
 
     // Process root MDX/MD files
     const rootItems: NavItem[] = [];

@@ -1468,18 +1468,6 @@
 .hub-c1 .hc-d-provenance .row b { color: var(--ink); font-weight: 600; }
 .hub-c1 .hc-d-provenance .row a:hover b { text-decoration: underline; text-underline-offset: 3px; }
 
-.hub-c1 .hc-d-author-link {
-  display: block;
-  margin-top: 4px;
-  font-family: var(--hub-font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink);
-  padding-top: 12px;
-  border-top: 1px dashed var(--bd-2);
-}
-
 .hub-c1 .hc-d-related { display: flex; flex-direction: column; }
 .hub-c1 .hc-d-related-row {
   display: flex;

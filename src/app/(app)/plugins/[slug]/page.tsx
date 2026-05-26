@@ -68,6 +68,17 @@ function camelize(pkgName: string): string {
     .join("");
 }
 
+function safeHttpUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
 export default async function PluginDetailPage({ params }: PluginDetailPageProps) {
   const { slug } = await params;
   const plugin = await getPluginBySlug(slug);
@@ -81,10 +92,13 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
     .filter((p) => p.category === plugin.category && p.slug !== plugin.slug)
     .slice(0, 3);
 
-  const sourceHost = plugin.sourceRepo
-    ? plugin.sourceRepo.replace(/^https?:\/\//, "").replace(/\/$/, "")
+  const safeSourceRepo = safeHttpUrl(plugin.sourceRepo);
+  const sourceHost = safeSourceRepo
+    ? safeSourceRepo.replace(/^https?:\/\//, "").replace(/\/$/, "")
     : null;
-  const releasesUrl = plugin.sourceRepo ? `${plugin.sourceRepo.replace(/\/$/, "")}/releases` : null;
+  const releasesUrl = safeSourceRepo ? `${safeSourceRepo.replace(/\/$/, "")}/releases` : null;
+  const issueUrl = safeSourceRepo ? `${safeSourceRepo.replace(/\/$/, "")}/issues/new` : null;
+  const safeAuthorUrl = safeHttpUrl(plugin.author.url);
 
   const versionTab =
     plugin.version === "unknown" ? (
@@ -180,8 +194,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
     },
   ];
 
-  const ownerPluginCount = allPlugins.filter((p) => p.category === plugin.category).length;
-
   return (
     <div className="hub-c1">
       {/* Header */}
@@ -266,17 +278,21 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                 <div className="hc-d-author">
                   <div className="avatar">{plugin.author.name[0]?.toUpperCase()}</div>
                   <div>
-                    <a href={plugin.author.url} target="_blank" rel="noreferrer">
+                    {safeAuthorUrl ? (
+                      <a href={safeAuthorUrl} target="_blank" rel="noreferrer">
+                        <b>{plugin.author.name.toLowerCase()}</b>
+                      </a>
+                    ) : (
                       <b>{plugin.author.name.toLowerCase()}</b>
-                    </a>
+                    )}
                     <small>Community publisher</small>
                   </div>
                 </div>
                 <div className="hc-d-provenance">
-                  {sourceHost && plugin.sourceRepo && (
+                  {safeSourceRepo && (
                     <div className="row">
                       <span>Published from</span>
-                      <a href={plugin.sourceRepo} target="_blank" rel="noreferrer">
+                      <a href={safeSourceRepo} target="_blank" rel="noreferrer">
                         <b>{sourceHost}</b>
                       </a>
                     </div>
@@ -296,10 +312,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                     <b>{longDate(plugin.submittedAt)}</b>
                   </div>
                 </div>
-                <Link href={`/?category=${plugin.category}`} className="hc-d-author-link">
-                  View all {ownerPluginCount} plugin{ownerPluginCount === 1 ? "" : "s"} in{" "}
-                  {plugin.category} →
-                </Link>
               </div>
 
               <div className="hc-d-side-card">
@@ -339,8 +351,8 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                   <span className="eyebrow">§ links</span>
                 </div>
                 <div className="hc-d-links">
-                  {plugin.sourceRepo && sourceHost && (
-                    <a href={plugin.sourceRepo} target="_blank" rel="noreferrer">
+                  {safeSourceRepo && sourceHost && (
+                    <a href={safeSourceRepo} target="_blank" rel="noreferrer">
                       ↗ {sourceHost}
                     </a>
                   )}
@@ -351,8 +363,8 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                   >
                     ↗ npm · {plugin.npmPackage}
                   </a>
-                  {plugin.sourceRepo && (
-                    <a href={`${plugin.sourceRepo}/issues/new`} target="_blank" rel="noreferrer">
+                  {issueUrl && (
+                    <a href={issueUrl} target="_blank" rel="noreferrer">
                       ↗ Report an issue
                     </a>
                   )}

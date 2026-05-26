@@ -1,0 +1,16 @@
+---
+title: Core Concepts
+description: Plugins, capabilities, categories, and the registry — the ideas behind the hub.
+order: 3
+---
+
+# Core Concepts
+
+A quick tour of the terms you'll see throughout these docs:
+
+- **Plugin** — an npm package that extends Paperclip. Each plugin in the hub has a registry entry and a detail page.
+- **Capability** — a Paperclip hook a plugin implements (for example `tool` or `event`); capabilities describe what a plugin can _do_.
+- **Category** — the single bucket a plugin belongs to (`auth`, `provider`, `tools`, …) that the browse UI filters on.
+- **Registry** — the source of truth for the directory: one JSON file per plugin, validated against a shared schema.
+
+This page will grow into a fuller explanation of how these pieces fit together. For the exact fields and allowed values, see the [Registry Schema](/docs/registry/schema).

@@ -1,0 +1,21 @@
+---
+title: Categories
+description: The plugin categories the hub filters on, and how to choose one.
+order: 32
+---
+
+# Categories
+
+Every plugin declares exactly one `category`, which the browse UI uses to filter the directory:
+
+| Category        | For                             |
+| --------------- | ------------------------------- |
+| `auth`          | Authentication providers        |
+| `provider`      | Model and service providers     |
+| `tools`         | Tools the agent can call        |
+| `integration`   | Third-party integrations        |
+| `observability` | Logging, tracing, and analytics |
+| `memory`        | Memory and storage backends     |
+| `other`         | Anything that doesn't fit above |
+
+Pick the single category that best describes your plugin's primary purpose. This page will add guidance for borderline cases; the enum itself is defined in the [Registry Schema](/docs/registry/schema).

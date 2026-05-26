@@ -45,8 +45,6 @@ export const redirects = async (): Promise<Redirect[]> => {
     // Redirect their old URLs (and any sub-pages) to the docs home.
     ...createRedirects(
       [
-        "/docs/getting-started",
-        "/docs/getting-started/:path*",
         "/docs/features",
         "/docs/features/:path*",
         "/docs/integrations",
@@ -59,8 +57,6 @@ export const redirects = async (): Promise<Redirect[]> => {
         "/docs/deployment/:path*",
         "/docs/internal",
         "/docs/internal/:path*",
-        "/docs/reference",
-        "/docs/reference/:path*",
       ] as Route[],
       routes.docs,
       true

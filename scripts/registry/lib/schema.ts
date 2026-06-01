@@ -1,26 +1,30 @@
 /**
  * Ajv setup shared across validators. One Ajv instance is reused — compiling
  * a schema is cheap once but isn't free.
+ *
+ * Format keywords (`uri`, `date-time`, etc.) are validated via `ajv-formats`
+ * so `sourceRepo: "not a url"` is rejected at schema time rather than slipping
+ * past with a documentation-only hint.
  */
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import AjvImport, { type ValidateFunction } from "ajv";
+import addFormatsImport from "ajv-formats";
 
-// CJS interop: ajv's default export is sometimes wrapped when imported via ESM.
+// CJS interop: both packages export defaults that get nested when imported via ESM.
 // biome-ignore lint/suspicious/noExplicitAny: interop
 const Ajv = ((AjvImport as any).default ?? AjvImport) as typeof AjvImport;
+// biome-ignore lint/suspicious/noExplicitAny: interop
+const addFormats = ((addFormatsImport as any).default ?? addFormatsImport) as typeof addFormatsImport;
 
-// We don't pull in ajv-formats — `format` keywords ("uri", "date-time") are
-// treated as documentation hints and ignored by Ajv. The CI validators that
-// actually need URL-shape enforcement do their own check.
-//
-// validateSchema: false bypasses meta-schema resolution. Our schemas declare
-// `$schema: "https://json-schema.org/draft-07/schema#"` for documentation;
-// Ajv 8's default draft is 2020-12, but the schema features we use (type,
-// required, properties, enum, pattern, format-as-comment) are common to both,
-// so we don't need a strict meta-schema check.
+// `strict: false` lets our schemas use Draft-07 `$schema` declarations even
+// though Ajv 8's default draft is 2020-12. `validateSchema: false` keeps Ajv
+// from trying to resolve the draft-07 meta-schema URL (the meta-schema isn't
+// preloaded in Ajv 8 and we don't need it; our schemas use only features
+// common to both drafts).
 const ajv = new Ajv({ strict: false, allErrors: true, validateSchema: false });
+addFormats(ajv);
 
 const cache = new Map<string, ValidateFunction>();
 

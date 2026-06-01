@@ -23,7 +23,14 @@ interface StoredManifest {
   resolvedAt: string;
 }
 
+// Mirrors the npmPackage pattern in registry/schema.json. We re-validate here
+// because the data crosses a file → network boundary and we want to be sure
+// the URL can only ever point at api.npmjs.org with a well-formed package
+// name as the path segment, even if a pointer file gets hand-edited.
+const NPM_PACKAGE_NAME = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+
 async function fetchWeeklyDownloads(npmPackage: string): Promise<number> {
+  if (!NPM_PACKAGE_NAME.test(npmPackage)) return 0;
   try {
     const encoded = npmPackage.startsWith("@")
       ? npmPackage.split("/").map(encodeURIComponent).join("/")

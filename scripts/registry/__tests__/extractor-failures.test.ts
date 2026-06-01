@@ -165,4 +165,28 @@ describe("pointer schema validation", () => {
       }),
     ).toBe(false);
   });
+
+  it("rejects a sourceRepo that isn't a valid URI", () => {
+    expect(
+      validate({
+        $schema: "../schema.json",
+        npmPackage: "p",
+        addedBy: "u",
+        category: "tools",
+        sourceRepo: "not a url",
+      }),
+    ).toBe(false);
+  });
+
+  it("accepts a well-formed https sourceRepo", () => {
+    expect(
+      validate({
+        $schema: "../schema.json",
+        npmPackage: "p",
+        addedBy: "u",
+        category: "tools",
+        sourceRepo: "https://github.com/octocat/my-plugin",
+      }),
+    ).toBe(true);
+  });
 });

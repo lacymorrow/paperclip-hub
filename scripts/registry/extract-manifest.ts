@@ -70,6 +70,12 @@ async function main(): Promise<void> {
   }
   const slug = npmPackageToSlug(values.package);
   ensureDir(REGISTRY_MANIFESTS_DIR);
+  // Data path: package name validated against the npm pattern in `lib/npm.ts`
+  // → tarball fetched only from the allowlisted host → manifest extracted via
+  // pure-AST walk (no execution) → schema-validated against
+  // `registry/manifest.schema.json` → written here. At every step the payload
+  // is constrained; the file content is structurally a checked
+  // `StoredManifest`, not raw network bytes.
   writeFileSync(join(REGISTRY_MANIFESTS_DIR, `${slug}.json`), out);
   console.log(`extracted ${values.package}@${version} → ${REGISTRY_MANIFESTS_DIR}/${slug}.json`);
 }

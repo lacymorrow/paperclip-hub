@@ -148,6 +148,7 @@
     "@xterm/xterm": "^6.0.0",
     "acorn": "^8.16.0",
     "ajv": "^8",
+    "ajv-formats": "^3",
     "ansi-escape-sequences": "^6.2.4",
     "ansi-to-html": "^0.7.2",
     "ansi-to-react": "^6.2.6",

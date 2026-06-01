@@ -199,6 +199,16 @@ export async function checkNpmExists(changes: ChangedRegistryFiles): Promise<Che
 /**
  * PR author must equal `addedBy` AND be listed as an npm maintainer of the
  * package, OR a hub maintainer must apply the `submitted-on-behalf` label.
+ *
+ * **Known limitation:** the check compares the GitHub PR-author login against
+ * npm `maintainers[].name`. Many developers have different usernames on the
+ * two services (e.g., `@alvarosanchez` on GitHub vs `alvaro.sanchez` on npm),
+ * which will produce a false negative here even when the same human controls
+ * both accounts. The `submitted-on-behalf` label is the explicit escape hatch
+ * for legitimate cases the check can't auto-resolve; we accept the friction
+ * because the alternative (linking GitHub ↔ npm identities) requires either
+ * an authenticated lookup the plugin author has to set up, or trusting an
+ * unverified mapping committed to the pointer entry.
  */
 export async function checkOwnership(
   changes: ChangedRegistryFiles,
@@ -234,11 +244,21 @@ export async function checkOwnership(
 /**
  * PR author's GitHub account must be at least MIN_ACCOUNT_AGE_DAYS old.
  * Anti-spam gate that matches Obsidian's submission policy.
+ *
+ * Uses `GITHUB_TOKEN` for authenticated requests when present. Unauthenticated
+ * api.github.com calls are capped at 60/hour per IP — easily exhausted on a
+ * busy CI day — so we always attach the token in the GitHub Actions context.
  */
 export async function checkAccountAge(prAuthor: string): Promise<CheckResult> {
   try {
+    const token = process.env.GITHUB_TOKEN;
+    const headers: Record<string, string> = {
+      "User-Agent": "paperclip-hub-validator/1.0",
+      Accept: "application/vnd.github+json",
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
     const res = await fetch(`https://api.github.com/users/${encodeURIComponent(prAuthor)}`, {
-      headers: { "User-Agent": "paperclip-hub-validator/1.0" },
+      headers,
     });
     if (!res.ok) {
       return {
@@ -309,9 +329,13 @@ export function checkTyposquat(
 }
 
 /**
- * If a PR commits a manifest file, re-extract from npm and assert byte-
- * identical match. Prevents a bad actor from committing a manifest that
- * doesn't match what npm actually serves.
+ * If a PR commits a manifest file, re-extract from npm and assert the result
+ * equals the committed JSON. Prevents a bad actor from committing a manifest
+ * that doesn't match what npm actually serves.
+ *
+ * Comparison is key-order insensitive: we canonicalize via `canonicalStringify`
+ * so a maintainer who reformats or sorts keys in the committed file doesn't
+ * trip a false positive.
  */
 export async function checkManifestMatch(changes: ChangedRegistryFiles): Promise<CheckResult> {
   const errors: string[] = [];
@@ -323,7 +347,7 @@ export async function checkManifestMatch(changes: ChangedRegistryFiles): Promise
         continue;
       }
       const { manifest: fresh } = await extractManifestAtVersion(stored.npmPackage, stored.version);
-      if (JSON.stringify(fresh) !== JSON.stringify(stored.manifest)) {
+      if (canonicalStringify(fresh) !== canonicalStringify(stored.manifest)) {
         errors.push(
           `${file}: committed manifest does not match what extract-manifest would produce for ${stored.npmPackage}@${stored.version}. Did the npm tarball change, or was the committed JSON edited by hand?`
         );
@@ -337,6 +361,26 @@ export async function checkManifestMatch(changes: ChangedRegistryFiles): Promise
     }
   }
   return { check: "manifest-match", ok: errors.length === 0, errors };
+}
+
+/**
+ * JSON-stringify with deterministic key ordering — recursively sorts object
+ * keys before serializing. Arrays stay in their existing order (array order is
+ * semantic in our manifests). Used by `checkManifestMatch` so different key
+ * orderings in the extracted vs committed JSON don't cause false negatives.
+ */
+export function canonicalStringify(value: unknown): string {
+  return JSON.stringify(canonicalize(value));
+}
+
+function canonicalize(value: unknown): unknown {
+  if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) return value.map(canonicalize);
+  const sorted: Record<string, unknown> = {};
+  for (const key of Object.keys(value as Record<string, unknown>).sort()) {
+    sorted[key] = canonicalize((value as Record<string, unknown>)[key]);
+  }
+  return sorted;
 }
 
 /**

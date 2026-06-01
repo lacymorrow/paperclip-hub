@@ -8,7 +8,7 @@
 ## Submitter checklist
 
 - [ ] The plugin is published to npm
-- [ ] My GitHub account is listed as an npm maintainer of the package
+- [ ] My GitHub username equals my npm username (so the ownership check can match them automatically). If they differ, the hub maintainer will need to apply the `submitted-on-behalf` label after verifying you're the npm maintainer.
 - [ ] The package's `package.json` includes a `paperclipPlugin.manifest` field
 - [ ] The plugin works locally (`paperclip plugin install <npmPackage>`)
 - [ ] The filename `registry/plugins/<slug>.json` matches the package name (with `@scope/` stripped)

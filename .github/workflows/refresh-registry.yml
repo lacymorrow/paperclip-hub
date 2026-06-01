@@ -1,0 +1,62 @@
+name: Refresh registry manifests
+
+on:
+  schedule:
+    # Daily at 06:00 UTC. Picks up any new versions that plugin authors
+    # published since the previous run.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: "registry-refresh"
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: Auto-bump versions and rebuild index
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Refresh stored manifests
+        run: bun scripts/registry/extract-manifest.ts --refresh
+
+      - name: Build plugins.json
+        run: bun scripts/registry/build-index.ts
+
+      - name: Open PR with updates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$(git status --porcelain registry/manifests)" ]]; then
+            echo "no manifest updates"
+            exit 0
+          fi
+          BRANCH="registry/refresh-$(date -u +%Y-%m-%d)"
+          git config user.name "paperclip-hub-bot"
+          git config user.email "noreply@cliphub.fyi"
+          git checkout -b "$BRANCH"
+          git add registry/manifests public/plugins.json
+          git commit -m "chore(registry): auto-bump plugin manifests"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "chore(registry): auto-bump plugin manifests" \
+            --body "Nightly refresh: re-extracted manifests for any plugins where npm's \`dist-tags.latest\` advanced past the stored version. Failures leave the stored manifest unchanged; the site keeps serving what it already had." \
+            --label automation

@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@agent-analytics/paperclip-live-analytics-plugin",
+  "addedBy": "lacymorrow",
+  "category": "observability",
+  "sourceRepo": "https://github.com/Agent-Analytics/paperclip-live-analytics-plugin"
+}

@@ -1,10 +1,6 @@
 {
   "$schema": "../schema.json",
-  "name": "Company Wizard",
   "npmPackage": "@yesterday-ai/paperclip-plugin-company-wizard",
-  "description": "Interactive setup wizard for Paperclip companies. Scaffolds team structure, roles, projects, and agent configurations.",
-  "category": "tools",
-  "capabilities": ["tool", "config"],
-  "author": "lx0",
-  "submittedAt": "2026-04-30T00:00:00Z"
+  "addedBy": "lacymorrow",
+  "category": "tools"
 }

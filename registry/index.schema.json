@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://cliphub.fyi/registry/index.schema.json",
+  "title": "Paperclip Hub built index",
+  "description": "Public contract for the built plugins.json artifact served at https://cliphub.fyi/plugins.json. Combines registry pointers, extracted manifests, and live npm enrichment.",
+  "type": "object",
+  "required": ["generatedAt", "plugins"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slug", "npmPackage", "addedBy", "category", "version", "manifest", "installs", "installCommand"],
+        "additionalProperties": true,
+        "properties": {
+          "slug": { "type": "string" },
+          "npmPackage": { "type": "string" },
+          "addedBy": { "type": "string" },
+          "category": { "type": "string" },
+          "sourceRepo": { "type": "string" },
+          "version": { "type": "string" },
+          "latestVersion": { "type": "string" },
+          "manifest": { "type": "object" },
+          "installs": { "type": "number", "minimum": 0 },
+          "installCommand": { "type": "string" },
+          "resolvedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "quarantined": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slug", "reason"],
+        "properties": {
+          "slug": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

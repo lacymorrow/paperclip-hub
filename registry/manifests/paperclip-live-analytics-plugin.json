@@ -1,0 +1,61 @@
+{
+  "npmPackage": "@agent-analytics/paperclip-live-analytics-plugin",
+  "version": "0.1.11",
+  "manifest": {
+    "id": "agent-analytics.paperclip-live-analytics-plugin",
+    "apiVersion": 1,
+    "version": "0.1.11",
+    "displayName": "Agent Analytics Live",
+    "description": "Paperclip plugin for viewing live Agent Analytics signals inside a company workspace.",
+    "author": "@agent-analytics",
+    "categories": [
+      "connector",
+      "ui"
+    ],
+    "capabilities": [
+      "http.outbound",
+      "plugin.state.read",
+      "plugin.state.write",
+      "companies.read",
+      "projects.read",
+      "ui.page.register",
+      "ui.dashboardWidget.register",
+      "ui.sidebar.register",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "agent-analytics-live-page",
+          "displayName": "Agent Analytics Live",
+          "exportName": "LivePage",
+          "routePath": "agent-analytics-live"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "agent-analytics-live-widget",
+          "displayName": "Agent Analytics Live",
+          "exportName": "LiveDashboardWidget"
+        },
+        {
+          "type": "sidebar",
+          "id": "agent-analytics-live-sidebar",
+          "displayName": "Analytics",
+          "exportName": "LiveSidebarLink"
+        },
+        {
+          "type": "settingsPage",
+          "id": "agent-analytics-live-settings",
+          "displayName": "Agent Analytics Live Settings",
+          "exportName": "LiveSettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-04-26T00:00:00Z"
+}

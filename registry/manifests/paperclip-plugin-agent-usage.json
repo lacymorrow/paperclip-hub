@@ -1,0 +1,121 @@
+{
+  "npmPackage": "paperclip-plugin-agent-usage",
+  "version": "0.1.3",
+  "manifest": {
+    "id": "paperclip-plugin-agent-usage",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "Agent Usage Tracker",
+    "description": "Monitors AI provider usage quotas (Claude, etc.) and exposes real-time usage data to agents and the dashboard so they can make smart decisions based on remaining capacity.",
+    "author": "Paperclip Company",
+    "categories": [
+      "ui",
+      "automation"
+    ],
+    "capabilities": [
+      "companies.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "events.emit",
+      "jobs.schedule",
+      "http.outbound",
+      "metrics.write",
+      "agent.tools.register",
+      "ui.dashboardWidget.register",
+      "ui.page.register",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "claudeOauthToken": {
+          "type": "string",
+          "title": "Claude OAuth Token",
+          "description": "OAuth access token for the Anthropic usage API. Found in ~/.claude/.credentials.json under claudeAiOauth.accessToken. Leave blank to auto-detect from the local machine.",
+          "default": ""
+        },
+        "pollIntervalMinutes": {
+          "type": "number",
+          "title": "Poll Interval (minutes)",
+          "description": "How often to refresh usage data from providers.",
+          "default": 15
+        },
+        "providers": {
+          "type": "array",
+          "title": "Providers to Track",
+          "items": {
+            "type": "string",
+            "enum": [
+              "claude"
+            ]
+          },
+          "default": [
+            "claude"
+          ]
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "poll-usage",
+        "displayName": "Poll Provider Usage",
+        "description": "Periodically fetches usage quota data from configured AI providers and stores it for agent access.",
+        "schedule": "*/15 * * * *"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get-usage",
+        "displayName": "Get AI Provider Usage",
+        "description": "Returns current usage quota windows for configured AI providers (utilization percentages, reset times, limits). Use this to check how much capacity remains before starting expensive operations.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "Provider to query. Defaults to 'claude'."
+            }
+          }
+        }
+      },
+      {
+        "name": "get-usage-summary",
+        "displayName": "Get Usage Summary",
+        "description": "Returns a brief human-readable summary of current usage across all providers, including remaining capacity and reset times.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "agent-usage-page",
+          "displayName": "Agent Usage",
+          "exportName": "AgentUsagePage",
+          "routePath": "agent-usage"
+        },
+        {
+          "type": "settingsPage",
+          "id": "agent-usage-settings-page",
+          "displayName": "Agent Usage Settings",
+          "exportName": "AgentUsageSettingsPage"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "agent-usage-dashboard-widget",
+          "displayName": "AI Usage",
+          "exportName": "AgentUsageDashboardWidget"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-05-01T00:00:00Z"
+}

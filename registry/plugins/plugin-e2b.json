@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@paperclipai/plugin-e2b",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/paperclipai/paperclip"
+}

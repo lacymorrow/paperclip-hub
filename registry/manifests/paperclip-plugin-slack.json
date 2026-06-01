@@ -1,0 +1,199 @@
+{
+  "npmPackage": "paperclip-plugin-slack",
+  "version": "2.0.8",
+  "manifest": {
+    "id": "paperclip-plugin-slack",
+    "apiVersion": 1,
+    "version": "2.0.6",
+    "displayName": "Slack Chat OS",
+    "description": "Full Chat OS for Slack: escalation, multi-agent sessions, media pipeline, custom commands, and proactive suggestions. Push Paperclip notifications, receive slash commands, and manage agent workflows.",
+    "author": "mvanhorn",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "companies.read",
+      "issues.read",
+      "issues.create",
+      "agents.read",
+      "agent.sessions.create",
+      "agent.sessions.send",
+      "agent.sessions.close",
+      "agents.invoke",
+      "events.subscribe",
+      "events.emit",
+      "plugin.state.read",
+      "plugin.state.write",
+      "http.outbound",
+      "secrets.read-ref",
+      "webhooks.receive",
+      "instance.settings.register",
+      "activity.log.write",
+      "metrics.write",
+      "jobs.schedule",
+      "agent.tools.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "slackTokenRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "Slack Bot Token (secret reference)",
+          "description": "Secret UUID for your Slack Bot OAuth token. Create the secret in Settings → Secrets, then paste its UUID here.",
+          "default": ""
+        },
+        "slackSigningSecretRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "Slack Signing Secret (secret reference)",
+          "description": "Secret UUID for your Slack app's Signing Secret. Required to verify that incoming webhooks are genuinely from Slack.",
+          "default": ""
+        },
+        "defaultChannelId": {
+          "type": "string",
+          "title": "Default Slack Channel ID",
+          "description": "Channel ID to post notifications to (e.g. C01ABC2DEF3).",
+          "default": ""
+        },
+        "approvalsChannelId": {
+          "type": "string",
+          "title": "Approvals Channel ID",
+          "description": "Dedicated channel for approval notifications (optional, falls back to default).",
+          "default": ""
+        },
+        "errorsChannelId": {
+          "type": "string",
+          "title": "Errors Channel ID",
+          "description": "Dedicated channel for agent error notifications (optional, falls back to default).",
+          "default": ""
+        },
+        "pipelineChannelId": {
+          "type": "string",
+          "title": "Pipeline Channel ID",
+          "description": "Dedicated channel for agent lifecycle events (optional, falls back to default).",
+          "default": ""
+        },
+        "notifyOnIssueCreated": {
+          "type": "boolean",
+          "title": "Notify on issue created",
+          "default": true
+        },
+        "notifyOnIssueDone": {
+          "type": "boolean",
+          "title": "Notify on issue completed",
+          "default": true
+        },
+        "notifyOnApprovalCreated": {
+          "type": "boolean",
+          "title": "Notify on approval requested",
+          "default": true
+        },
+        "notifyOnAgentError": {
+          "type": "boolean",
+          "title": "Notify on agent error",
+          "default": true
+        },
+        "notifyOnAgentConnected": {
+          "type": "boolean",
+          "title": "Notify on agent connected/disconnected",
+          "default": true
+        },
+        "notifyOnBudgetThreshold": {
+          "type": "boolean",
+          "title": "Notify on budget threshold reached",
+          "default": true
+        },
+        "enableDailyDigest": {
+          "type": "boolean",
+          "title": "Send daily activity digest",
+          "description": "Posts a summary of all agent activity, costs, and completed tasks once per day.",
+          "default": false
+        },
+        "paperclipBaseUrl": {
+          "type": "string",
+          "title": "Paperclip Base URL",
+          "description": "Base URL of your Paperclip instance for dashboard links.",
+          "default": "http://localhost:3100"
+        },
+        "escalationChatId": {
+          "type": "string",
+          "title": "Escalation Channel ID",
+          "description": "Dedicated channel for escalation notifications (optional, falls back to approvalsChannelId or defaultChannelId).",
+          "default": ""
+        },
+        "escalationTimeoutMs": {
+          "type": "number",
+          "title": "Escalation Timeout (ms)",
+          "description": "Time in milliseconds before an unresolved escalation triggers the default action.",
+          "default": 900000
+        },
+        "escalationDefaultAction": {
+          "type": "string",
+          "title": "Escalation Default Action",
+          "description": "Action to take when an escalation times out: 'defer', 'dismiss', or 'auto_reply'.",
+          "default": "defer"
+        },
+        "escalationHoldMessage": {
+          "type": "string",
+          "title": "Escalation Hold Message",
+          "description": "Message sent to the customer while waiting for a human to respond.",
+          "default": "Your request has been escalated to a human agent. Please hold."
+        },
+        "maxAgentsPerThread": {
+          "type": "number",
+          "title": "Max Agents Per Thread",
+          "description": "Maximum number of concurrent agents allowed in a single Slack thread.",
+          "default": 5
+        }
+      },
+      "required": [
+        "slackTokenRef",
+        "slackSigningSecretRef",
+        "defaultChannelId"
+      ]
+    },
+    "jobs": [
+      {
+        "jobKey": "daily-digest",
+        "displayName": "Daily Activity Digest",
+        "description": "Posts a summary of agent activity, costs, and completed tasks to Slack.",
+        "schedule": "0 9 * * *"
+      },
+      {
+        "jobKey": "check-escalation-timeouts",
+        "displayName": "Check Escalation Timeouts",
+        "description": "Checks for unresolved escalations that have exceeded the configured timeout.",
+        "schedule": "*/1 * * * *"
+      },
+      {
+        "jobKey": "check-watches",
+        "displayName": "Check Event Watches",
+        "description": "Processes pending event watches and triggers agent invocations for matching events.",
+        "schedule": "*/2 * * * *"
+      }
+    ],
+    "webhooks": [
+      {
+        "endpointKey": "slack-events",
+        "displayName": "Slack Events API",
+        "description": "Receives Slack Events API payloads (url_verification, event callbacks, file_shared)."
+      },
+      {
+        "endpointKey": "slash-command",
+        "displayName": "Slack Slash Command",
+        "description": "Receives /clip slash commands from Slack."
+      },
+      {
+        "endpointKey": "slack-interactivity",
+        "displayName": "Slack Interactivity",
+        "description": "Receives button click payloads from interactive messages (approve/reject/escalation/handoff/discussion/command)."
+      }
+    ]
+  },
+  "resolvedAt": "2026-04-10T00:00:00Z"
+}

@@ -1,0 +1,90 @@
+{
+  "npmPackage": "paperclip-plugin-compass",
+  "version": "1.1.8",
+  "manifest": {
+    "id": "paperclip-plugin-compass",
+    "apiVersion": 1,
+    "version": "1.1.7",
+    "displayName": "Compass",
+    "description": "Strategic consultant for AI company lifecycle — diagnose, found, revive, reposition",
+    "author": "Paperclip AI",
+    "categories": [
+      "ui",
+      "automation"
+    ],
+    "capabilities": [
+      "ui.page.register",
+      "ui.sidebar.register",
+      "agents.read",
+      "agents.pause",
+      "agents.resume",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "issues.wakeup",
+      "issue.comments.read",
+      "issue.comments.create",
+      "issue.documents.read",
+      "issue.documents.write",
+      "plugin.state.read",
+      "plugin.state.write",
+      "companies.read",
+      "activity.log.write",
+      "events.subscribe",
+      "events.emit",
+      "jobs.schedule"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "anthropicApiKey": {
+          "type": "string",
+          "title": "Anthropic API Key",
+          "description": "Anthropic API key used by Compass for strategy reasoning (Found, Assess, Revive, Reposition modes). Required when running LLM-backed workflows; mode detection works without it.",
+          "format": "password"
+        },
+        "zaiApiKey": {
+          "type": "string",
+          "title": "Z.ai (Zhipu) API Key",
+          "description": "Optional Z.ai/Zhipu key. If set, Compass uses GLM-class models for cheap-tier reasoning (drift summaries, classification).",
+          "format": "password"
+        },
+        "primaryModel": {
+          "type": "string",
+          "title": "Primary Model",
+          "description": "Model identifier for strategy reasoning. Defaults to claude-sonnet-4-6 when an Anthropic key is set.",
+          "default": "claude-sonnet-4-6"
+        },
+        "cheapModel": {
+          "type": "string",
+          "title": "Cheap Model",
+          "description": "Model used for low-stakes summarization and classification. Defaults to claude-haiku-4-5-20251001.",
+          "default": "claude-haiku-4-5-20251001"
+        }
+      },
+      "required": []
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "compass-page",
+          "displayName": "Compass",
+          "exportName": "MainPanel",
+          "routePath": "compass"
+        },
+        {
+          "type": "sidebar",
+          "id": "compass-sidebar-link",
+          "displayName": "Compass",
+          "exportName": "SidebarLink"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-04-20T00:00:00Z"
+}

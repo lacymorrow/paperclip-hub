@@ -1,0 +1,197 @@
+{
+  "npmPackage": "@farhoodlabs/paperclip-plugin-k8s",
+  "version": "0.3.7",
+  "manifest": {
+    "id": "farhoodlabs.k8s-sandbox-provider",
+    "apiVersion": 1,
+    "version": "0.3.7",
+    "displayName": "Kubernetes Sandbox Provider",
+    "description": "Provisions a long-lived Kubernetes pod per environment lease and routes adapter command execution through the K8s exec API.",
+    "author": "farhoodlabs",
+    "categories": [
+      "automation"
+    ],
+    "capabilities": [
+      "environment.drivers.register",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "inventory",
+          "displayName": "Inventory",
+          "exportName": "SettingsPage"
+        }
+      ]
+    },
+    "environmentDrivers": [
+      {
+        "driverKey": "k8s",
+        "kind": "sandbox_provider",
+        "displayName": "Kubernetes",
+        "description": "Runs each environment lease as a long-lived pod, with optional PVC-backed workspace and lease reuse across runs.",
+        "configSchema": {
+          "type": "object",
+          "properties": {
+            "kubeconfigPath": {
+              "type": "string",
+              "description": "Path to a kubeconfig file. Falls back to in-cluster config or ~/.kube/config."
+            },
+            "namespace": {
+              "type": "string",
+              "description": "Kubernetes namespace for the lease pod and any owned resources. When the plugin worker runs in-cluster and this is left blank, defaults to the worker's own namespace (read from the in-cluster service account). Falls back to \"default\" otherwise."
+            },
+            "image": {
+              "type": "string",
+              "description": "Container image to run inside the lease pod. When the plugin worker runs in-cluster and this is left blank, defaults to the worker's host pod image, which is digest-pinned and already cached on the node."
+            },
+            "serviceAccountName": {
+              "type": "string",
+              "description": "ServiceAccount to attach to the pod. Supports {companyId} placeholder, e.g. \"paperclip-{companyId}\"."
+            },
+            "workspace": {
+              "type": "object",
+              "title": "Workspace",
+              "description": "Where the agent's working directory lives inside the lease pod, and the PVC (if any) that backs it.",
+              "properties": {
+                "mountPath": {
+                  "type": "string",
+                  "title": "Mount Path",
+                  "default": "/workspace",
+                  "description": "Path inside the pod where the workspace volume is mounted."
+                },
+                "pvc": {
+                  "type": "object",
+                  "title": "Persistent Volume Claim",
+                  "description": "Optional PVC backing the workspace. Leave name blank for an ephemeral emptyDir workspace.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "title": "PVC Name",
+                      "description": "Name of the PVC to mount at the mount path. Leave blank for an ephemeral emptyDir workspace (lost when the pod terminates)."
+                    },
+                    "create": {
+                      "type": "boolean",
+                      "title": "Create if Missing",
+                      "default": false,
+                      "description": "When set, the plugin creates the PVC during acquireLease if it doesn't already exist (using the storage class, size, and access mode below). When false, the PVC must already exist or acquire fails. Plugin-created PVCs are not auto-deleted when the lease ends."
+                    },
+                    "storageClass": {
+                      "type": "string",
+                      "title": "Storage Class",
+                      "description": "StorageClass name for newly-created PVCs. Leave blank to use the cluster's default StorageClass."
+                    },
+                    "size": {
+                      "type": "string",
+                      "title": "Size",
+                      "default": "10Gi",
+                      "description": "Volume size for newly-created PVCs (Kubernetes quantity, e.g. \"10Gi\", \"50Gi\")."
+                    },
+                    "accessMode": {
+                      "type": "string",
+                      "title": "Access Mode",
+                      "default": "ReadWriteOnce",
+                      "description": "Access mode for newly-created PVCs. Most cloud providers only support ReadWriteOnce."
+                    }
+                  }
+                }
+              }
+            },
+            "runAsUser": {
+              "type": "number",
+              "description": "UID for the pod's containers. Defaults to 1000 (the `node` user in the Paperclip image).",
+              "default": 1000
+            },
+            "runAsGroup": {
+              "type": "number",
+              "description": "GID for the pod's containers. Defaults to 1000.",
+              "default": 1000
+            },
+            "fsGroup": {
+              "type": "number",
+              "description": "fsGroup applied to mounted volumes so the runAsUser can write. Defaults to 1000.",
+              "default": 1000
+            },
+            "resources": {
+              "type": "object",
+              "title": "Resources",
+              "description": "CPU and memory requests/limits for the lease pod's agent container. Standard Kubernetes quantity strings (e.g. \"500m\", \"2\", \"512Mi\", \"4Gi\"). Leave blank for no limits.",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "title": "Requests",
+                  "description": "Minimum resources reserved for the pod (used by the scheduler).",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "title": "CPU",
+                      "description": "e.g. 500m, 1, 2"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "title": "Memory",
+                      "description": "e.g. 256Mi, 1Gi"
+                    }
+                  }
+                },
+                "limits": {
+                  "type": "object",
+                  "title": "Limits",
+                  "description": "Maximum resources the pod can consume (kubelet enforces; CPU throttles, memory triggers OOM).",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "title": "CPU",
+                      "description": "e.g. 1, 2, 4"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "title": "Memory",
+                      "description": "e.g. 1Gi, 4Gi, 8Gi"
+                    }
+                  }
+                }
+              }
+            },
+            "reuseLease": {
+              "type": "boolean",
+              "description": "Keep the pod running across runs and resume into it on the next lease.",
+              "default": false
+            },
+            "podReadyTimeoutMs": {
+              "type": "number",
+              "title": "Pod Ready Timeout (ms)",
+              "description": "How long to wait for the pod to reach Ready before failing acquire.",
+              "default": 120000
+            },
+            "timeoutMs": {
+              "type": "number",
+              "title": "Timeout (ms)",
+              "description": "Default timeout per execute call. The host extends its environmentExecute RPC budget to match this value.",
+              "default": 300000
+            },
+            "debug": {
+              "type": "boolean",
+              "title": "Debug Logging",
+              "default": false,
+              "description": "Emit verbose [debug] logs from each plugin lifecycle hook (validateConfig, probe, acquire/resume/release/destroy lease, realizeWorkspace, execute) including received params and resolved values. Useful for diagnosing timeouts, RPC behavior, and config-passthrough issues. Logs go to the host's plugin log stream — no restart needed to enable; just save the env config. Disable in production."
+            },
+            "env": {
+              "type": "object",
+              "description": "Environment variables to set on the pod container.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resolvedAt": "2026-04-28T00:00:00Z"
+}

@@ -117,7 +117,7 @@ export default function SubmitPage() {
               {
                 num: "02",
                 title: "Fill out the form",
-                desc: "Tell us about your plugin — name, capabilities, and npm package.",
+                desc: "Give us your npm package name and GitHub handle. CI extracts the manifest from npm.",
               },
               {
                 num: "03",
@@ -249,10 +249,8 @@ export default function SubmitPage() {
             }}
           >
             <span style={{ color: "#b13a2a" }}>$</span> paperclip plugin submit \{"\n"}
-            {"  "}--name &quot;My Plugin&quot; \{"\n"}
             {"  "}--package my-plugin-npm \{"\n"}
-            {"  "}--category tools \{"\n"}
-            {"  "}--capabilities event,tool
+            {"  "}--category tools
           </pre>
         </div>
       </div>

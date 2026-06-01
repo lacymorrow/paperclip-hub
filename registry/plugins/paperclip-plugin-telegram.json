@@ -1,11 +1,7 @@
 {
   "$schema": "../schema.json",
-  "name": "Telegram",
   "npmPackage": "paperclip-plugin-telegram",
-  "description": "Telegram bot integration for Paperclip. Connect agents to Telegram chats with message handling and inline commands.",
+  "addedBy": "lacymorrow",
   "category": "integration",
-  "capabilities": ["event", "tool"],
-  "sourceRepo": "https://github.com/mvanhorn/paperclip-plugin-telegram",
-  "author": "mvanhorn",
-  "submittedAt": "2026-04-10T00:00:00Z"
+  "sourceRepo": "https://github.com/mvanhorn/paperclip-plugin-telegram"
 }

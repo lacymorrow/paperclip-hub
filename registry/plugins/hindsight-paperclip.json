@@ -1,11 +1,7 @@
 {
   "$schema": "../schema.json",
-  "name": "Hindsight Memory",
   "npmPackage": "@vectorize-io/hindsight-paperclip",
-  "description": "Vector-backed long-term memory for Paperclip agents. Stores and retrieves context using semantic search powered by Vectorize.",
+  "addedBy": "lacymorrow",
   "category": "memory",
-  "capabilities": ["tool", "config"],
-  "sourceRepo": "https://github.com/vectorize-io/hindsight",
-  "author": "nicoloboschi",
-  "submittedAt": "2026-04-24T00:00:00Z"
+  "sourceRepo": "https://github.com/vectorize-io/hindsight"
 }

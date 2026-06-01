@@ -1,75 +1,33 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://cliphub.fyi/registry/schema.json",
-  "title": "Plugin Registry Entry",
-  "description": "Schema for a plugin entry in the Paperclip Hub plugin registry.",
+  "title": "Plugin Registry Pointer",
+  "description": "A minimal pointer to a Paperclip plugin published on npm. Plugin metadata (displayName, capabilities, etc.) is extracted from the package's built manifest at CI time and stored in registry/manifests/{slug}.json.",
   "type": "object",
-  "required": ["name", "npmPackage", "description", "category", "capabilities", "author", "submittedAt"],
+  "required": ["npmPackage", "addedBy", "category"],
   "additionalProperties": false,
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "Display name of the plugin.",
-      "minLength": 1
-    },
+    "$schema": { "type": "string" },
     "npmPackage": {
       "type": "string",
-      "description": "npm package name (e.g. paperclip-github or @scope/pkg).",
+      "description": "Exact npm package name (e.g. paperclip-foo or @scope/foo).",
       "pattern": "^(@[a-z0-9-~][a-z0-9-._~]*/)?[a-z0-9-~][a-z0-9-._~]*$"
     },
-    "description": {
+    "addedBy": {
       "type": "string",
-      "description": "Short description of what the plugin does.",
+      "description": "GitHub handle of the submitter. Audit only; git history is canonical.",
       "minLength": 1,
-      "maxLength": 300
+      "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$"
     },
     "category": {
       "type": "string",
-      "description": "Plugin category. Must match a value the browse UI can filter on.",
-      "enum": [
-        "auth",
-        "provider",
-        "tools",
-        "integration",
-        "observability",
-        "memory",
-        "other"
-      ]
-    },
-    "capabilities": {
-      "type": "array",
-      "description": "Plugin hook types this plugin implements.",
-      "items": {
-        "type": "string",
-        "enum": [
-          "event",
-          "config",
-          "tool",
-          "auth",
-          "chat.message",
-          "chat.params",
-          "permission.ask",
-          "tool.execute.before",
-          "tool.execute.after"
-        ]
-      },
-      "minItems": 1,
-      "uniqueItems": true
+      "description": "Hub-curated category for marketplace navigation. Distinct from the manifest's own categories array, which is the plugin author's classification.",
+      "enum": ["auth", "provider", "tools", "integration", "observability", "memory", "other"]
     },
     "sourceRepo": {
       "type": "string",
-      "description": "URL of the plugin's source code repository.",
+      "description": "Optional. URL of the plugin's source repository (informational).",
       "format": "uri"
-    },
-    "author": {
-      "type": "string",
-      "description": "GitHub handle or org of the plugin author.",
-      "minLength": 1
-    },
-    "submittedAt": {
-      "type": "string",
-      "description": "ISO 8601 datetime when the plugin was submitted to the registry.",
-      "format": "date-time"
     }
   }
 }

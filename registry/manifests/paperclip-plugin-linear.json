@@ -1,0 +1,239 @@
+{
+  "npmPackage": "@oldharlem/paperclip-plugin-linear",
+  "version": "0.7.0",
+  "manifest": {
+    "id": "paperclip.linear",
+    "apiVersion": 1,
+    "version": "0.7.0",
+    "displayName": "Linear",
+    "description": "Two-way sync between Paperclip projects and a Linear workspace. Pick which Paperclip project links to which Linear project; new Paperclip issues push to the linked Linear project, Linear issues that carry a configured label are imported back so agents can pick them up.",
+    "author": "Paperclip",
+    "categories": [
+      "connector",
+      "automation",
+      "ui"
+    ],
+    "capabilities": [
+      "companies.read",
+      "projects.read",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "issues.wakeup",
+      "issue.comments.read",
+      "issue.comments.create",
+      "issue.documents.read",
+      "activity.log.write",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "events.emit",
+      "jobs.schedule",
+      "webhooks.receive",
+      "http.outbound",
+      "secrets.read-ref",
+      "agent.tools.register",
+      "instance.settings.register",
+      "ui.page.register",
+      "ui.dashboardWidget.register",
+      "ui.detailTab.register",
+      "ui.sidebar.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "type": "string",
+          "title": "Linear API Key",
+          "description": "Paste your Linear personal API key here (Linear → Settings → API → Personal API keys). Stored encrypted at rest. For stronger isolation, use apiKeyRef instead."
+        },
+        "apiKeyRef": {
+          "type": "string",
+          "title": "Linear API Key (secret ref)",
+          "description": "Optional: reference an entry in the Paperclip secret provider instead of pasting the key above.",
+          "format": "secret-ref"
+        },
+        "webhookSecret": {
+          "type": "string",
+          "title": "Linear Webhook Signing Secret",
+          "description": "Paste the HMAC SHA-256 signing secret Linear shows when you create the webhook."
+        },
+        "webhookSecretRef": {
+          "type": "string",
+          "title": "Linear Webhook Signing Secret (secret ref)",
+          "format": "secret-ref"
+        },
+        "apiUrl": {
+          "type": "string",
+          "title": "Linear GraphQL Endpoint",
+          "default": "https://api.linear.app/graphql"
+        },
+        "paperclipPublicUrl": {
+          "type": "string",
+          "title": "Paperclip Public URL",
+          "description": "Public origin of this Paperclip instance (e.g. https://paperclipai.example.com). Used to compose the Linear webhook URL the plugin auto-provisions. Trailing slashes are stripped."
+        },
+        "pushPaperclipIssues": {
+          "type": "boolean",
+          "title": "Push new Paperclip issues to Linear",
+          "default": true
+        },
+        "pushPaperclipDocuments": {
+          "type": "boolean",
+          "title": "Mirror Paperclip documents (e.g. plans) to Linear comments",
+          "description": "When agents create or update an issue document like the plan, post or update a single Linear comment with the document body so it shows up in the Linear thread.",
+          "default": true
+        },
+        "importLinearIssues": {
+          "type": "boolean",
+          "title": "Import labelled Linear issues into Paperclip",
+          "default": true
+        },
+        "importLabelName": {
+          "type": "string",
+          "title": "Import label",
+          "description": "Linear label name that gates imports — only Linear issues with this label are pulled into Paperclip. The plugin auto-creates the label on first sync.",
+          "default": "paperclip"
+        },
+        "incrementalSyncMinutes": {
+          "type": "integer",
+          "title": "Incremental Sync Frequency (minutes)",
+          "minimum": 1,
+          "maximum": 1440,
+          "default": 15
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "full-sync",
+        "displayName": "Linear: Full Sync",
+        "description": "Refresh cached Linear teams, projects, and labels; reconcile mapped projects.",
+        "schedule": "0 3 * * *"
+      },
+      {
+        "jobKey": "incremental-sync",
+        "displayName": "Linear: Incremental Sync",
+        "description": "Pull labelled Linear issues updated since the last cursor, per linked project.",
+        "schedule": "*/15 * * * *"
+      }
+    ],
+    "webhooks": [
+      {
+        "endpointKey": "linear",
+        "displayName": "Linear Webhook",
+        "description": "Receives create/update/remove events from Linear for issues and comments. Configure this URL inside Linear → Settings → API → Webhooks."
+      }
+    ],
+    "tools": [
+      {
+        "name": "create-linear-issue",
+        "displayName": "Create Linear Issue",
+        "description": "Creates a new issue in Linear. If the agent's current Paperclip project is linked to a Linear project, the issue is created there.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Linear issue title"
+            },
+            "description": {
+              "type": "string",
+              "description": "Markdown description"
+            },
+            "paperclipProjectId": {
+              "type": "string",
+              "description": "Optional Paperclip project UUID. When provided, resolves the linked Linear project automatically."
+            },
+            "paperclipIssueId": {
+              "type": "string",
+              "description": "Optional Paperclip issue UUID. When provided, the resulting Linear issue is linked to it for future bidirectional sync."
+            },
+            "teamId": {
+              "type": "string",
+              "description": "Optional Linear team UUID override."
+            },
+            "projectId": {
+              "type": "string",
+              "description": "Optional Linear project UUID override."
+            }
+          },
+          "required": [
+            "title"
+          ]
+        }
+      },
+      {
+        "name": "search-linear-issues",
+        "displayName": "Search Linear Issues",
+        "description": "Searches Linear for issues matching a query string and returns identifier/title/url for the top matches.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "linear-page",
+          "displayName": "Linear",
+          "exportName": "LinearPage",
+          "routePath": "linear"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "linear-dashboard-widget",
+          "displayName": "Linear Sync",
+          "exportName": "LinearDashboardWidget"
+        },
+        {
+          "type": "detailTab",
+          "id": "linear-issue-detail-tab",
+          "displayName": "Linear",
+          "exportName": "LinearIssueDetailTab",
+          "entityTypes": [
+            "issue"
+          ]
+        },
+        {
+          "type": "detailTab",
+          "id": "linear-project-detail-tab",
+          "displayName": "Linear",
+          "exportName": "LinearProjectDetailTab",
+          "entityTypes": [
+            "project"
+          ]
+        },
+        {
+          "type": "projectSidebarItem",
+          "id": "linear-project-sidebar-item",
+          "displayName": "Linear",
+          "exportName": "LinearProjectSidebarItem",
+          "entityTypes": [
+            "project"
+          ]
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-04-14T00:00:00Z"
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://cliphub.fyi/registry/manifest.schema.json",
+  "title": "Paperclip Plugin Manifest (mirror of PaperclipPluginManifestV1)",
+  "description": "Validation schema for the manifest object extracted from a plugin's built dist/manifest.js. Mirrors the shape of PaperclipPluginManifestV1 in @paperclipai/shared. Liberal in what it accepts (additionalProperties allowed on nested objects) so it tolerates spec growth without churning the hub.",
+  "type": "object",
+  "required": ["id", "apiVersion", "version", "displayName", "description", "capabilities"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable plugin identifier. Should match the npm package name in most cases.",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "apiVersion": {
+      "type": "number",
+      "description": "Plugin SDK API version this manifest targets.",
+      "minimum": 1
+    },
+    "version": {
+      "type": "string",
+      "description": "Plugin version. Should match the published npm version.",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 },
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 128 },
+      "uniqueItems": true,
+      "maxItems": 200
+    },
+    "entrypoints": { "type": "object", "additionalProperties": true },
+    "instanceConfigSchema": { "type": "object", "additionalProperties": true },
+    "jobs": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "tools": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "webhooks": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "ui": { "type": "object", "additionalProperties": true },
+    "managedAgents": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "managedProjects": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "managedRoutines": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "managedSkills": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "launchers": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "databases": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "apiRoutes": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "environmentDrivers": { "type": "array", "items": { "type": "object", "additionalProperties": true }, "maxItems": 500 },
+    "minimumHostVersion": { "type": "string", "maxLength": 64 }
+  }
+}

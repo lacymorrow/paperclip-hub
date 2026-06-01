@@ -1,0 +1,84 @@
+{
+  "npmPackage": "paperclip-plugin-navigator",
+  "version": "0.2.1",
+  "manifest": {
+    "id": "paperclip-plugin-navigator",
+    "apiVersion": 1,
+    "version": "0.2.1",
+    "displayName": "File Navigator",
+    "description": "Browse projects with real names and open them directly in your external filebrowser.",
+    "author": "paperclip-plugin-navigator",
+    "categories": [
+      "workspace",
+      "ui"
+    ],
+    "capabilities": [
+      "projects.read",
+      "project.workspaces.read",
+      "companies.read",
+      "ui.page.register",
+      "ui.sidebar.register",
+      "http.outbound"
+    ],
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "fileBrowserBaseUrl": {
+          "type": "string",
+          "title": "File Browser Base URL",
+          "description": "Base URL of your external filebrowser (e.g. https://files.example.com/files)"
+        },
+        "fileBrowserUser": {
+          "type": "string",
+          "title": "File Browser Username",
+          "description": "Username for filebrowser API authentication. Required for the native file browser."
+        },
+        "fileBrowserPassword": {
+          "type": "string",
+          "title": "File Browser Password",
+          "format": "password",
+          "description": "Password for filebrowser API authentication. Required for the native file browser."
+        },
+        "enableModalBrowser": {
+          "type": "boolean",
+          "title": "Enable Modal Browser (Beta)",
+          "description": "When enabled, clicking Files opens an inline file browser modal instead of navigating to the external filebrowser. Beta feature — disabled by default.",
+          "default": false
+        }
+      },
+      "required": [
+        "fileBrowserBaseUrl"
+      ]
+    },
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "navigator-sidebar",
+          "displayName": "Files",
+          "exportName": "NavigatorSidebarEntry"
+        },
+        {
+          "type": "page",
+          "id": "navigator-page",
+          "displayName": "Files",
+          "exportName": "NavigatorPage"
+        },
+        {
+          "type": "projectSidebarItem",
+          "id": "navigator-project-sidebar",
+          "displayName": "Files",
+          "exportName": "NavigatorProjectSidebarItem",
+          "entityTypes": [
+            "project"
+          ]
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-04-22T00:00:00Z"
+}

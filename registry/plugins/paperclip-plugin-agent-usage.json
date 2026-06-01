@@ -1,11 +1,7 @@
 {
   "$schema": "../schema.json",
-  "name": "Agent Usage Tracker",
   "npmPackage": "paperclip-plugin-agent-usage",
-  "description": "Track AI model usage, token consumption, and cost attribution across Paperclip agent runs.",
+  "addedBy": "lacymorrow",
   "category": "observability",
-  "capabilities": ["event", "config"],
-  "sourceRepo": "https://github.com/lacymorrow/paperclip-plugin-agent-usage",
-  "author": "lacymorrow",
-  "submittedAt": "2026-05-01T00:00:00Z"
+  "sourceRepo": "https://github.com/lacymorrow/paperclip-plugin-agent-usage"
 }

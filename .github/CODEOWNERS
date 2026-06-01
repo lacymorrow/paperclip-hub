@@ -1,0 +1,4 @@
+# Plugin registry — every change requires a hub maintainer review
+registry/** @lacymorrow
+scripts/registry/** @lacymorrow
+.github/workflows/validate-plugin.yml @lacymorrow

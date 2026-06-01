@@ -8,6 +8,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { compileSchema, formatErrors } from "../lib/schema.ts";
+import { npmPackageToSlug } from "../lib/slug.ts";
 
 describe("registry entries pass schema validation", () => {
   it("every registry/plugins/*.json validates against the slim pointer schema", () => {
@@ -53,6 +54,31 @@ describe("registry entries pass schema validation", () => {
     const manifests = readdirSync("registry/manifests").filter((f) => f.endsWith(".json"));
     for (const m of manifests) {
       expect(pointers.has(m), `orphan registry/manifests/${m}`).toBe(true);
+    }
+  });
+
+  it("every pointer filename matches npmPackageToSlug(npmPackage)", () => {
+    const dir = "registry/plugins";
+    for (const file of readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+      const slug = file.replace(/\.json$/, "");
+      const data = JSON.parse(readFileSync(join(dir, file), "utf8")) as { npmPackage: string };
+      const expected = npmPackageToSlug(data.npmPackage);
+      expect(slug, `${file}: filename should be ${expected}.json for npmPackage ${data.npmPackage}`).toBe(
+        expected,
+      );
+    }
+  });
+
+  it("each stored manifest's npmPackage equals the corresponding pointer's npmPackage", () => {
+    const files = readdirSync("registry/plugins").filter((f) => f.endsWith(".json"));
+    for (const file of files) {
+      const pointer = JSON.parse(readFileSync(join("registry/plugins", file), "utf8")) as {
+        npmPackage: string;
+      };
+      const stored = JSON.parse(readFileSync(join("registry/manifests", file), "utf8")) as {
+        npmPackage: string;
+      };
+      expect(stored.npmPackage, `${file}: manifest npmPackage mismatch`).toBe(pointer.npmPackage);
     }
   });
 });

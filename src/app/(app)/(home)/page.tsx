@@ -105,26 +105,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             Browse
           </Link>
           <Link href="/submit">Submit</Link>
-          <Link href="/docs">Docs</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub#readme">Docs</Link>
         </nav>
         <div className="hc-header-actions">
-          <div className="hc-sm-search" aria-hidden>
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <span>Search the library…</span>
-            <span className="kbd">⌘K</span>
-          </div>
           <Link href="https://paperclip.ing" className="hc-btn">
             Get Paperclip →
           </Link>
@@ -166,7 +149,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <section className="hc-hero">
             <div className="hc-hero-l">
               <div className="hc-eyebrow">
-                <span className="vol">May 2026</span>
+                <span className="vol">Paperclip Hub</span>
                 <span>A registry for autonomous teams.</span>
               </div>
               <h1>
@@ -409,7 +392,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <h3>
                 The <em>top five.</em>
               </h3>
-              <Link href="/?sort=popular">see all</Link>
             </div>
             <div className="hc-trend">
               {trending.map((p, i) => (
@@ -477,10 +459,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <footer className="hc-foot">
         <div className="l">
           <b>Paperclip</b>
-          <span>The Hub — May 2026</span>
+          <span>The Hub</span>
         </div>
         <div className="r">
-          <Link href="/docs">Docs</Link>
           <Link href="/submit">Submit</Link>
           <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
         </div>

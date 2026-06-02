@@ -36,7 +36,7 @@ export function InstallCard({ cliCommand, pluginName }: InstallCardProps) {
     <div className="hc-d-install">
       <div className="hc-d-install-hd">
         <span>Install</span>
-        <span className="kbd">paperclip CLI · v2026.05</span>
+        <span className="kbd">via paperclipai</span>
       </div>
       <div
         className="hc-d-install-cmd"

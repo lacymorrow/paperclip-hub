@@ -181,8 +181,7 @@ export function PluginSubmissionForm({ existingSlugs = [] }: PluginSubmissionFor
                 </SelectContent>
               </Select>
               <FormDescription>
-                Where this plugin appears in the hub's browse filters. The plugin author's own
-                categories list (from the manifest) is shown separately on the detail page.
+                Where this plugin appears in the hub's browse filters.
               </FormDescription>
               <FormMessage />
             </FormItem>

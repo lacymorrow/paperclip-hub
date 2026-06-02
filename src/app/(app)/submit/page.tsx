@@ -39,12 +39,10 @@ export default function SubmitPage() {
         </Link>
         <nav className="hc-nav">
           <Link href="/">Browse</Link>
-          <Link href="/?sort=newest">Collections</Link>
-          <Link href="/?category=provider">Publishers</Link>
           <Link href="/submit" className="is-active">
             Submit
           </Link>
-          <Link href="/docs">Docs</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub#readme">Docs</Link>
         </nav>
         <div className="hc-header-actions">
           <Link href="https://paperclip.ing" className="hc-btn">
@@ -198,7 +196,7 @@ export default function SubmitPage() {
           <PluginSubmissionForm existingSlugs={existingSlugs} />
         </div>
 
-        {/* CLI alternative */}
+        {/* Manual PR alternative */}
         <div
           style={{
             marginTop: 36,
@@ -218,17 +216,17 @@ export default function SubmitPage() {
               marginBottom: 10,
             }}
           >
-            Prefer the CLI?
+            Prefer to open the PR yourself?
           </span>
           <p
             style={{
               fontSize: "0.875rem",
               opacity: 0.8,
               lineHeight: 1.6,
-              marginBottom: 14,
+              marginBottom: 0,
             }}
           >
-            You can also submit a plugin by manually opening a pull request to{" "}
+            Open a pull request directly against{" "}
             <a
               href="https://github.com/lacymorrow/paperclip-hub"
               target="_blank"
@@ -236,22 +234,10 @@ export default function SubmitPage() {
               style={{ color: "var(--paper)", textDecoration: "underline" }}
             >
               lacymorrow/paperclip-hub
-            </a>
-            .
+            </a>{" "}
+            adding a pointer file under <code>registry/plugins/</code>. CI extracts the manifest
+            and validates ownership against your npm maintainers list.
           </p>
-          <pre
-            style={{
-              fontFamily: "var(--hub-font-mono)",
-              fontSize: "0.8125rem",
-              lineHeight: 1.7,
-              opacity: 0.75,
-              overflow: "auto",
-            }}
-          >
-            <span style={{ color: "#b13a2a" }}>$</span> paperclip plugin submit \{"\n"}
-            {"  "}--package my-plugin-npm \{"\n"}
-            {"  "}--category tools
-          </pre>
         </div>
       </div>
 
@@ -259,10 +245,9 @@ export default function SubmitPage() {
       <footer className="hc-foot">
         <div className="l">
           <b>Paperclip</b>
-          <span>The Hub — May 2026</span>
+          <span>The Hub</span>
         </div>
         <div className="r">
-          <Link href="/docs">Docs</Link>
           <Link href="/submit">Submit</Link>
           <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
         </div>

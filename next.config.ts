@@ -18,6 +18,22 @@ const nextConfig: NextConfig = {
   redirects,
 
   async headers() {
+    // Content-Security-Policy. Tight on intent — we only fetch from our own
+    // origin plus the npm downloads API (used by the home page for install
+    // counts) and Google Fonts (loaded by hub.css). Inline styles are needed
+    // because hub.css uses style attributes; inline scripts are needed for
+    // Next.js's JSON-LD block in the root layout.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https://avatars.githubusercontent.com https://github.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://api.npmjs.org https://registry.npmjs.org",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self' https://github.com",
+    ].join("; ");
     return [
       {
         source: "/(.*)",
@@ -26,6 +42,8 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Content-Security-Policy", value: csp },
         ],
       },
     ];

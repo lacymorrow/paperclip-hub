@@ -134,7 +134,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <input
               name="q"
               defaultValue={params.q ?? ""}
-              placeholder={'Try "github", "memory", "hermes"…'}
+              placeholder={'Try "github", "memory", "discord"…'}
               aria-label="Search plugins"
             />
             <button type="submit">Search</button>
@@ -178,7 +178,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <input
                   name="q"
                   defaultValue={params.q ?? ""}
-                  placeholder={'Try "github", "memory", "hermes"…'}
+                  placeholder={'Try "github", "memory", "discord"…'}
                   aria-label="Search plugins"
                 />
                 <button type="submit">Search</button>

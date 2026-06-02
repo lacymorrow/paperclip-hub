@@ -22,6 +22,7 @@ export const CATEGORIES = [
   { value: "integration", label: "Integrations" },
   { value: "observability", label: "Observability" },
   { value: "memory", label: "Memory" },
+  { value: "other", label: "Other" },
 ] as const;
 
 export const SORT_OPTIONS = [

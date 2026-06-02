@@ -1,0 +1,338 @@
+{
+  "npmPackage": "@honcho-ai/paperclip-honcho",
+  "version": "0.1.2",
+  "manifest": {
+    "id": "honcho-ai.paperclip-honcho",
+    "apiVersion": 1,
+    "version": "0.1.2",
+    "displayName": "Honcho Memory",
+    "description": "Tool-first Honcho memory integration for Paperclip companies, agents, issues, comments, and documents.",
+    "author": "Honcho AI",
+    "categories": [
+      "connector",
+      "automation",
+      "ui"
+    ],
+    "capabilities": [
+      "companies.read",
+      "projects.read",
+      "project.workspaces.read",
+      "issues.read",
+      "issue.comments.read",
+      "issue.documents.read",
+      "agents.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "jobs.schedule",
+      "agent.tools.register",
+      "http.outbound",
+      "secrets.read-ref",
+      "instance.settings.register",
+      "ui.detailTab.register",
+      "ui.action.register"
+    ],
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "honchoApiBaseUrl": {
+          "type": "string",
+          "title": "Honcho API Base URL",
+          "default": "https://api.honcho.dev"
+        },
+        "honchoApiKey": {
+          "type": "string",
+          "title": "Honcho API Key",
+          "format": "secret-ref",
+          "default": ""
+        },
+        "workspacePrefix": {
+          "type": "string",
+          "title": "Workspace Prefix",
+          "default": "paperclip"
+        },
+        "syncIssueComments": {
+          "type": "boolean",
+          "title": "Sync Issue Comments",
+          "default": true
+        },
+        "syncIssueDocuments": {
+          "type": "boolean",
+          "title": "Sync Issue Documents",
+          "default": true
+        },
+        "enablePromptContext": {
+          "type": "boolean",
+          "title": "Inject Honcho Prompt Context",
+          "default": false
+        },
+        "enablePeerChat": {
+          "type": "boolean",
+          "title": "Enable Peer Chat Tool",
+          "default": true
+        },
+        "observe_me": {
+          "type": "boolean",
+          "title": "Observe Current Agent",
+          "default": true
+        },
+        "observe_others": {
+          "type": "boolean",
+          "title": "Observe Other Participants",
+          "default": true
+        },
+        "noisePatterns": {
+          "type": "array",
+          "title": "Custom Noise Patterns",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "disableDefaultNoisePatterns": {
+          "type": "boolean",
+          "title": "Disable Default Noise Patterns",
+          "default": false
+        },
+        "stripPlatformMetadata": {
+          "type": "boolean",
+          "title": "Strip Platform Metadata",
+          "default": true
+        },
+        "flushBeforeReset": {
+          "type": "boolean",
+          "title": "Flush Before Reset",
+          "default": false
+        }
+      }
+    },
+    "entrypoints": {
+      "worker": "./dist/worker-bootstrap.js",
+      "ui": "./dist/ui"
+    },
+    "jobs": [
+      {
+        "jobKey": "initialize-memory",
+        "displayName": "Initialize Memory",
+        "description": "Connects Honcho, creates core mappings, imports baseline issue memory, and verifies manual prompt previews."
+      },
+      {
+        "jobKey": "migration-scan",
+        "displayName": "Scan Migration Sources",
+        "description": "Scans issue comments and issue documents and writes an import preview."
+      },
+      {
+        "jobKey": "migration-import",
+        "displayName": "Import Historical Memory",
+        "description": "Imports the approved historical Paperclip issue memory preview into Honcho with idempotent ledger checks."
+      }
+    ],
+    "tools": [
+      {
+        "name": "honcho_get_issue_context",
+        "displayName": "Honcho Issue Context",
+        "description": "Retrieve compact Honcho context for the current issue session.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "issueId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "honcho_search_memory",
+        "displayName": "Honcho Search Memory",
+        "description": "Search Honcho memory within the current workspace, narrowing to the current issue by default.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string",
+              "enum": [
+                "workspace",
+                "session"
+              ]
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "honcho_ask_peer",
+        "displayName": "Honcho Ask Peer",
+        "description": "Query Honcho peer chat for a target peer. Requires peer chat to be enabled in plugin config.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "targetPeerId": {
+              "type": "string"
+            },
+            "query": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "targetPeerId",
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "honcho_get_workspace_context",
+        "displayName": "Honcho Workspace Context",
+        "description": "Retrieve broad workspace recall from Honcho.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "honcho_search_messages",
+        "displayName": "Honcho Search Messages",
+        "description": "Search raw Honcho messages.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "honcho_search_conclusions",
+        "displayName": "Honcho Search Conclusions",
+        "description": "Search high-signal summarized Honcho memory.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "honcho_get_session",
+        "displayName": "Honcho Session",
+        "description": "Retrieve issue session context from Honcho.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "issueId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "honcho_get_agent_context",
+        "displayName": "Honcho Agent Context",
+        "description": "Retrieve peer context for a specific agent.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "agentId": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "agentId"
+          ]
+        }
+      },
+      {
+        "name": "honcho_get_hierarchy_context",
+        "displayName": "Honcho Hierarchy Context",
+        "description": "Retrieve delegated work context when the host provides lineage metadata.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "runId": {
+              "type": "string"
+            },
+            "issueId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "honcho-settings-page",
+          "displayName": "Honcho Settings",
+          "exportName": "HonchoSettingsPage"
+        },
+        {
+          "type": "detailTab",
+          "id": "honcho-issue-memory-tab",
+          "displayName": "Memory",
+          "exportName": "HonchoIssueMemoryTab",
+          "entityTypes": [
+            "issue"
+          ],
+          "order": 40
+        }
+      ],
+      "launchers": [
+        {
+          "id": "honcho-memory-launcher",
+          "displayName": "Honcho Memory",
+          "placementZone": "globalToolbarButton",
+          "action": {
+            "type": "openDrawer",
+            "target": "HonchoMemoryToolbarLauncher"
+          },
+          "render": {
+            "environment": "hostOverlay"
+          }
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:54:52.878Z"
+}

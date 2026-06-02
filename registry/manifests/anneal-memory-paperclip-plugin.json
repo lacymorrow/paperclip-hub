@@ -1,0 +1,214 @@
+{
+  "npmPackage": "@anneal-memory/paperclip-plugin",
+  "version": "0.0.2",
+  "manifest": {
+    "id": "anneal-memory",
+    "apiVersion": 1,
+    "version": "0.0.1",
+    "displayName": "anneal-memory",
+    "description": "First-class four-layer memory for Paperclip agents: episodic store + continuity file + Hebbian associations + limbic affective tagging, with citation-validated graduation and tamper-evident audit chain. Wraps the anneal-memory Python MCP server.",
+    "author": "Phill Clapham",
+    "categories": [
+      "automation"
+    ],
+    "capabilities": [
+      "agent.tools.register",
+      "plugin.state.read",
+      "plugin.state.write",
+      "activity.log.write",
+      "events.subscribe"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "mcpCommand": {
+          "type": "string",
+          "title": "anneal-memory command",
+          "description": "Path or command name for the anneal-memory MCP server executable. Default: 'anneal-memory' (resolves via PATH). Override for uvx, pipx, or virtualenv installs.",
+          "default": "anneal-memory"
+        },
+        "storeBasePath": {
+          "type": "string",
+          "title": "Memory store base path",
+          "description": "Filesystem directory under which per-agent SQLite stores are created. Each Paperclip agent gets a subdirectory: <storeBasePath>/<agentId>/memory.db. Defaults to the plugin's data directory."
+        },
+        "autoRecordEvents": {
+          "type": "boolean",
+          "title": "Auto-record Paperclip events as episodes",
+          "description": "When enabled, the plugin subscribes to agent/run events and records them as 'observation' episodes automatically. Disable for explicit-only recording.",
+          "default": false
+        }
+      }
+    },
+    "tools": [
+      {
+        "name": "record",
+        "displayName": "Record episode",
+        "description": "Record a typed episode to memory. Call when important decisions are made, patterns noticed, tensions identified, questions arise, or outcomes observed. Record the reasoning, not just the fact.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Episode content."
+            },
+            "episode_type": {
+              "type": "string",
+              "enum": [
+                "observation",
+                "decision",
+                "tension",
+                "question",
+                "outcome",
+                "context"
+              ],
+              "description": "Episode type."
+            },
+            "source": {
+              "type": "string",
+              "description": "Source attribution. Default 'agent'."
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Optional JSON metadata."
+            }
+          },
+          "required": [
+            "content",
+            "episode_type"
+          ]
+        }
+      },
+      {
+        "name": "recall",
+        "displayName": "Recall episodes",
+        "description": "Query episodes from memory with filters (time range, type, source, keyword). Returns matches newest-first.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "since": {
+              "type": "string",
+              "description": "ISO 8601 lower bound."
+            },
+            "until": {
+              "type": "string",
+              "description": "ISO 8601 upper bound."
+            },
+            "episode_type": {
+              "type": "string",
+              "enum": [
+                "observation",
+                "decision",
+                "tension",
+                "question",
+                "outcome",
+                "context"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "keyword": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "integer",
+              "default": 100
+            },
+            "offset": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        }
+      },
+      {
+        "name": "prepare_wrap",
+        "displayName": "Prepare wrap (compression package)",
+        "description": "Prepare a compression package at session boundary. Returns episodes since last wrap, current continuity, stale pattern warnings, Hebbian association context, and compression instructions. Mints a wrap_token that must be round-tripped to save_continuity.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "max_chars": {
+              "type": "integer",
+              "default": 20000
+            },
+            "staleness_days": {
+              "type": "integer",
+              "default": 7
+            }
+          }
+        }
+      },
+      {
+        "name": "save_continuity",
+        "displayName": "Save compressed continuity",
+        "description": "Validate and save compressed continuity (must contain ## State, ## Patterns, ## Decisions, ## Context). Server validates structure, citation grounding, citation gaming, and records Hebbian associations + optional affective state.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "Full continuity markdown."
+            },
+            "affective_state": {
+              "type": "object",
+              "properties": {
+                "tag": {
+                  "type": "string"
+                },
+                "intensity": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "tag",
+                "intensity"
+              ]
+            },
+            "wrap_token": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{32}$",
+              "description": "32-char hex token from prepare_wrap response."
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "delete_episode",
+        "displayName": "Delete episode",
+        "description": "Delete a single episode by ID (GDPR-grade; tombstone preserved by default). Cascades to associations + audit log. Irreversible.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "episode_id": {
+              "type": "string",
+              "description": "8-char hex episode ID."
+            }
+          },
+          "required": [
+            "episode_id"
+          ]
+        }
+      },
+      {
+        "name": "status",
+        "displayName": "Memory status",
+        "description": "Get memory health metrics: episode counts, wrap state, continuity size, Hebbian density, audit chain health.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ]
+  },
+  "resolvedAt": "2026-06-02T07:56:10.924Z"
+}

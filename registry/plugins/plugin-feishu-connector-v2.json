@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@niubitli/plugin-feishu-connector-v2",
+  "addedBy": "lacymorrow",
+  "category": "integration"
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@jk3labs/file-browser",
+  "addedBy": "lacymorrow",
+  "category": "tools"
+}

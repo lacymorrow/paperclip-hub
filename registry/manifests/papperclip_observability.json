@@ -1,0 +1,63 @@
+{
+  "npmPackage": "@gaud_erp/papperclip_observability",
+  "version": "0.3.3",
+  "manifest": {
+    "id": "paperclip.observability",
+    "apiVersion": 1,
+    "version": "0.3.3",
+    "displayName": "Observability",
+    "description": "Configure metrics data sources and view imported dashboards (Grafana, AWS CloudWatch)",
+    "author": "Paperclip",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "plugin.state.read",
+      "plugin.state.write",
+      "secrets.read-ref",
+      "ui.sidebar.register",
+      "ui.page.register",
+      "instance.settings.register",
+      "metrics.write"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "observability-nav",
+          "displayName": "Observability",
+          "exportName": "ObservabilitySidebar",
+          "order": 40
+        },
+        {
+          "type": "routeSidebar",
+          "id": "observability-route-nav",
+          "displayName": "Observability",
+          "routePath": "observability",
+          "exportName": "ObservabilityRouteSidebar",
+          "order": 40
+        },
+        {
+          "type": "page",
+          "id": "observability",
+          "displayName": "Observability",
+          "routePath": "observability",
+          "exportName": "ObservabilityPage",
+          "order": 40
+        },
+        {
+          "type": "settingsPage",
+          "id": "observability-settings",
+          "displayName": "Observability",
+          "exportName": "ObservabilitySettingsPage",
+          "order": 40
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:08.249Z"
+}

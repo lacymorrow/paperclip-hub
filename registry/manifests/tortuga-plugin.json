@@ -1,0 +1,67 @@
+{
+  "npmPackage": "@bopen-io/tortuga-plugin",
+  "version": "0.0.11",
+  "manifest": {
+    "id": "bopen-io.tortuga-plugin",
+    "apiVersion": 1,
+    "version": "0.0.11",
+    "displayName": "Tortuga",
+    "description": "bOpen fleet monitoring and operations: real-time agent health, heartbeat tracking, cost analytics",
+    "author": "bOpen",
+    "categories": [
+      "ui",
+      "automation"
+    ],
+    "capabilities": [
+      "agents.read",
+      "agents.pause",
+      "agents.resume",
+      "agents.invoke",
+      "companies.read",
+      "issues.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "jobs.schedule",
+      "ui.dashboardWidget.register",
+      "ui.page.register",
+      "ui.sidebar.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "jobs": [
+      {
+        "jobKey": "fleet-health",
+        "displayName": "Fleet Health Check",
+        "description": "Cross-references Paperclip agents with fleet state to detect unhealthy or missing agents.",
+        "schedule": "*/5 * * * *"
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "tortuga-dashboard-widget",
+          "displayName": "Fleet Status",
+          "exportName": "FleetStatusWidget"
+        },
+        {
+          "type": "page",
+          "id": "tortuga-page",
+          "displayName": "Fleet Monitor",
+          "exportName": "FleetMonitorPage",
+          "routePath": "tortuga"
+        },
+        {
+          "type": "sidebar",
+          "id": "tortuga-sidebar-link",
+          "displayName": "Tortuga",
+          "exportName": "TortugaSidebarLink"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:07.415Z"
+}

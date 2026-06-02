@@ -1,0 +1,75 @@
+{
+  "npmPackage": "@betaform/paperclaw-dashboard",
+  "version": "2.6.8",
+  "manifest": {
+    "id": "betaform.paperclaw-dashboard",
+    "apiVersion": 1,
+    "version": "2.6.8",
+    "displayName": "betaform Control",
+    "description": "Executive dashboard for betaform.io: lead pipeline, social media queue, agent status, and post approvals.",
+    "author": "betaform",
+    "categories": [
+      "ui",
+      "automation"
+    ],
+    "capabilities": [
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "issue.documents.read",
+      "issue.documents.write",
+      "agents.read",
+      "companies.read",
+      "projects.read",
+      "issue.comments.read",
+      "events.subscribe",
+      "http.outbound",
+      "ui.sidebar.register",
+      "ui.page.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "betaform-dashboard-sidebar",
+          "displayName": "betaform",
+          "exportName": "DashboardSidebarLink",
+          "routePath": "ctrl-kpis"
+        },
+        {
+          "type": "page",
+          "id": "betaform-dashboard-page",
+          "displayName": "betaform Control",
+          "exportName": "DashboardPage",
+          "routePath": "ctrl-kpis"
+        },
+        {
+          "type": "page",
+          "id": "betaform-posts-page",
+          "displayName": "Social Posts",
+          "exportName": "SocialQueuePage",
+          "routePath": "ctrl-posts"
+        },
+        {
+          "type": "page",
+          "id": "betaform-leads-page",
+          "displayName": "Lead Pipeline",
+          "exportName": "LeadPipelinePage",
+          "routePath": "ctrl-leads"
+        },
+        {
+          "type": "page",
+          "id": "betaform-files-page",
+          "displayName": "Dokumente",
+          "exportName": "FileListPage",
+          "routePath": "ctrl-files"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:13.127Z"
+}

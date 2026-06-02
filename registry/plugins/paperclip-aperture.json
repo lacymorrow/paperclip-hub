@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@tomismeta/paperclip-aperture",
+  "addedBy": "lacymorrow",
+  "category": "memory",
+  "sourceRepo": "https://github.com/tomismeta/paperclip-aperture"
+}

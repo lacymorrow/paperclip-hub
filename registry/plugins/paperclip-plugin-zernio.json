@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-plugin-zernio",
+  "addedBy": "lacymorrow",
+  "category": "integration",
+  "sourceRepo": "https://github.com/rwbaker/plugin-zernio"
+}

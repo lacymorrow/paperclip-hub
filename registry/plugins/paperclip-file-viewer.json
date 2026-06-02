@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-file-viewer",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/Tr1ckyMag1ca1/paperclip-file-viewer"
+}

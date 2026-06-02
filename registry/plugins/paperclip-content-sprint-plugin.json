@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@marsbdigital/paperclip-content-sprint-plugin",
+  "addedBy": "lacymorrow",
+  "category": "tools"
+}

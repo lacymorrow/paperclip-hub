@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-plugin-notification-sound",
+  "addedBy": "lacymorrow",
+  "category": "tools"
+}

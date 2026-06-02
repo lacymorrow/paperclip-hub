@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@blaze283/social-agent-plugin",
+  "addedBy": "lacymorrow",
+  "category": "integration"
+}

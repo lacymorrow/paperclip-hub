@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@honcho-ai/paperclip-honcho",
+  "addedBy": "lacymorrow",
+  "category": "memory",
+  "sourceRepo": "https://github.com/plastic-labs/paperclip-honcho"
+}

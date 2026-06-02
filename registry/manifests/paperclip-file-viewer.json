@@ -1,0 +1,76 @@
+{
+  "npmPackage": "paperclip-file-viewer",
+  "version": "0.3.1",
+  "manifest": {
+    "id": "paperclipai.plugin-file-viewer",
+    "apiVersion": 1,
+    "version": "0.3.1",
+    "displayName": "File Viewer",
+    "description": "Browse and review files linked to Paperclip issues. Manage a review queue, approve or reject files, and keep a full review history — all from within Paperclip.",
+    "author": "Paperclip AI Agents",
+    "categories": [
+      "ui",
+      "workspace"
+    ],
+    "capabilities": [
+      "plugin.state.read",
+      "plugin.state.write",
+      "companies.read",
+      "issues.read",
+      "issue.documents.read",
+      "ui.page.register",
+      "ui.sidebar.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "seedExampleFiles": {
+          "type": "boolean",
+          "title": "Seed Example Files",
+          "description": "Create 3 example files (deploy.sh, config.yml, README.md) on first load. Useful for testing. Disable for clean installs.",
+          "default": true
+        },
+        "defaultFlagForReview": {
+          "type": "boolean",
+          "title": "Flag New Files for Review",
+          "description": "When enabled, newly registered files are automatically added to the Review Queue.",
+          "default": false
+        },
+        "autoIndexDocuments": {
+          "type": "boolean",
+          "title": "Auto-Index Issue Documents",
+          "description": "Automatically discover and register all issue documents on plugin startup. New documents are added each time the plugin restarts.",
+          "default": true
+        },
+        "maxFilesPerPage": {
+          "type": "number",
+          "title": "Files Per Page",
+          "description": "Maximum number of files shown in the sidebar list.",
+          "default": 100
+        }
+      }
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "file-viewer-page",
+          "displayName": "File Viewer",
+          "routePath": "file-viewer",
+          "exportName": "FileViewerPage"
+        },
+        {
+          "type": "sidebar",
+          "id": "file-viewer-sidebar",
+          "displayName": "File Viewer",
+          "exportName": "FileViewerSidebar"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:13.998Z"
+}

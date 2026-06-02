@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@wil0x91/paperclip-plugin-github-issues",
+  "addedBy": "lacymorrow",
+  "category": "integration",
+  "sourceRepo": "https://github.com/wil0x91/paperclip-plugin-github-issues"
+}

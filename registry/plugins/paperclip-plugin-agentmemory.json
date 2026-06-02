@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@gaud_erp/paperclip-plugin-agentmemory",
+  "addedBy": "lacymorrow",
+  "category": "memory",
+  "sourceRepo": "https://github.com/gauderp/paperclip-plugin-agentmemory"
+}

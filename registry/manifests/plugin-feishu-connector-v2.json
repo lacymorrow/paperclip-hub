@@ -1,0 +1,880 @@
+{
+  "npmPackage": "@niubitli/plugin-feishu-connector-v2",
+  "version": "0.3.3-connector-feishu",
+  "manifest": {
+    "id": "paperclipai.feishu-connector",
+    "apiVersion": 1,
+    "version": "0.3.1-connector-feishu",
+    "displayName": "飞书连接器",
+    "description": "让 Paperclip 智能体通过飞书机器人收消息、回消息，并可把需求写入飞书多维表格。",
+    "author": "Paperclip",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "companies.read",
+      "projects.read",
+      "issues.read",
+      "issues.create",
+      "issue.comments.read",
+      "issue.comments.create",
+      "issue.attachments.create",
+      "agents.read",
+      "agents.invoke",
+      "agent.sessions.create",
+      "agent.sessions.send",
+      "activity.log.write",
+      "metrics.write",
+      "database.namespace.migrate",
+      "database.namespace.read",
+      "database.namespace.write",
+      "plugin.state.read",
+      "plugin.state.write",
+      "secrets.read-ref",
+      "webhooks.receive",
+      "api.routes.register",
+      "events.subscribe",
+      "agent.tools.register",
+      "instance.settings.register",
+      "ui.sidebar.register",
+      "ui.dashboardWidget.register",
+      "ui.detailTab.register",
+      "ui.action.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "webhooks": [
+      {
+        "endpointKey": "feishu-events",
+        "displayName": "飞书事件回调",
+        "description": "接收飞书开放平台推送的消息事件，并按入口规则创建或更新 Paperclip Issue。"
+      }
+    ],
+    "apiRoutes": [
+      {
+        "routeKey": "simulate-inbound-message",
+        "method": "POST",
+        "path": "/simulate-inbound-message",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      }
+    ],
+    "database": {
+      "namespaceSlug": "feishu_connector",
+      "migrationsDir": "migrations",
+      "coreReadTables": [
+        "issues"
+      ]
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "capabilityDefaultPolicy": {
+          "type": "string",
+          "title": "飞书能力默认开放策略",
+          "x-order": 5,
+          "description": "默认使用“按飞书应用授权开放”：插件不会让用户逐项确认已接入能力，用户只需要关闭不想给 Agent 使用的能力。",
+          "enum": [
+            "authorized",
+            "conservative"
+          ],
+          "enumNames": [
+            "按飞书应用授权开放",
+            "保守模式：只开启核心能力"
+          ],
+          "default": "authorized"
+        },
+        "connections": {
+          "type": "array",
+          "title": "第 1 步：飞书机器人账号",
+          "x-order": 10,
+          "description": "先告诉 Paperclip 用哪个飞书机器人收发消息。通常一个机器人填一项。",
+          "items": {
+            "type": "object",
+            "title": "飞书机器人账号",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "连接代号",
+                "x-order": 10,
+                "description": "自己起一个短名字，后面的接收规则会引用它。建议用英文和短横线，例如 boss-news-bot。",
+                "default": "boss-news-bot"
+              },
+              "name": {
+                "type": "string",
+                "title": "页面显示名称",
+                "x-order": 20,
+                "description": "给人看的名字，例如「老板资讯机器人」。",
+                "default": "老板资讯机器人"
+              },
+              "profileName": {
+                "type": "string",
+                "title": "lark-cli 登录配置名",
+                "x-order": 30,
+                "description": "这是飞书官方 lark-cli 里已经登录好的 profile 名。不会填时先找工程师执行 lark-cli auth login 创建。",
+                "default": "paperclip-news-bot"
+              },
+              "botAliases": {
+                "type": "array",
+                "title": "飞书 @ 名称/别名",
+                "x-order": 32,
+                "description": "当飞书或 lark-cli 没有返回机器人显示名时，用这里判断用户是不是 @ 了当前机器人。可填多个，例如「锐思」「小锐」。",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "appId": {
+                "type": "string",
+                "title": "飞书 App ID（可选）",
+                "x-order": 35,
+                "description": "只用于页面核对，不保存 App Secret。App Secret 由官方 lark-cli profile 托管。"
+              },
+              "enabled": {
+                "type": "boolean",
+                "title": "启用这个飞书机器人",
+                "x-order": 40,
+                "default": true
+              }
+            },
+            "required": [
+              "id",
+              "profileName"
+            ]
+          },
+          "default": []
+        },
+        "routes": {
+          "type": "array",
+          "title": "第 2 步：飞书消息交给哪个智能体",
+          "x-order": 20,
+          "description": "一条规则代表一个场景：谁在飞书里发消息、交给 Paperclip 里的哪个智能体处理。",
+          "items": {
+            "type": "object",
+            "title": "接收消息规则",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "规则代号",
+                "x-order": 10,
+                "description": "自己起一个短名字，例如 boss-chat-to-news-agent。",
+                "default": "boss-chat-to-news-agent"
+              },
+              "connectionId": {
+                "type": "string",
+                "title": "使用哪个飞书机器人",
+                "x-order": 20,
+                "description": "填写第 1 步里的「连接代号」。如果只配置了一个机器人，也建议填上，避免以后混淆。",
+                "default": "boss-news-bot"
+              },
+              "enabled": {
+                "type": "boolean",
+                "title": "启用这条规则",
+                "x-order": 30,
+                "default": true
+              },
+              "matchType": {
+                "type": "string",
+                "title": "监听方式",
+                "x-order": 40,
+                "description": "最常用选「指定飞书群/会话」。老板单聊机器人也可以用这个方式，填对应 chat_id。",
+                "enum": [
+                  "chat",
+                  "user",
+                  "keyword",
+                  "regex",
+                  "default"
+                ],
+                "enumNames": [
+                  "指定飞书群/会话",
+                  "指定发消息的人",
+                  "消息包含关键词",
+                  "高级：正则匹配",
+                  "兜底：其他消息都接收"
+                ],
+                "default": "chat"
+              },
+              "chatId": {
+                "type": "string",
+                "title": "飞书群/会话 chat_id",
+                "x-order": 50,
+                "description": "监听方式选「指定飞书群/会话」时填写。设置页支持按群名搜索后自动带出。"
+              },
+              "chatName": {
+                "type": "string",
+                "title": "飞书群/会话名称",
+                "x-order": 55,
+                "description": "只用于页面显示，真正匹配仍以 chat_id 为准。"
+              },
+              "userOpenId": {
+                "type": "string",
+                "title": "发消息人的 open_id",
+                "x-order": 60,
+                "description": "监听方式选「指定发消息的人」时填写。设置页支持按姓名搜索后自动带出。"
+              },
+              "userName": {
+                "type": "string",
+                "title": "发消息人姓名",
+                "x-order": 65,
+                "description": "只用于页面显示，真正匹配仍以 open_id 为准。"
+              },
+              "keyword": {
+                "type": "string",
+                "title": "关键词",
+                "x-order": 70,
+                "description": "监听方式选「消息包含关键词」时填写。例如「资讯」「帮我查」。"
+              },
+              "regex": {
+                "type": "string",
+                "title": "高级：正则表达式",
+                "x-order": 80,
+                "description": "一般不用填。只有需要复杂匹配规则时给工程师使用。"
+              },
+              "companyRef": {
+                "type": "string",
+                "title": "Paperclip 公司",
+                "x-order": 90,
+                "description": "填公司名称或左侧圆点上的公司前缀即可，例如「锐捷网络」或「CMP」。",
+                "default": "CMP"
+              },
+              "targetAgentName": {
+                "type": "string",
+                "title": "交给哪个智能体",
+                "x-order": 100,
+                "description": "填左侧智能体列表里显示的名字，例如「资讯数字人」「刘总」。插件会自动找到对应智能体。"
+              },
+              "replyMode": {
+                "type": "string",
+                "title": "智能体处理后怎么回复飞书",
+                "x-order": 110,
+                "enum": [
+                  "none",
+                  "message",
+                  "thread"
+                ],
+                "enumNames": [
+                  "不自动回复",
+                  "发一条新消息",
+                  "在原消息线程里回复"
+                ],
+                "default": "thread"
+              },
+              "baseSinkId": {
+                "type": "string",
+                "title": "可选：同步到哪张多维表格",
+                "x-order": 120,
+                "description": "填写第 3 步里的「多维表格规则代号」。不需要写入多维表格就留空。"
+              },
+              "priority": {
+                "type": "number",
+                "title": "高级：规则优先级",
+                "x-order": 900,
+                "description": "多条规则都能匹配时，数字大的先执行。普通用户保持 10 即可。",
+                "default": 10
+              },
+              "companyId": {
+                "type": "string",
+                "title": "高级：公司 ID",
+                "x-order": 910,
+                "description": "普通用户不用填。只有公司名称/前缀找不到时，才让工程师复制公司 ID。"
+              },
+              "projectId": {
+                "type": "string",
+                "title": "高级：项目 ID",
+                "x-order": 920,
+                "description": "默认会创建到公司任务池。想固定进入某个项目时再填项目 ID。"
+              },
+              "targetAgentId": {
+                "type": "string",
+                "title": "高级：智能体 ID",
+                "x-order": 930,
+                "description": "普通用户不用填。只有智能体名称找不到时，才复制智能体页面 URL 里的 ID。"
+              }
+            },
+            "required": [
+              "id",
+              "matchType"
+            ]
+          },
+          "default": []
+        },
+        "baseSinks": {
+          "type": "array",
+          "title": "第 3 步（可选）：写入飞书多维表格",
+          "x-order": 30,
+          "description": "如果希望把飞书里的新需求同步沉淀到多维表格，就在这里添加一项。不需要就留空。",
+          "items": {
+            "type": "object",
+            "title": "多维表格写入规则",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "多维表格规则代号",
+                "x-order": 10,
+                "description": "自己起一个短名字，接收规则里会引用它。例如 boss-demand-base。",
+                "default": "boss-demand-base"
+              },
+              "connectionId": {
+                "type": "string",
+                "title": "使用哪个飞书机器人",
+                "x-order": 20,
+                "description": "填写第 1 步里的「连接代号」。留空时默认使用第一个机器人。",
+                "default": "boss-news-bot"
+              },
+              "enabled": {
+                "type": "boolean",
+                "title": "启用写入多维表格",
+                "x-order": 30,
+                "default": true
+              },
+              "baseToken": {
+                "type": "string",
+                "title": "多维表格 base token",
+                "x-order": 40,
+                "description": "飞书多维表格链接里的 app 开头那段 token。不会找时把表格链接发给工程师。"
+              },
+              "tableIdOrName": {
+                "type": "string",
+                "title": "数据表 ID 或表名",
+                "x-order": 50,
+                "description": "可以填表名，例如「需求池」；更稳的是填 table_id。"
+              },
+              "identity": {
+                "type": "string",
+                "title": "用谁的身份写表",
+                "x-order": 60,
+                "enum": [
+                  "bot",
+                  "user"
+                ],
+                "enumNames": [
+                  "机器人身份",
+                  "用户身份"
+                ],
+                "default": "bot"
+              },
+              "fieldMap": {
+                "type": "object",
+                "title": "写入哪些字段",
+                "x-order": 70,
+                "description": "左边是飞书表格字段名，右边是要写入的内容模板。默认字段适合「需求池」表。",
+                "properties": {
+                  "需求标题": {
+                    "type": "string",
+                    "title": "需求标题",
+                    "x-order": 10,
+                    "default": "{{issue_title}}"
+                  },
+                  "原始需求": {
+                    "type": "string",
+                    "title": "原始需求",
+                    "x-order": 20,
+                    "default": "{{message.text}}"
+                  },
+                  "提出人": {
+                    "type": "string",
+                    "title": "提出人",
+                    "x-order": 30,
+                    "default": "{{sender.name}}"
+                  },
+                  "飞书消息ID": {
+                    "type": "string",
+                    "title": "飞书消息ID",
+                    "x-order": 40,
+                    "default": "{{message.id}}"
+                  },
+                  "Paperclip任务ID": {
+                    "type": "string",
+                    "title": "Paperclip任务ID",
+                    "x-order": 50,
+                    "default": "{{issue_id}}"
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "baseToken",
+              "tableIdOrName"
+            ]
+          },
+          "default": []
+        },
+        "dryRunCli": {
+          "type": "boolean",
+          "title": "测试模式：先不真的发飞书消息",
+          "x-order": 40,
+          "default": true,
+          "description": "刚配置时建议打开。确认没问题后再关闭，关闭后才会真的调用 lark-cli 给飞书发消息或写表。"
+        },
+        "ackOnInbound": {
+          "type": "boolean",
+          "title": "收到需求后先回复一句「已收到」",
+          "x-order": 50,
+          "default": false,
+          "description": "打开后，飞书消息进来时会先自动回复确认。建议正式使用时打开。"
+        },
+        "ackMessageTemplate": {
+          "type": "string",
+          "title": "收到需求时的确认话术",
+          "x-order": 60,
+          "default": "已收到，交给 {{agent_name}} 处理。\n任务：{{issue_ref}}",
+          "description": "可以使用 {{agent_name}} 表示智能体名称。"
+        },
+        "enableQuickReply": {
+          "type": "boolean",
+          "title": "测试口令：只回复 ok 时不跑智能体",
+          "x-order": 65,
+          "default": true,
+          "description": "打开后，在飞书里 @机器人 发送「只回复 ok」会直接回 ok，用来确认飞书收发链路，不会创建 Paperclip 任务。"
+        },
+        "quickReplyRegex": {
+          "type": "string",
+          "title": "高级：测试口令匹配规则",
+          "x-order": 66,
+          "default": "^(只回复\\s*ok|回复\\s*ok|ping)$",
+          "description": "普通用户不用改。匹配到这个规则时，会直接发送下方的测试回复内容。"
+        },
+        "quickReplyText": {
+          "type": "string",
+          "title": "测试回复内容",
+          "x-order": 67,
+          "default": "ok",
+          "description": "测试口令命中后，机器人直接回复这句话。"
+        },
+        "completionMessageTemplate": {
+          "type": "string",
+          "title": "智能体完成后的回复话术",
+          "x-order": 70,
+          "default": "处理完成：{{issue_title}}",
+          "description": "默认优先使用 Paperclip 最终评论正文。自定义时可使用 {{issue_title}}、{{issue_ref}}、{{issue_url}}。"
+        },
+        "paperclipBaseUrl": {
+          "type": "string",
+          "title": "Paperclip 内部访问地址（可选）",
+          "x-order": 75,
+          "default": "",
+          "description": "例如 https://paperclip.company.com。只用于飞书里附带内部任务链接；没有 Paperclip 账号的人打不开。"
+        },
+        "enableEventSubscriber": {
+          "type": "boolean",
+          "title": "自动监听飞书新消息",
+          "x-order": 80,
+          "default": false,
+          "description": "本地测试可以打开。未来部署到云服务器时，建议只开一个监听服务，避免同一条飞书消息被处理多次。"
+        },
+        "eventTypes": {
+          "type": "string",
+          "title": "高级：监听的飞书事件类型",
+          "x-order": 90,
+          "default": "im.message.receive_v1",
+          "description": "普通用户不用改。默认监听飞书收到消息事件。"
+        },
+        "eventVerificationTokenRef": {
+          "type": "string",
+          "title": "事件 Verification Token Secret Ref",
+          "x-order": 92,
+          "description": "可选。把飞书事件订阅里的 Verification Token 存到 Paperclip Secret/Vault 后，在这里填写引用名。插件只保存引用，不保存 token 明文。"
+        },
+        "eventEncryptKeyRef": {
+          "type": "string",
+          "title": "事件 Encrypt Key Secret Ref",
+          "x-order": 94,
+          "description": "可选。把飞书事件订阅里的 Encrypt Key 存到 Paperclip Secret/Vault 后，在这里填写引用名。用于解密加密事件，也可用于签名校验。"
+        },
+        "eventRequireSignature": {
+          "type": "boolean",
+          "title": "公网回调必须校验签名",
+          "x-order": 96,
+          "default": false,
+          "description": "云端 webhook 建议开启。开启后，飞书回调必须带 x-lark-signature、timestamp 和 nonce，并通过 Encrypt Key 校验。"
+        },
+        "larkCliBin": {
+          "type": "string",
+          "title": "高级：lark-cli 命令路径",
+          "x-order": 100,
+          "default": "lark-cli",
+          "description": "普通用户不用改。保持默认时插件会优先使用包内自带 CLI；需要强制走服务器固定路径时才填写完整路径。"
+        }
+      }
+    },
+    "tools": [
+      {
+        "name": "feishu.send_message",
+        "displayName": "发送飞书消息",
+        "description": "通过已配置的飞书机器人给指定会话或用户发送消息。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "title": "飞书机器人连接代号",
+              "description": "对应第 1 步里填写的连接代号。留空时使用第一个启用的机器人。"
+            },
+            "chatId": {
+              "type": "string",
+              "title": "飞书群/会话 chat_id",
+              "description": "发到群或单聊会话时填写。"
+            },
+            "userId": {
+              "type": "string",
+              "title": "飞书用户 ID",
+              "description": "直接发给某个用户时填写。"
+            },
+            "text": {
+              "type": "string",
+              "title": "文本内容"
+            },
+            "markdown": {
+              "type": "string",
+              "title": "Markdown 内容"
+            }
+          }
+        }
+      },
+      {
+        "name": "feishu.write_base_record",
+        "displayName": "写入飞书多维表格",
+        "description": "把一条结构化记录写入已配置的飞书多维表格。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "sinkId": {
+              "type": "string",
+              "title": "多维表格规则代号",
+              "description": "对应第 3 步里填写的规则代号。"
+            },
+            "record": {
+              "type": "object",
+              "title": "要写入的记录内容"
+            }
+          },
+          "required": [
+            "sinkId",
+            "record"
+          ]
+        }
+      },
+      {
+        "name": "feishu.send_card",
+        "displayName": "发送飞书卡片",
+        "description": "通过已配置的飞书机器人发送结构化飞书卡片。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "title": "飞书机器人连接代号",
+              "description": "留空时使用第一个启用的机器人。"
+            },
+            "chatId": {
+              "type": "string",
+              "title": "飞书群/会话 chat_id"
+            },
+            "userId": {
+              "type": "string",
+              "title": "飞书用户 ID"
+            },
+            "title": {
+              "type": "string",
+              "title": "卡片标题"
+            },
+            "summary": {
+              "type": "string",
+              "title": "卡片正文摘要"
+            },
+            "actions": {
+              "type": "array",
+              "title": "按钮",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "title": "按钮文字"
+                  },
+                  "url": {
+                    "type": "string",
+                    "title": "按钮链接"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "title",
+            "summary"
+          ]
+        }
+      },
+      {
+        "name": "feishu.reply_original_thread",
+        "displayName": "回复原飞书会话",
+        "description": "在由飞书消息创建的 Paperclip 任务中，把内容回复到原飞书消息线程。默认会根据当前 Agent 运行自动找到原会话。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "要回复的文本"
+            },
+            "issueId": {
+              "type": "string",
+              "title": "Paperclip 任务 ID（可选）",
+              "description": "一般不用填。只有当前运行找不到飞书会话时，才用任务 ID 兜底查找。"
+            },
+            "replyMode": {
+              "type": "string",
+              "title": "回复方式",
+              "enum": [
+                "thread",
+                "message"
+              ],
+              "enumNames": [
+                "在原消息线程里回复",
+                "直接发到原飞书会话"
+              ],
+              "default": "thread"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "feishu.reply_source_thread",
+        "displayName": "回复飞书来源线程",
+        "description": "在由飞书消息创建的 Paperclip 任务中，把内容回复到原飞书消息线程。建议新 Agent 使用这个工具名；旧工具名继续兼容。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "要回复的文本"
+            },
+            "issueId": {
+              "type": "string",
+              "title": "Paperclip 任务 ID（可选）",
+              "description": "一般不用填。只有当前运行找不到飞书会话时，才用任务 ID 兜底查找。"
+            },
+            "replyMode": {
+              "type": "string",
+              "title": "回复方式",
+              "enum": [
+                "thread",
+                "message"
+              ],
+              "enumNames": [
+                "在原消息线程里回复",
+                "直接发到原飞书会话"
+              ],
+              "default": "thread"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "feishu.ask_clarification",
+        "displayName": "向飞书提出追问",
+        "description": "任务信息不足时，在原飞书消息线程里向提出人追问。只适用于从飞书入口创建的 Paperclip 任务。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "title": "要追问的问题"
+            },
+            "issueId": {
+              "type": "string",
+              "title": "Paperclip 任务 ID（可选）",
+              "description": "一般不用填。只有当前运行找不到飞书会话时，才用任务 ID 兜底查找。"
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      {
+        "name": "feishu.download_attachments",
+        "displayName": "下载原飞书附件",
+        "description": "下载创建当前 Paperclip 任务的飞书原消息附件，并挂到 Issue。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "issueId": {
+              "type": "string",
+              "title": "Paperclip 任务 ID（可选）",
+              "description": "一般不用填。只有当前运行找不到飞书会话时，才用任务 ID 兜底查找。"
+            }
+          }
+        }
+      },
+      {
+        "name": "feishu.lookup_user",
+        "displayName": "查找飞书用户",
+        "description": "按姓名、工号或关键词查找飞书联系人，供智能体在需要确认收件人或提出人身份时使用。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "title": "姓名、工号或关键词"
+            },
+            "connectionId": {
+              "type": "string",
+              "title": "飞书机器人连接代号（可选）",
+              "description": "留空时使用第一个启用的机器人。"
+            },
+            "profileName": {
+              "type": "string",
+              "title": "lark-cli profile（可选）",
+              "description": "工程师调试时才需要。普通智能体不要填写。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "feishu.fetch_doc",
+        "displayName": "读取飞书文档",
+        "description": "读取飞书云文档内容，供智能体总结或分析。默认使用用户授权身份。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "doc": {
+              "type": "string",
+              "title": "飞书文档 URL 或 token"
+            },
+            "connectionId": {
+              "type": "string",
+              "title": "飞书机器人连接代号（可选）",
+              "description": "用于选择绑定在同一飞书应用下的 profile。"
+            },
+            "profileName": {
+              "type": "string",
+              "title": "lark-cli profile（可选）",
+              "description": "工程师调试时才需要。普通智能体不要填写。"
+            },
+            "identity": {
+              "type": "string",
+              "title": "访问身份",
+              "enum": [
+                "user",
+                "bot"
+              ],
+              "enumNames": [
+                "用户授权",
+                "机器人身份"
+              ],
+              "default": "user"
+            }
+          },
+          "required": [
+            "doc"
+          ]
+        }
+      },
+      {
+        "name": "feishu.run_lark_cli_capability",
+        "displayName": "受控运行 lark-cli 能力",
+        "description": "高级兜底工具。只能运行能力中心已开启且命令前缀在允许列表里的 lark-cli 能力。",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "capabilityKey": {
+              "type": "string",
+              "title": "能力 key",
+              "description": "来自能力中心，例如 fetch_doc、lookup_user。"
+            },
+            "command": {
+              "type": "array",
+              "title": "lark-cli 命令参数数组",
+              "items": {
+                "type": "string"
+              },
+              "description": "不要包含 lark-cli 二进制名。插件会按连接注入 profile。"
+            },
+            "connectionId": {
+              "type": "string",
+              "title": "飞书机器人连接代号（可选）"
+            },
+            "profileName": {
+              "type": "string",
+              "title": "lark-cli profile（可选）",
+              "description": "工程师调试时才需要。普通智能体不要填写。"
+            },
+            "timeoutMs": {
+              "type": "number",
+              "title": "超时时间毫秒（可选）"
+            }
+          },
+          "required": [
+            "capabilityKey",
+            "command"
+          ]
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "feishu-connector-settings",
+          "displayName": "飞书连接器配置",
+          "exportName": "FeishuSettingsPage"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "feishu-connector-status",
+          "displayName": "飞书连接器",
+          "exportName": "DashboardWidget"
+        },
+        {
+          "type": "sidebar",
+          "id": "feishu-connector-sidebar-link",
+          "displayName": "飞书连接器",
+          "exportName": "FeishuSidebarLink"
+        },
+        {
+          "type": "sidebarPanel",
+          "id": "feishu-connector-sidebar-panel",
+          "displayName": "飞书连接器状态",
+          "exportName": "FeishuSidebarPanel"
+        },
+        {
+          "type": "detailTab",
+          "id": "feishu-issue-source",
+          "displayName": "飞书",
+          "exportName": "FeishuIssueTab",
+          "entityTypes": [
+            "issue"
+          ]
+        },
+        {
+          "type": "commentContextMenuItem",
+          "id": "feishu-comment-reply-action",
+          "displayName": "回复到飞书",
+          "exportName": "FeishuCommentReplyAction",
+          "entityTypes": [
+            "comment"
+          ]
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:03.844Z"
+}

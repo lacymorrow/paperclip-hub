@@ -1,0 +1,68 @@
+{
+  "npmPackage": "@wil0x91/paperclip-plugin-github-issues",
+  "version": "0.2.4",
+  "manifest": {
+    "id": "local.github-issues",
+    "apiVersion": 1,
+    "version": "0.2.3",
+    "displayName": "GitHub Issues Sync",
+    "description": "Multi-binding GitHub issue sync — register N bindings (one per Paperclip company × repo) and the plugin polls each on a 10-minute schedule.",
+    "author": "Willian Costa",
+    "categories": [
+      "connector"
+    ],
+    "capabilities": [
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "plugin.state.read",
+      "plugin.state.write",
+      "jobs.schedule",
+      "http.outbound",
+      "secrets.read-ref",
+      "activity.log.write",
+      "companies.read",
+      "projects.read",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "dist/worker.js",
+      "ui": "dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "defaultPriority": {
+          "type": "string",
+          "title": "Default priority for imported issues",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "default": "medium"
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "sync-github-issues",
+        "displayName": "Sync GitHub issues",
+        "description": "Poll every registered binding and import / update issues.",
+        "schedule": "*/10 * * * *"
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "github-issues-settings",
+          "displayName": "GitHub Issues Sync",
+          "exportName": "GithubIssuesPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:04.588Z"
+}

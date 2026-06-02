@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@anneal-memory/paperclip-plugin",
+  "addedBy": "lacymorrow",
+  "category": "memory",
+  "sourceRepo": "https://github.com/phillipclapham/anneal-memory-paperclip-plugin"
+}

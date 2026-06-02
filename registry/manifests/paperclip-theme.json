@@ -1,0 +1,35 @@
+{
+  "npmPackage": "paperclip-theme",
+  "version": "0.2.2",
+  "manifest": {
+    "id": "blazo.paperclip-theme",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "Theme Customizer",
+    "description": "In-app theme editor with live preview, curated presets, and shareable configurations. Override colors, radius, and design tokens without rebuilding.",
+    "author": "Khaleeq Fisher",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "plugin.state.read",
+      "plugin.state.write",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "theme-settings-page",
+          "displayName": "Theme",
+          "exportName": "ThemeSettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:14.703Z"
+}

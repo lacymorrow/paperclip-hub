@@ -1,0 +1,67 @@
+{
+  "npmPackage": "@avirajkhare00/agent-commerce-bridge",
+  "version": "0.1.4",
+  "manifest": {
+    "id": "avirajkhare00.agent-commerce-bridge",
+    "apiVersion": 1,
+    "version": "0.1.4",
+    "displayName": "Agent Commerce",
+    "description": "Bridge UI for Agent Commerce next to Paperclip",
+    "author": "avirajkhare00",
+    "categories": [
+      "connector"
+    ],
+    "capabilities": [
+      "http.outbound",
+      "plugin.state.read",
+      "plugin.state.write",
+      "ui.action.register",
+      "ui.page.register",
+      "ui.sidebar.register",
+      "ui.dashboardWidget.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "commerce_api_base_url": {
+          "type": "string",
+          "title": "Commerce API base URL",
+          "description": "Origin only, no trailing path (e.g. http://127.0.0.1:3210). Used for GET /v1/paperclip/ping on the Commerce service."
+        },
+        "commerce_tenant_api_key": {
+          "type": "string",
+          "title": "Commerce tenant API key",
+          "description": "Bearer token for your Commerce tenant (Authorization header)."
+        }
+      }
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "commerce-bridge-page",
+          "displayName": "Commerce bridge",
+          "exportName": "CommercePage",
+          "routePath": "commerce-bridge"
+        },
+        {
+          "type": "sidebar",
+          "id": "commerce-sidebar",
+          "displayName": "Commerce bridge",
+          "exportName": "CommerceSidebarLink"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "health-widget",
+          "displayName": "Agent Commerce",
+          "exportName": "DashboardWidget"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:54:58.856Z"
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@avirajkhare00/agent-commerce-bridge",
+  "addedBy": "lacymorrow",
+  "category": "integration"
+}

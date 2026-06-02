@@ -1,0 +1,177 @@
+{
+  "npmPackage": "@bopen-io/clawnet-plugin",
+  "version": "0.0.12",
+  "manifest": {
+    "id": "bopen-io.clawnet-plugin",
+    "apiVersion": 1,
+    "version": "0.0.12",
+    "displayName": "ClawNet",
+    "description": "Agent marketplace bridge: browse, search, and hire agents from the ClawNet registry with trust-gated attestations",
+    "author": "bOpen",
+    "categories": [
+      "connector"
+    ],
+    "capabilities": [
+      "agents.read",
+      "agents.invoke",
+      "issues.create",
+      "issues.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "jobs.schedule",
+      "http.outbound",
+      "secrets.read-ref",
+      "agent.tools.register",
+      "ui.dashboardWidget.register",
+      "ui.page.register",
+      "ui.sidebar.register",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "clawnetApiUrl": {
+          "type": "string",
+          "title": "ClawNet API URL",
+          "default": "https://clawnet.sh"
+        },
+        "syncIntervalMinutes": {
+          "type": "number",
+          "title": "Sync Interval (minutes)",
+          "default": 15
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "clawnet-sync",
+        "displayName": "ClawNet Registry Sync",
+        "description": "Pulls agents and skills from the ClawNet registry into plugin state.",
+        "schedule": "*/15 * * * *"
+      }
+    ],
+    "tools": [
+      {
+        "name": "agent-lookup",
+        "displayName": "ClawNet Agent Lookup",
+        "description": "Look up a ClawNet agent by slug and return its profile, trust score, skills, and attestations.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "The ClawNet agent slug to look up."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        }
+      },
+      {
+        "name": "skill-search",
+        "displayName": "ClawNet Skill Search",
+        "description": "Search available skills from the ClawNet registry by keyword or category.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query for skill name, description, or tags."
+            },
+            "category": {
+              "type": "string",
+              "description": "Optional category filter."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "fleet-overview",
+        "displayName": "ClawNet Fleet Overview",
+        "description": "Return a summary of all ClawNet agents including count, status breakdown, and top skills.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "hire-clawnet-agent",
+        "displayName": "Hire ClawNet Agent",
+        "description": "Hire an agent from the ClawNet registry into this Paperclip company. Looks up the agent by slug and invokes the hiring flow.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "ClawNet agent slug to hire."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        }
+      },
+      {
+        "name": "link-clawnet-agent",
+        "displayName": "Link Agent to ClawNet Template",
+        "description": "Link an existing Paperclip agent to a ClawNet registry template by agent ID and ClawNet slug.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "agentId": {
+              "type": "string",
+              "description": "Paperclip agent UUID to link."
+            },
+            "clawnetSlug": {
+              "type": "string",
+              "description": "ClawNet agent slug to link to."
+            }
+          },
+          "required": [
+            "agentId",
+            "clawnetSlug"
+          ]
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "clawnet-dashboard-widget",
+          "displayName": "ClawNet Fleet",
+          "exportName": "ClawNetFleetWidget"
+        },
+        {
+          "type": "page",
+          "id": "clawnet-page",
+          "displayName": "ClawNet Marketplace",
+          "exportName": "ClawNetMarketplacePage",
+          "routePath": "clawnet"
+        },
+        {
+          "type": "sidebar",
+          "id": "clawnet-sidebar-link",
+          "displayName": "ClawNet",
+          "exportName": "ClawNetSidebarLink"
+        },
+        {
+          "type": "settingsPage",
+          "id": "clawnet-settings-page",
+          "displayName": "ClawNet Settings",
+          "exportName": "ClawNetSettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:01.661Z"
+}

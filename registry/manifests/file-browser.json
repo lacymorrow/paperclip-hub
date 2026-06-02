@@ -1,0 +1,93 @@
+{
+  "npmPackage": "@jk3labs/file-browser",
+  "version": "0.1.3",
+  "manifest": {
+    "id": "jkl.file-browser",
+    "apiVersion": 1,
+    "version": "0.1.3",
+    "displayName": "JKL File Browser",
+    "description": "A file browser plugin for Paperclip workspaces",
+    "author": "Plugin Author",
+    "categories": [
+      "workspace"
+    ],
+    "capabilities": [
+      "events.subscribe",
+      "plugin.state.read",
+      "plugin.state.write",
+      "local.folders",
+      "ui.dashboardWidget.register",
+      "ui.detailTab.register",
+      "api.routes.register",
+      "project.workspaces.read"
+    ],
+    "localFolders": [
+      {
+        "folderKey": "workspace",
+        "displayName": "Workspace Root",
+        "description": "Root directory of the project workspace to browse files",
+        "access": "read"
+      }
+    ],
+    "apiRoutes": [
+      {
+        "routeKey": "list-files",
+        "method": "GET",
+        "path": "/files/list",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "download-file",
+        "method": "GET",
+        "path": "/files/download",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "download-zip",
+        "method": "GET",
+        "path": "/files/zip",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      }
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "file-browser-widget",
+          "displayName": "JKL File Browser",
+          "exportName": "DashboardWidget"
+        },
+        {
+          "type": "detailTab",
+          "id": "file-browser-tab",
+          "displayName": "Files",
+          "exportName": "FileBrowserTab",
+          "entityTypes": [
+            "project"
+          ],
+          "order": 50
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:13.632Z"
+}

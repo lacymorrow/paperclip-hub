@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "peak6-x-intelligence-plugin",
+  "addedBy": "lacymorrow",
+  "category": "integration",
+  "sourceRepo": "https://github.com/peak6-labs/x-intelligence-plugin"
+}

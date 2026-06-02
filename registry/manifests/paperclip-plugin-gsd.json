@@ -1,0 +1,108 @@
+{
+  "npmPackage": "@codewithahsan/paperclip-plugin-gsd",
+  "version": "0.1.0",
+  "manifest": {
+    "id": "paperclip.gsd",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "GSD — Get Shit Done",
+    "description": "Bridges GSD planning workflows with Paperclip. Syncs phases, milestones, and progress from agent workspaces into Paperclip issues and UI.",
+    "author": "Paperclip",
+    "categories": [
+      "workspace",
+      "automation"
+    ],
+    "capabilities": [
+      "events.subscribe",
+      "jobs.schedule",
+      "plugin.state.read",
+      "plugin.state.write",
+      "companies.read",
+      "projects.read",
+      "project.workspaces.read",
+      "issues.read",
+      "issues.update",
+      "issue.comments.read",
+      "issue.comments.create",
+      "agents.read",
+      "ui.dashboardWidget.register",
+      "ui.detailTab.register",
+      "ui.action.register",
+      "instance.settings.register",
+      "activity.log.write"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "autoSyncEnabled": {
+          "type": "boolean",
+          "title": "Enable auto-sync",
+          "description": "Periodically sync GSD state from project workspaces",
+          "default": true
+        },
+        "syncIntervalSeconds": {
+          "type": "number",
+          "title": "Sync interval (seconds)",
+          "description": "How often to check for GSD changes (minimum 10)",
+          "default": 30,
+          "minimum": 10,
+          "maximum": 600
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "periodic-sync",
+        "displayName": "Periodic GSD Sync"
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "gsd-overview",
+          "displayName": "GSD Progress",
+          "exportName": "GsdDashboardWidget"
+        },
+        {
+          "type": "detailTab",
+          "id": "gsd-project-tab",
+          "displayName": "GSD",
+          "exportName": "GsdProjectTab",
+          "entityTypes": [
+            "project"
+          ]
+        },
+        {
+          "type": "detailTab",
+          "id": "gsd-issue-tab",
+          "displayName": "GSD Phase",
+          "exportName": "GsdIssueTab",
+          "entityTypes": [
+            "issue"
+          ]
+        },
+        {
+          "type": "toolbarButton",
+          "id": "gsd-sync-btn",
+          "displayName": "Sync GSD",
+          "exportName": "GsdSyncButton",
+          "entityTypes": [
+            "project"
+          ]
+        },
+        {
+          "type": "settingsPage",
+          "id": "gsd-settings",
+          "displayName": "GSD Settings",
+          "exportName": "GsdSettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:02.391Z"
+}

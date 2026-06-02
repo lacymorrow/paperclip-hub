@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@acnlabs/paperclip-plugin-acn",
+  "addedBy": "lacymorrow",
+  "category": "integration",
+  "sourceRepo": "https://github.com/acnlabs/paperclip-acn-plugin"
+}

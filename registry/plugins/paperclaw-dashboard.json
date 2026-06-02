@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@betaform/paperclaw-dashboard",
+  "addedBy": "lacymorrow",
+  "category": "tools"
+}

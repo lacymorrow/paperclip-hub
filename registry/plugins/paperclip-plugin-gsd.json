@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@codewithahsan/paperclip-plugin-gsd",
+  "addedBy": "lacymorrow",
+  "category": "integration",
+  "sourceRepo": "https://github.com/AhsanAyaz/paperclip-plugin-gsd"
+}

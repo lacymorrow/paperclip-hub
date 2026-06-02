@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@magneto-ai/paperclip-plugin",
+  "addedBy": "lacymorrow",
+  "category": "tools"
+}

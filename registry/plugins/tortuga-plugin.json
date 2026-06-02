@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@bopen-io/tortuga-plugin",
+  "addedBy": "lacymorrow",
+  "category": "observability"
+}

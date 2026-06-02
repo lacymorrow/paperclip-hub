@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@webprismdev/paperclip-plugin-chat",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/webprismdevin/paperclip-plugin-chat"
+}

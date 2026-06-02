@@ -1,0 +1,156 @@
+{
+  "npmPackage": "@smara/paperclip-plugin-memory",
+  "version": "0.1.1",
+  "manifest": {
+    "id": "smara.memory",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "Smara Memory",
+    "description": "Persistent memory for Paperclip agents with Temporal Memory Scoring™. Store facts, search by meaning, and recall context — recent and important memories surface first, stale ones fade naturally.",
+    "author": "Smara (smara.io)",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "agent.tools.register",
+      "http.outbound",
+      "secrets.read-ref",
+      "plugin.state.read",
+      "plugin.state.write",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "smaraApiUrl": {
+          "type": "string",
+          "title": "Smara API URL",
+          "default": "https://api.smara.io"
+        },
+        "smaraApiKeyRef": {
+          "type": "string",
+          "title": "Smara API Key",
+          "description": "Secret reference for your Smara API key. Get a free key at https://smara.io"
+        },
+        "defaultUserId": {
+          "type": "string",
+          "title": "Default User ID",
+          "description": "User ID to use when agents don't specify one. Defaults to the agent's ID."
+        }
+      },
+      "required": [
+        "smaraApiKeyRef"
+      ]
+    },
+    "tools": [
+      {
+        "name": "memory-store",
+        "displayName": "Store Memory",
+        "description": "Store a fact or preference in Smara. Handles dedup and contradiction detection automatically. Memories decay over time based on importance — use 0.1-0.3 for trivia, 0.5 for general, 0.7-1.0 for critical.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "fact": {
+              "type": "string",
+              "description": "The fact to remember"
+            },
+            "user_id": {
+              "type": "string",
+              "description": "User ID (optional, defaults to agent ID)"
+            },
+            "importance": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Importance score 0-1. Higher = slower decay."
+            }
+          },
+          "required": [
+            "fact"
+          ]
+        }
+      },
+      {
+        "name": "memory-search",
+        "displayName": "Search Memory",
+        "description": "Semantic search across stored memories. Results ranked by Temporal Memory Scoring™ — balances semantic relevance with memory freshness and importance.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Natural language search query"
+            },
+            "user_id": {
+              "type": "string",
+              "description": "User ID (optional)"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 5)"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "memory-context",
+        "displayName": "Get User Context",
+        "description": "Retrieve a pre-formatted context string for a user, ready to inject into an agent's prompt. Ranked by Temporal Memory Scoring™.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "description": "User to get context for"
+            },
+            "query": {
+              "type": "string",
+              "description": "Optional topic focus"
+            },
+            "top_n": {
+              "type": "number",
+              "description": "Number of memories (default 5)"
+            }
+          },
+          "required": [
+            "user_id"
+          ]
+        }
+      },
+      {
+        "name": "memory-delete",
+        "displayName": "Delete Memory",
+        "description": "Delete a specific memory by ID. Use when asked to forget something.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Memory ID to delete"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      },
+      {
+        "name": "memory-usage",
+        "displayName": "Memory Usage",
+        "description": "Check current plan, limits, and memory count.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ]
+  },
+  "resolvedAt": "2026-06-02T07:54:52.352Z"
+}

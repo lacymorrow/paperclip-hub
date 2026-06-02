@@ -1,0 +1,171 @@
+{
+  "npmPackage": "@gaud_erp/social-networking",
+  "version": "0.1.0",
+  "manifest": {
+    "id": "gauderp.social-networking",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "Social Networking",
+    "description": "Conecta contas de redes sociais, agenda publicacoes e exibe historico com metricas. Slice inicial: LinkedIn.",
+    "author": "Gaud ERP",
+    "categories": [
+      "connector",
+      "ui"
+    ],
+    "capabilities": [
+      "events.subscribe",
+      "plugin.state.read",
+      "plugin.state.write",
+      "secrets.read-ref",
+      "http.outbound",
+      "jobs.schedule",
+      "database.namespace.migrate",
+      "database.namespace.read",
+      "database.namespace.write",
+      "api.routes.register",
+      "ui.sidebar.register",
+      "ui.page.register",
+      "instance.settings.register"
+    ],
+    "database": {
+      "migrationsDir": "migrations",
+      "coreReadTables": []
+    },
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "apiRoutes": [
+      {
+        "routeKey": "network-status",
+        "method": "GET",
+        "path": "/networks/:networkKey/status",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "linkedin-sync-metrics",
+        "method": "POST",
+        "path": "/linkedin/sync-metrics",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "scheduled-posts-list",
+        "method": "GET",
+        "path": "/networks/:networkKey/scheduled-posts",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "scheduled-posts-create",
+        "method": "POST",
+        "path": "/networks/:networkKey/scheduled-posts",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "scheduled-posts-delete",
+        "method": "DELETE",
+        "path": "/networks/:networkKey/scheduled-posts/:postId",
+        "auth": "board-or-agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "jobKey": "publish-scheduled",
+        "displayName": "Publicar posts agendados",
+        "description": "Processa fila de publicacoes com scheduledAt <= agora.",
+        "schedule": "*/5 * * * *"
+      },
+      {
+        "jobKey": "sync-linkedin-metrics",
+        "displayName": "Sincronizar metricas LinkedIn",
+        "description": "Atualiza likes, comentarios, shares e impressions em post_metrics.",
+        "schedule": "0 */6 * * *"
+      }
+    ],
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "linkedinClientIdSecretRef": {
+          "type": "string",
+          "title": "LinkedIn Client ID (secret ref)",
+          "default": ""
+        },
+        "linkedinClientSecretSecretRef": {
+          "type": "string",
+          "title": "LinkedIn Client Secret (secret ref)",
+          "default": ""
+        }
+      }
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "social-sidebar-link",
+          "displayName": "Social Networking",
+          "exportName": "SidebarLink",
+          "order": 45
+        },
+        {
+          "type": "page",
+          "id": "social-hub-page",
+          "displayName": "Social Networking",
+          "exportName": "SocialHubPage",
+          "routePath": "social"
+        },
+        {
+          "type": "routeSidebar",
+          "id": "social-route-sidebar",
+          "displayName": "Social Networking",
+          "exportName": "SocialRouteSidebar",
+          "routePath": "social"
+        },
+        {
+          "type": "page",
+          "id": "linkedin-page",
+          "displayName": "LinkedIn",
+          "exportName": "LinkedInPage",
+          "routePath": "social-linkedin"
+        },
+        {
+          "type": "routeSidebar",
+          "id": "linkedin-route-sidebar",
+          "displayName": "Social Networking",
+          "exportName": "SocialRouteSidebar",
+          "routePath": "social-linkedin"
+        },
+        {
+          "type": "settingsPage",
+          "id": "social-settings",
+          "displayName": "Social Networking",
+          "exportName": "SettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:03.089Z"
+}

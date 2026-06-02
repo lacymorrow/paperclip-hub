@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@paperclipai/plugin-exe-dev",
+  "addedBy": "lacymorrow",
+  "category": "provider",
+  "sourceRepo": "https://github.com/paperclipai/paperclip"
+}

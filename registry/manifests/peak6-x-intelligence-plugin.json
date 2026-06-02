@@ -1,0 +1,636 @@
+{
+  "npmPackage": "peak6-x-intelligence-plugin",
+  "version": "0.1.9",
+  "manifest": {
+    "id": "peak6-labs.x-intelligence",
+    "apiVersion": 1,
+    "version": "0.1.8",
+    "displayName": "X Intelligence",
+    "description": "Automated X/Twitter intelligence pipeline — discovery, enrichment, scoring, deduplication, authority list management, and corpus storage.",
+    "author": "peak6-labs",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "http.outbound",
+      "secrets.read-ref",
+      "jobs.schedule",
+      "agent.tools.register",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "events.emit",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "activity.log.write",
+      "metrics.write",
+      "instance.settings.register",
+      "ui.dashboardWidget.register",
+      "ui.page.register",
+      "agents.invoke",
+      "agents.read"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "type": "string",
+          "title": "Company ID",
+          "description": "UUID of the company this plugin serves (required for events and activity logging)",
+          "default": ""
+        },
+        "xai_api_key_ref": {
+          "type": "string",
+          "title": "xAI API Key Secret Reference",
+          "default": "XAI_API_KEY"
+        },
+        "x_api_bearer_ref": {
+          "type": "string",
+          "title": "X API Bearer Token Secret Reference",
+          "default": "BEARER_TOKEN"
+        },
+        "semantic_topics": {
+          "type": "array",
+          "title": "Semantic Discovery Topics",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "institutional investors discussing market structure reform",
+            "fintech companies disrupting traditional trading",
+            "SEC regulatory changes affecting options trading",
+            "algorithmic trading and quantitative strategies",
+            "venture capital investing in financial infrastructure",
+            "PEAK6",
+            "options market making technology",
+            "Chicago trading community news"
+          ]
+        },
+        "keyword_searches": {
+          "type": "array",
+          "title": "Keyword Searches",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "\"PEAK6 Investments\" OR \"PEAK6\" trading fintech",
+            "fintech and trading technology",
+            "market structure and regulation",
+            "options trading strategies and platforms"
+          ]
+        },
+        "content_pillars": {
+          "type": "array",
+          "title": "Content Pillars",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "market structure & regulation",
+            "fintech & trading technology",
+            "venture capital & investment",
+            "Chicago business ecosystem",
+            "company culture & talent"
+          ]
+        },
+        "scoring_weights": {
+          "type": "object",
+          "title": "Scoring Weights",
+          "properties": {
+            "relevance": {
+              "type": "number",
+              "default": 0.45
+            },
+            "recency": {
+              "type": "number",
+              "default": 0.25
+            },
+            "engagement": {
+              "type": "number",
+              "default": 0.3
+            }
+          },
+          "default": {
+            "relevance": 0.45,
+            "recency": 0.25,
+            "engagement": 0.3
+          }
+        },
+        "engagement_sub_weights": {
+          "type": "object",
+          "title": "Engagement Sub-Weights",
+          "properties": {
+            "likes": {
+              "type": "number",
+              "default": 0.55
+            },
+            "reposts": {
+              "type": "number",
+              "default": 0.25
+            },
+            "replies": {
+              "type": "number",
+              "default": 0.15
+            },
+            "quotes": {
+              "type": "number",
+              "default": 0.05
+            }
+          },
+          "default": {
+            "likes": 0.55,
+            "reposts": 0.25,
+            "replies": 0.15,
+            "quotes": 0.05
+          }
+        },
+        "max_corpus_size": {
+          "type": "number",
+          "title": "Max Corpus Size Per Day",
+          "default": 200
+        },
+        "dedup_threshold": {
+          "type": "number",
+          "title": "Dedup Jaccard Threshold",
+          "default": 0.7
+        },
+        "authority_boost": {
+          "type": "number",
+          "title": "Authority Score Boost",
+          "default": 0.15
+        },
+        "authority_lists": {
+          "type": "object",
+          "title": "Authority Handle Lists",
+          "default": {
+            "market_structure": {
+              "description": "Market structure, regulation, SEC reform, options trading",
+              "handles": [
+                "LizAnnSonders",
+                "matt_levine",
+                "unusual_whales",
+                "CMEGroup",
+                "CBOE",
+                "OptionsHawk",
+                "InvestorDenis"
+              ],
+              "last_reviewed": "2026-03-29"
+            },
+            "fintech": {
+              "description": "Fintech, trading technology, AI in finance",
+              "handles": [
+                "twifintech",
+                "IBSIntelligence",
+                "privy_io",
+                "i_Know_First",
+                "fintech_germany",
+                "venture_radar"
+              ],
+              "last_reviewed": "2026-03-29"
+            },
+            "venture_capital": {
+              "description": "Venture capital investing in financial infrastructure",
+              "handles": [
+                "a16z",
+                "FundersVC"
+              ],
+              "last_reviewed": "2026-03-29"
+            },
+            "chicago_trading": {
+              "description": "Chicago trading community, prop firms, PEAK6 ecosystem",
+              "handles": [
+                "CBOE",
+                "CMEGroup",
+                "boogeymantradez",
+                "adealafia"
+              ],
+              "last_reviewed": "2026-03-29"
+            }
+          }
+        },
+        "global_excluded": {
+          "type": "array",
+          "title": "Globally Excluded Handles",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "elonmusk",
+            "openai",
+            "google",
+            "microsoft"
+          ]
+        },
+        "authority_promotion_policy": {
+          "type": "object",
+          "title": "Authority Promotion Policy",
+          "default": {
+            "auto_promote_threshold": {
+              "min_appearances": 7,
+              "min_avg_relevance": 0.8,
+              "min_mutual_overlap": 3
+            },
+            "candidate_threshold": {
+              "min_appearances": 5,
+              "min_avg_relevance": 0.7,
+              "min_mutual_overlap": 2
+            },
+            "tracking_window_days": 14
+          }
+        },
+        "corpus_retention_days": {
+          "type": "number",
+          "title": "Corpus Retention (days)",
+          "default": 90
+        },
+        "engagement_thresholds": {
+          "type": "object",
+          "title": "Engagement Thresholds",
+          "description": "Engagement level tiers: noise_floor (filter), expert (highlight), escalation (alert event)",
+          "properties": {
+            "noise_floor": {
+              "type": "number",
+              "default": 10
+            },
+            "expert": {
+              "type": "number",
+              "default": 50
+            },
+            "escalation": {
+              "type": "number",
+              "default": 100
+            }
+          },
+          "default": {
+            "noise_floor": 10,
+            "expert": 50,
+            "escalation": 100
+          }
+        },
+        "alert_agents": {
+          "type": "array",
+          "title": "Alert Agents",
+          "description": "Agents to invoke on high-engagement tweets and corpus updates. Each entry maps an agent ID to an optional memory file for preference-enriched prompts.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "agentId": {
+                "type": "string",
+                "description": "Paperclip agent UUID"
+              },
+              "memoryFile": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Path to user memory file for enriched prompts (null for raw alerts)"
+              }
+            },
+            "required": [
+              "agentId"
+            ]
+          },
+          "default": []
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "discovery-run",
+        "displayName": "Discovery Run",
+        "description": "Two-stage pipeline: xAI open + focused discovery, X API v2 enrichment, scoring, and corpus storage.",
+        "schedule": "0 6 * * *"
+      },
+      {
+        "jobKey": "authority-decay",
+        "displayName": "Authority Decay",
+        "description": "Weekly handle decay — downgrade or remove handles not seen within the tracking window.",
+        "schedule": "0 0 * * 0"
+      },
+      {
+        "jobKey": "compliance-check",
+        "displayName": "Compliance Check",
+        "description": "Weekly re-check of stored tweets — remove deleted or suspended content.",
+        "schedule": "0 3 * * 0"
+      },
+      {
+        "jobKey": "corpus-retention",
+        "displayName": "Corpus Retention",
+        "description": "Monthly archive/delete corpus older than the retention window.",
+        "schedule": "0 4 1 * *"
+      }
+    ],
+    "tools": [
+      {
+        "name": "search-corpus",
+        "displayName": "Search X Corpus",
+        "description": "Search the scored X intelligence corpus by query text, date range, content pillar, score threshold, and engagement level.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query (text match)"
+            },
+            "date": {
+              "type": "string",
+              "description": "Date filter (YYYY-MM-DD)"
+            },
+            "pillar": {
+              "type": "string",
+              "description": "Content pillar filter"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            },
+            "min_score": {
+              "type": "number",
+              "description": "Minimum score threshold (0-1)"
+            },
+            "min_engagement": {
+              "type": "number",
+              "description": "Minimum total engagement (likes+reposts+replies+quotes)"
+            },
+            "since": {
+              "type": "string",
+              "description": "Time window: '1h', '3h', '12h', '1d', '7d', or YYYY-MM-DD"
+            }
+          }
+        }
+      },
+      {
+        "name": "get-today",
+        "displayName": "Get Today's Intelligence",
+        "description": "Get today's scored X intelligence corpus from entities, optionally filtered by pillar and score threshold.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "pillar": {
+              "type": "string",
+              "description": "Content pillar filter"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            },
+            "min_score": {
+              "type": "number",
+              "description": "Minimum score threshold (0-1)"
+            }
+          }
+        }
+      },
+      {
+        "name": "get-authorities",
+        "displayName": "Get Authority Handles",
+        "description": "Get the authority handle list for a domain, or all domains if none specified.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "list_name": {
+              "type": "string",
+              "description": "Domain name (e.g. 'market_structure')"
+            }
+          }
+        }
+      },
+      {
+        "name": "suggest-handles",
+        "displayName": "Suggest Handle Promotions",
+        "description": "Get handles that are candidates for authority list promotion based on tracking data.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "track-handle",
+        "displayName": "Track Handle",
+        "description": "Record a handle appearance from agent discovery with relevance score and domain.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "handle": {
+              "type": "string",
+              "description": "X handle (without @)"
+            },
+            "relevance": {
+              "type": "number",
+              "description": "Relevance score (0-1)"
+            },
+            "domain": {
+              "type": "string",
+              "description": "Domain/topic area"
+            }
+          },
+          "required": [
+            "handle",
+            "relevance",
+            "domain"
+          ]
+        }
+      },
+      {
+        "name": "analyze-topic",
+        "displayName": "Analyze Topic",
+        "description": "On-demand xAI search for any topic with 5-perspective decomposition (core, expert voices, pain points, positive signals, link-based) and corpus cross-reference. Returns a synthesis brief.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "topic": {
+              "type": "string",
+              "description": "Topic to analyze"
+            },
+            "include_corpus": {
+              "type": "boolean",
+              "description": "Cross-reference with stored corpus (default true)"
+            }
+          },
+          "required": [
+            "topic"
+          ]
+        }
+      },
+      {
+        "name": "get-thread",
+        "displayName": "Get Tweet Thread",
+        "description": "Fetch conversation context for a tweet. Returns the target tweet and other tweets in the same conversation thread.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to get thread for"
+            }
+          },
+          "required": [
+            "tweet_id"
+          ]
+        }
+      },
+      {
+        "name": "promote-handle",
+        "displayName": "Promote Handle",
+        "description": "Promote a tracked handle to authority status in a specific domain list. Sets entity status to promoted and records the target list.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "handle": {
+              "type": "string",
+              "description": "X handle (without @)"
+            },
+            "list_name": {
+              "type": "string",
+              "description": "Authority list to promote to (e.g. 'market_structure')"
+            },
+            "note": {
+              "type": "string",
+              "description": "Optional note about why this handle was promoted"
+            }
+          },
+          "required": [
+            "handle",
+            "list_name"
+          ]
+        }
+      },
+      {
+        "name": "rate-tweet",
+        "displayName": "Rate Tweet",
+        "description": "Record relevance feedback on a tweet in the corpus. Agents or humans can rate tweets as relevant, irrelevant, or skip.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to rate"
+            },
+            "rating": {
+              "type": "string",
+              "enum": [
+                "relevant",
+                "irrelevant",
+                "skip"
+              ],
+              "description": "Relevance rating"
+            },
+            "rated_by": {
+              "type": "string",
+              "description": "ID of the rater (agent or user)"
+            }
+          },
+          "required": [
+            "tweet_id",
+            "rating"
+          ]
+        }
+      },
+      {
+        "name": "search-x",
+        "displayName": "Search X",
+        "description": "Real-time semantic search on X/Twitter via xAI. Returns scored, enriched tweets without storing to corpus. Works any time — no pipeline required.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query (semantic — describe what you're looking for)"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            },
+            "handles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional: restrict search to these handles only"
+            },
+            "quick": {
+              "type": "boolean",
+              "description": "Quick mode: skip enrichment, return xAI synthesis + tweet IDs only (lower cost)"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "get-trending",
+        "displayName": "Get Trending",
+        "description": "What's trending in PEAK6's configured domains right now. Searches all semantic topics (or a specific pillar) via xAI, enriches and scores results. No pipeline required.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            },
+            "pillar": {
+              "type": "string",
+              "description": "Filter to topics matching this pillar/keyword"
+            }
+          }
+        }
+      },
+      {
+        "name": "get-user-timeline",
+        "displayName": "Get User Timeline",
+        "description": "Fetch a user's recent tweets from X/Twitter. Returns enriched tweet data with metrics.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "handle": {
+              "type": "string",
+              "description": "X handle (without @)"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max tweets to return (default 20, max 100)"
+            },
+            "since": {
+              "type": "string",
+              "description": "Only return tweets after this date (YYYY-MM-DD)"
+            }
+          },
+          "required": [
+            "handle"
+          ]
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "x-intelligence-dashboard",
+          "displayName": "X Intelligence",
+          "exportName": "DashboardWidget"
+        },
+        {
+          "type": "settingsPage",
+          "id": "x-intelligence-settings",
+          "displayName": "X Intelligence Settings",
+          "exportName": "SettingsPage"
+        },
+        {
+          "type": "page",
+          "id": "x-intelligence-corpus-browser",
+          "displayName": "X Intelligence Corpus",
+          "exportName": "CorpusBrowserPage",
+          "routePath": "x-intelligence"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:06.690Z"
+}

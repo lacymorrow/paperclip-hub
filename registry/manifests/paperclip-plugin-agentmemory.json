@@ -1,0 +1,198 @@
+{
+  "npmPackage": "@gaud_erp/paperclip-plugin-agentmemory",
+  "version": "0.6.0",
+  "manifest": {
+    "id": "customizar.agentmemory",
+    "apiVersion": 1,
+    "version": "0.6.0",
+    "displayName": "Agent Memory",
+    "description": "Memory-as-Skill system for Paperclip agents. Persistent recall, observation, and search with token budget enforcement.",
+    "author": "paperclip-plugin-agentmemory contributors",
+    "categories": [
+      "connector"
+    ],
+    "capabilities": [
+      "http.outbound",
+      "plugin.state.read",
+      "plugin.state.write",
+      "instance.settings.register",
+      "companies.read",
+      "agent.tools.register",
+      "agents.managed",
+      "skills.managed",
+      "jobs.schedule",
+      "events.subscribe",
+      "ui.dashboardWidget.register",
+      "ui.action.register",
+      "secrets.read-ref",
+      "activity.log.write",
+      "events.emit"
+    ],
+    "tools": [
+      {
+        "name": "memory-recall",
+        "displayName": "Memory Recall",
+        "description": "Recall relevant context from persistent memory before starting a task.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Description of what you're about to do"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project name for scoped search"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Max tokens for context (defaults to budget)"
+            }
+          }
+        }
+      },
+      {
+        "name": "memory-observe",
+        "displayName": "Memory Observe",
+        "description": "Store an observation — decision, discovery, pattern, or failure — into persistent memory.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "observation",
+            "category"
+          ],
+          "properties": {
+            "observation": {
+              "type": "string",
+              "description": "The insight to remember (1-3 sentences)"
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "decision",
+                "discovery",
+                "pattern",
+                "failure"
+              ],
+              "description": "Type of observation"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project name"
+            }
+          }
+        }
+      },
+      {
+        "name": "memory-search",
+        "displayName": "Memory Search",
+        "description": "Search persistent memory for specific information — use when checking if something was tried before.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "What to search for"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project name for scoped search"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 10)"
+            }
+          }
+        }
+      },
+      {
+        "name": "memory-forget",
+        "displayName": "Memory Forget",
+        "description": "Remove a specific memory that is outdated or incorrect.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "memoryId"
+          ],
+          "properties": {
+            "memoryId": {
+              "type": "string",
+              "description": "ID of the memory to remove (from recall/search results)"
+            },
+            "reason": {
+              "type": "string",
+              "description": "Why this memory is being removed"
+            }
+          }
+        }
+      }
+    ],
+    "skills": [
+      {
+        "skillKey": "agent-memory",
+        "displayName": "Agent Memory",
+        "description": "Teaches agents to use persistent memory — recall context, observe decisions, search history.",
+        "markdown": "# Agent Memory Protocol\n\nYou have access to persistent memory tools. Memory context is managed both automatically and manually.\n\n## Automatic behavior (no action needed)\n- **Auto-recall:** Memory context is loaded automatically at the start of each run. You receive prior decisions, known patterns, and past failures relevant to your current task.\n- **Auto-observe:** A summary of your work is recorded automatically at the end of each run.\n\n## When to use tools manually\n\n### memory-recall\nUse `memory-recall` only when you need context NOT covered by the auto-loaded memory:\n- Searching for something specific from a different project\n- Narrowing down to a particular topic mid-task\n\n### memory-observe\nUse `memory-observe` during work for **high-value insights only**:\n- Made an architectural decision? → category `\"decision\"`\n- Something failed unexpectedly? → category `\"failure\"`\n- Discovered something non-obvious? → category `\"discovery\"`\n- Identified a recurring pattern? → category `\"pattern\"`\n\nBasic run summaries are captured automatically — only observe what the auto-summary would miss.\n\n### memory-search\n- \"Have we tried this before?\" → `memory-search` before investigating from scratch\n- \"How did we solve X last time?\" → `memory-search` with relevant context\n\n### memory-forget\n- Recall returned something outdated or wrong? → `memory-forget` with the memoryId from the result\n- Then observe the correct information with `memory-observe`\n- Search results and recall results include a `source` field — use it as the memoryId for forget\n\n## Project scoping\n- Project context is injected automatically from your current run context\n- You do NOT need to pass the `project` parameter unless targeting a different project\n- To search across all projects, pass `project: \"*\"`\n\n## Rules\n- Do NOT observe trivial information (imports, boilerplate, obvious code)\n- Do NOT observe entire code — observe the decision or insight behind it\n- Prefer short, dense observations (1-3 sentences)\n- The recall tool already respects token budget — trust the result and use it\n- When recall returns relevant context, reference it in your work\n"
+      },
+      {
+        "skillKey": "memory-reflection",
+        "displayName": "Memory Reflection",
+        "description": "Guides agents through retrospective analysis of decisions and failures at milestone completion.",
+        "markdown": "# Memory Reflection Protocol\n\nRun this retrospective when a milestone, sprint, or major feature is completed.\n\n## Steps\n\n1. **Gather failures:**\n   Call `memory-search` with a query targeting failures in this project.\n   Review each failure — what went wrong and what was the root cause?\n\n2. **Gather decisions:**\n   Call `memory-search` with a query targeting decisions in this project.\n   List the key architectural and design decisions made.\n\n3. **Cross-reference:**\n   Which decisions contributed to failures?\n   Which decisions prevented failures or worked well?\n   Are there recurring failure patterns across multiple tasks?\n\n4. **Synthesize:**\n   Write a consolidated insight as a `memory-observe` with category `\"pattern\"`.\n   Focus on actionable takeaways, not a narrative.\n   Example: \"Pattern: skipping integration tests before DB migrations led to 3 production rollbacks. Always run migration tests against a staging copy first.\"\n\n5. **Report:**\n   Present the reflection summary to the user with:\n   - Total failures reviewed\n   - Total decisions reviewed\n   - Key patterns identified\n   - Recommended changes\n\n## Rules\n- Be ruthlessly specific — \"improve testing\" is not a pattern, \"add integration tests for migration scripts\" is\n- One observation per pattern — don't dump everything into one\n- If no meaningful patterns emerge, say so — don't fabricate insights\n"
+      }
+    ],
+    "jobs": [
+      {
+        "jobKey": "curator-cycle",
+        "displayName": "Memory Curator Cycle",
+        "description": "Consolidates observations, compresses history, cleans expired data.",
+        "schedule": "0 */6 * * *"
+      }
+    ],
+    "agents": [
+      {
+        "agentKey": "memory-curator",
+        "displayName": "Memory Curator",
+        "role": "memory-maintenance",
+        "title": "Memory Curator Agent",
+        "capabilities": "Consolidates observations into crystals, compresses history, cleans expired data, maintains knowledge graph.",
+        "instructions": {
+          "content": "# Memory Curator\n\nYou maintain the memory base clean and useful. You run automatically on a schedule and after issues are completed.\n\n## Periodic routine\n1. List unconsolidated observations from the last 7 days\n2. Group by project and category\n3. Consolidate groups with 5+ observations into crystals\n4. Extract entities/relations for the knowledge graph (if enabled)\n5. Apply auto-forget on observations older than the configured threshold that are already consolidated\n6. Garbage-collect sketches not promoted within the configured TTL\n\n## After issue completed\n1. Consolidate observations from the issue into a summary crystal\n2. Promote relevant sketches to permanent memory\n3. Discard irrelevant sketches\n\n## Rules\n- NEVER delete user manual memories\n- Consolidate, don't erase — compressed information is better than lost information\n- Prioritize \"failure\" and \"decision\" crystals (they have the highest value for future work)\n- Log what you consolidated and cleaned for auditability\n"
+        }
+      }
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "health-widget",
+          "displayName": "Agent Memory Health",
+          "exportName": "DashboardWidget"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "stats-widget",
+          "displayName": "Agent Memory Stats",
+          "exportName": "StatsWidget"
+        },
+        {
+          "type": "settingsPage",
+          "id": "settings",
+          "displayName": "Agent Memory",
+          "exportName": "SettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:54:53.642Z"
+}

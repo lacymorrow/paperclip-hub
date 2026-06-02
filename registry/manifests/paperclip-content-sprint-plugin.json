@@ -1,0 +1,89 @@
+{
+  "npmPackage": "@marsbdigital/paperclip-content-sprint-plugin",
+  "version": "0.1.3",
+  "manifest": {
+    "id": "marsbdigital.paperclip-content-sprint-plugin",
+    "apiVersion": 1,
+    "version": "0.1.3",
+    "displayName": "Content Sprint AI",
+    "description": "Generate five structured social posts (authority, engagement, conversion) from product context for LinkedIn or X.",
+    "author": "Mars B Digital",
+    "categories": [
+      "automation",
+      "ui"
+    ],
+    "capabilities": [
+      "agent.tools.register",
+      "jobs.schedule",
+      "ui.action.register",
+      "ui.dashboardWidget.register"
+    ],
+    "entrypoints": {
+      "worker": "dist/index.js",
+      "ui": "dist/ui"
+    },
+    "tools": [
+      {
+        "name": "generate_content_batch",
+        "displayName": "Generate content batch",
+        "description": "Creates five social posts (2 authority, 2 engagement, 1 conversion) from product name, description, audience, and platform.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "productName": {
+              "type": "string",
+              "description": "Product or offer name"
+            },
+            "productDescription": {
+              "type": "string",
+              "description": "What the product does and why it matters"
+            },
+            "targetAudience": {
+              "type": "string",
+              "description": "Who you are writing for"
+            },
+            "platform": {
+              "type": "string",
+              "enum": [
+                "linkedin",
+                "twitter"
+              ],
+              "description": "Target network"
+            }
+          },
+          "required": [
+            "productName",
+            "productDescription",
+            "targetAudience",
+            "platform"
+          ]
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "jobKey": "run_content_sprint",
+        "displayName": "Run content sprint",
+        "description": "Generates a sample batch using placeholder product input (for demos and smoke tests).",
+        "schedule": "0 9 * * 1"
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "globalToolbarButton",
+          "id": "content-sprint-toolbar",
+          "displayName": "Content Sprint",
+          "exportName": "ToolbarButton"
+        },
+        {
+          "type": "dashboardWidget",
+          "id": "content-sprint-dashboard",
+          "displayName": "Content Sprint AI",
+          "exportName": "ContentSprintPanel"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:09.906Z"
+}

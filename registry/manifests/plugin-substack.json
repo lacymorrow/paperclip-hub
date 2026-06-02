@@ -1,0 +1,75 @@
+{
+  "npmPackage": "@bbugs280/plugin-substack",
+  "version": "0.1.0",
+  "manifest": {
+    "id": "substack",
+    "apiVersion": 1,
+    "version": "0.1.0",
+    "displayName": "Substack",
+    "description": "Substack plugin for Paperclip. Fetches recent posts and public engagement stats via RSS and the Substack reader API.",
+    "author": "@bbugs280",
+    "categories": [
+      "connector"
+    ],
+    "capabilities": [
+      "agent.tools.register",
+      "http.outbound",
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "tools": [
+      {
+        "name": "substack-get-posts",
+        "displayName": "Get Recent Posts",
+        "description": "Fetch recent posts from a Substack publication via RSS. Returns title, date, URL, and preview.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "publicationUrl": {
+              "type": "string",
+              "description": "The Substack publication URL, e.g. newworldvalue.substack.com"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max number of posts to return (default: 10)"
+            }
+          },
+          "required": [
+            "publicationUrl"
+          ]
+        }
+      },
+      {
+        "name": "substack-get-post-stats",
+        "displayName": "Get Post Stats",
+        "description": "Fetch like count and comment count for a specific Substack post using the public reader API.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "postUrl": {
+              "type": "string",
+              "description": "Full URL of the Substack post, e.g. https://newworldvalue.substack.com/p/some-post"
+            }
+          },
+          "required": [
+            "postUrl"
+          ]
+        }
+      }
+    ],
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "defaultPublication": {
+          "type": "string",
+          "title": "Default Publication",
+          "description": "Default Substack subdomain, e.g. newworldvalue.substack.com",
+          "default": ""
+        }
+      }
+    }
+  },
+  "resolvedAt": "2026-06-02T07:54:59.526Z"
+}

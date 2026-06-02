@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@bbugs280/plugin-substack",
+  "addedBy": "lacymorrow",
+  "category": "integration"
+}

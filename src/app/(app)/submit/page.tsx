@@ -109,6 +109,24 @@ export default function SubmitPage() {
             Share your plugin with the Paperclip community. Fill out the form and open a pull
             request directly on GitHub — no account required here.
           </p>
+          <p
+            style={{
+              marginTop: 14,
+              padding: "10px 14px",
+              background: "var(--paper)",
+              border: "1px solid var(--bd-1)",
+              fontSize: "0.875rem",
+              color: "var(--ink-2)",
+              lineHeight: 1.55,
+              maxWidth: 560,
+            }}
+          >
+            <b style={{ color: "var(--ink)" }}>Already listed?</b> Plugins are added either by
+            their npm maintainers via this form, or by hub maintainers curating from npm
+            packages tagged <code>paperclip-plugin</code>. To claim ownership, edit metadata, or
+            request removal of a curated listing, open a PR against{" "}
+            <code>registry/plugins/&lt;your-plugin&gt;.json</code>.
+          </p>
         </div>
 
         {/* Steps */}

@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-plugin-claude-config-editor",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/paperclipai/plugin-claude-config-editor"
+}

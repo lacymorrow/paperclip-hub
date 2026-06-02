@@ -1,0 +1,75 @@
+{
+  "npmPackage": "@sergioconejo/paperclip-plugin-agent-chat",
+  "version": "0.5.0",
+  "manifest": {
+    "id": "paperclip-agent-chat",
+    "apiVersion": 1,
+    "version": "0.5.0",
+    "displayName": "Agent Chat",
+    "description": "Chat page for direct conversations with agent employees via real agent sessions.",
+    "author": "sergioconejo",
+    "categories": [
+      "ui",
+      "automation"
+    ],
+    "capabilities": [
+      "agents.read",
+      "agents.invoke",
+      "agent.sessions.create",
+      "agent.sessions.list",
+      "agent.sessions.send",
+      "agent.sessions.close",
+      "companies.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "activity.log.write",
+      "events.subscribe",
+      "ui.sidebar.register",
+      "ui.page.register",
+      "ui.detailTab.register",
+      "ui.action.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "maxHistoryPerAgent": {
+          "type": "number",
+          "title": "Max History Per Agent",
+          "default": 50
+        }
+      }
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "chat-sidebar-link",
+          "displayName": "Agent Chat",
+          "exportName": "ChatSidebarLink"
+        },
+        {
+          "type": "page",
+          "id": "chat-page",
+          "displayName": "Agent Chat",
+          "exportName": "ChatPage",
+          "routePath": "agent-chat"
+        },
+        {
+          "type": "detailTab",
+          "id": "chat-agent-tab",
+          "displayName": "Chat",
+          "exportName": "ChatAgentTab",
+          "entityTypes": [
+            "agent"
+          ],
+          "order": 5
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:10.783Z"
+}

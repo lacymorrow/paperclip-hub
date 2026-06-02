@@ -1,0 +1,48 @@
+{
+  "npmPackage": "@webprismdev/paperclip-plugin-chat",
+  "version": "0.1.12",
+  "manifest": {
+    "id": "chat-ui",
+    "apiVersion": 1,
+    "version": "0.1.12",
+    "displayName": "Chat",
+    "description": "Interactive AI copilot for managing tasks, agents, and workspaces through natural conversation",
+    "author": "webprismdevin",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "ui.page.register",
+      "ui.sidebar.register",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "issue.comments.create",
+      "agents.read",
+      "projects.read",
+      "activity.read",
+      "costs.read"
+    ],
+    "entrypoints": {
+      "worker": "dist/server/worker.js",
+      "ui": "dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "chat-page",
+          "displayName": "Chat",
+          "exportName": "default"
+        },
+        {
+          "type": "sidebar",
+          "id": "chat-sidebar",
+          "displayName": "Chat",
+          "exportName": "default"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:12.387Z"
+}

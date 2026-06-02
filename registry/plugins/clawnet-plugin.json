@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@bopen-io/clawnet-plugin",
+  "addedBy": "lacymorrow",
+  "category": "integration"
+}

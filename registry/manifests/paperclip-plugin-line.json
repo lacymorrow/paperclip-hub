@@ -1,0 +1,320 @@
+{
+  "npmPackage": "paperclip-plugin-line",
+  "version": "1.0.0",
+  "manifest": {
+    "id": "paperclip-plugin-line",
+    "apiVersion": 1,
+    "version": "1.0.0",
+    "displayName": "LINE Bridge",
+    "description": "Bidirectional LINE Messaging API integration for Paperclip: verified webhook intake, agent sessions per LINE user, outbound LINE push tools, and inbound media relay.",
+    "author": "Bandruption",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "plugin.state.read",
+      "plugin.state.write",
+      "jobs.schedule",
+      "webhooks.receive",
+      "agent.tools.register",
+      "http.outbound",
+      "secrets.read-ref",
+      "activity.log.write",
+      "metrics.write",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "issue.comments.read",
+      "issue.comments.create",
+      "agents.read",
+      "agent.sessions.create",
+      "agent.sessions.list",
+      "agent.sessions.send",
+      "agent.sessions.close",
+      "events.emit",
+      "events.subscribe"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "lineChannelSecretRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "LINE Channel Secret (secret reference)",
+          "description": "Secret UUID for the LINE Messaging API channel secret used to verify webhook signatures.",
+          "default": ""
+        },
+        "lineChannelAccessTokenRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "LINE Channel Access Token (secret reference)",
+          "description": "Secret UUID for the LINE channel access token used by outbound LINE API calls.",
+          "default": ""
+        },
+        "paperclipBoardApiKeyRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "Paperclip Board API Key (secret reference)",
+          "description": "Optional secret UUID for a board API key used by attachment uploads in authenticated deployments.",
+          "default": ""
+        },
+        "paperclipApiBaseUrl": {
+          "type": "string",
+          "title": "Paperclip API Base URL",
+          "description": "Optional override for the Paperclip API base URL. Defaults to the PAPERCLIP_API_URL env var.",
+          "default": ""
+        },
+        "defaultPaperclipCompany": {
+          "type": "string",
+          "title": "Default Paperclip Company",
+          "description": "Single-tenant mode: the Paperclip company every inbound LINE user is mapped to. Leave blank if you supply an onProvisionPrincipal extension hook.",
+          "default": ""
+        },
+        "defaultAgentId": {
+          "type": "string",
+          "title": "Default Agent ID",
+          "description": "Single-tenant mode: the agent that handles every LINE user's session. Leave blank if you supply an onProvisionPrincipal extension hook.",
+          "default": ""
+        },
+        "attachmentBucketName": {
+          "type": "string",
+          "title": "Attachment Bucket Name",
+          "description": "Logical attachment bucket namespace used for inbound LINE media object keys.",
+          "default": ""
+        },
+        "attachmentSignedUrlTtlDays": {
+          "type": "integer",
+          "title": "Attachment Signed URL TTL (days)",
+          "description": "Number of days inbound LINE attachment signed read URLs remain valid.",
+          "minimum": 1,
+          "maximum": 90,
+          "default": 30
+        },
+        "idleCloseMinutes": {
+          "type": "integer",
+          "title": "Idle Close Threshold (minutes)",
+          "description": "How long an open LINE thread may stay idle before the plugin closes it.",
+          "minimum": 1,
+          "maximum": 1440,
+          "default": 30
+        },
+        "linePushDailyLimit": {
+          "type": "integer",
+          "title": "LINE Push Daily Limit",
+          "description": "Maximum line.push_* tool calls per Paperclip company and agent per UTC day. Use 0 to disable push tools.",
+          "minimum": 0,
+          "default": 500
+        },
+        "replyTokenMaxAgeSeconds": {
+          "type": "integer",
+          "title": "Reply Token Max Age (seconds)",
+          "description": "Maximum age for cached LINE reply tokens before they are treated as expired.",
+          "minimum": 1,
+          "maximum": 300,
+          "default": 60
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "process-event",
+        "displayName": "Process LINE Event",
+        "description": "Queue-drain job that processes verified inbound LINE events after the webhook ACK path returns.",
+        "schedule": "*/1 * * * *"
+      },
+      {
+        "jobKey": "idle-close",
+        "displayName": "Idle Close LINE Threads",
+        "description": "Scheduled sweep that closes stale LINE threads and tears down their persisted agent sessions.",
+        "schedule": "*/15 * * * *"
+      },
+      {
+        "jobKey": "reply-token-gc",
+        "displayName": "Reply Token Garbage Collection",
+        "description": "Scheduled cleanup for expired cached LINE reply-token metadata.",
+        "schedule": "*/1 * * * *"
+      }
+    ],
+    "webhooks": [
+      {
+        "endpointKey": "line-webhook",
+        "displayName": "LINE Webhook",
+        "description": "Receives LINE Messaging API webhook deliveries for inbound LINE traffic."
+      }
+    ],
+    "tools": [
+      {
+        "name": "line.push_text",
+        "displayName": "LINE Push Text",
+        "description": "Send a plain-text LINE push message to a mapped LINE principal.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lineUserId",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "line.push_image",
+        "displayName": "LINE Push Image",
+        "description": "Send an image to a LINE principal using a publicly readable or signed image URL.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            },
+            "imageUrl": {
+              "type": "string"
+            },
+            "previewImageUrl": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lineUserId",
+            "imageUrl"
+          ]
+        }
+      },
+      {
+        "name": "line.push_flex",
+        "displayName": "LINE Push Flex",
+        "description": "Send a LINE Flex message payload to a LINE principal.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            },
+            "altText": {
+              "type": "string"
+            },
+            "contents": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "lineUserId",
+            "altText",
+            "contents"
+          ]
+        }
+      },
+      {
+        "name": "line.push_template",
+        "displayName": "LINE Push Template",
+        "description": "Send a LINE template message payload to a LINE principal.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            },
+            "altText": {
+              "type": "string"
+            },
+            "template": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "lineUserId",
+            "altText",
+            "template"
+          ]
+        }
+      },
+      {
+        "name": "line.push_sticker",
+        "displayName": "LINE Push Sticker",
+        "description": "Send a sticker message to a LINE principal.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            },
+            "packageId": {
+              "type": "string"
+            },
+            "stickerId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lineUserId",
+            "packageId",
+            "stickerId"
+          ]
+        }
+      },
+      {
+        "name": "line.ack_with_reply_token",
+        "displayName": "LINE Ack With Reply Token",
+        "description": "Use cached reply-token metadata tied to a Paperclip comment to send an immediate acknowledgment.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "commentId": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "commentId",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "line.close_thread",
+        "displayName": "LINE Close Thread",
+        "description": "Close the current Paperclip thread for a mapped LINE user.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lineUserId"
+          ]
+        }
+      },
+      {
+        "name": "line.get_profile",
+        "displayName": "LINE Get Profile",
+        "description": "Fetch the current LINE profile data for a mapped LINE principal.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "lineUserId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lineUserId"
+          ]
+        }
+      }
+    ]
+  },
+  "resolvedAt": "2026-06-02T07:55:05.292Z"
+}

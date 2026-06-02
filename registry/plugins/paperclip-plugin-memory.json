@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@smara/paperclip-plugin-memory",
+  "addedBy": "lacymorrow",
+  "category": "memory",
+  "sourceRepo": "https://github.com/smara-io/paperclip-plugin"
+}

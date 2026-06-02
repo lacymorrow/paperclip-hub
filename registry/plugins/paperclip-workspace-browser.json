@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-workspace-browser",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/fob92/paperclip-workspace-browser"
+}

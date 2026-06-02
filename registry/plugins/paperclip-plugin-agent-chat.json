@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "@sergioconejo/paperclip-plugin-agent-chat",
+  "addedBy": "lacymorrow",
+  "category": "tools",
+  "sourceRepo": "https://github.com/sergioconejo/paperclip-plugin-agent-chat"
+}

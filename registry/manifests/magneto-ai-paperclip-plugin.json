@@ -1,0 +1,223 @@
+{
+  "npmPackage": "@magneto-ai/paperclip-plugin",
+  "version": "0.1.2",
+  "manifest": {
+    "id": "magneto-ai",
+    "apiVersion": 1,
+    "version": "0.1.2",
+    "displayName": "Magneto AI",
+    "description": "Paperclip plugin for Magneto AI - exposes power skills as agent tools with hierarchical governance, approval bridge, and tamper-evident audit logging.",
+    "author": "Magneto AI Contributors",
+    "categories": [
+      "automation",
+      "connector"
+    ],
+    "capabilities": [
+      "agent.tools.register",
+      "events.subscribe",
+      "events.emit",
+      "activity.log.write",
+      "plugin.state.read",
+      "plugin.state.write"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "magnetoPath": {
+          "type": "string",
+          "title": "Magneto CLI Path",
+          "description": "Path to magneto CLI executable",
+          "default": "magneto"
+        },
+        "defaultSprintId": {
+          "type": "string",
+          "title": "Default Sprint ID",
+          "description": "Default sprint ID for artifact storage"
+        },
+        "syncAudit": {
+          "type": "boolean",
+          "title": "Sync Audit Log",
+          "description": "Enable audit log sync to Paperclip Activity",
+          "default": true
+        },
+        "auditSyncIntervalMs": {
+          "type": "number",
+          "title": "Audit Sync Interval (ms)",
+          "description": "Audit sync interval in milliseconds",
+          "default": 30000
+        },
+        "companyId": {
+          "type": "string",
+          "title": "Company ID",
+          "description": "Company ID for audit entries"
+        },
+        "verbose": {
+          "type": "boolean",
+          "title": "Verbose Logging",
+          "description": "Enable verbose logging",
+          "default": false
+        }
+      }
+    },
+    "tools": [
+      {
+        "name": "magneto.think",
+        "displayName": "Magneto Think",
+        "description": "Structured thinking with chain-of-thought reasoning",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "description": "The problem to think through"
+            },
+            "sprint": {
+              "type": "string",
+              "description": "Sprint ID for artifacts"
+            }
+          },
+          "required": [
+            "prompt"
+          ]
+        }
+      },
+      {
+        "name": "magneto.review",
+        "displayName": "Magneto Review",
+        "description": "Graph-aware code review with trace links",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "diff": {
+              "type": "string"
+            },
+            "base": {
+              "type": "string"
+            },
+            "sprint": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "magneto.ship",
+        "displayName": "Magneto Ship",
+        "description": "Release automation: sync, test, PR, trace links",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "sprint": {
+              "type": "string"
+            },
+            "draft": {
+              "type": "boolean"
+            },
+            "skipTests": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      {
+        "name": "magneto.audit",
+        "displayName": "Magneto Audit",
+        "description": "Read and verify tamper-evident audit log",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "tail": {
+              "type": "number"
+            },
+            "verify": {
+              "type": "boolean"
+            },
+            "sprint": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "magneto.guard",
+        "displayName": "Magneto Guard",
+        "description": "Combined /careful + /freeze safety",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "off": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "paths"
+          ]
+        }
+      },
+      {
+        "name": "magneto.trace",
+        "displayName": "Magneto Trace",
+        "description": "Requirement / design / code / test link graph",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "coverage": {
+              "type": "boolean"
+            },
+            "sprint": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "magneto.codex.review",
+        "displayName": "Magneto Codex Review",
+        "description": "Multi-LLM code review with convergence scoring",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "diff": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "sprint": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "magneto.plan-ceo-review",
+        "displayName": "Magneto CEO Review",
+        "description": "CEO-level business readiness review",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "plan": {
+              "type": "string"
+            },
+            "sprint": {
+              "type": "string"
+            },
+            "strict": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resolvedAt": "2026-06-02T07:55:09.135Z"
+}

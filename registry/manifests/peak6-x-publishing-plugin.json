@@ -1,0 +1,743 @@
+{
+  "npmPackage": "peak6-x-publishing-plugin",
+  "version": "0.2.3",
+  "manifest": {
+    "id": "peak6-labs.x-publishing",
+    "apiVersion": 1,
+    "version": "0.2.3",
+    "displayName": "X Publishing",
+    "description": "X/Twitter publishing plugin — drafts, approvals, scheduling, threads, metrics capture, and cross-plugin event flow.",
+    "author": "peak6-labs",
+    "categories": [
+      "connector",
+      "automation"
+    ],
+    "capabilities": [
+      "http.outbound",
+      "secrets.read-ref",
+      "jobs.schedule",
+      "agent.tools.register",
+      "plugin.state.read",
+      "plugin.state.write",
+      "events.subscribe",
+      "events.emit",
+      "issues.read",
+      "issues.create",
+      "issues.update",
+      "activity.log.write",
+      "metrics.write",
+      "instance.settings.register",
+      "ui.dashboardWidget.register",
+      "ui.page.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "type": "string",
+          "title": "Company ID",
+          "description": "UUID of the company this plugin serves",
+          "default": ""
+        },
+        "oauth_client_id_ref": {
+          "type": "string",
+          "title": "OAuth Client ID Secret Reference",
+          "description": "Shared across all accounts (one X Developer App)",
+          "default": "X_OAUTH_CLIENT_ID"
+        },
+        "oauth_client_secret_ref": {
+          "type": "string",
+          "title": "OAuth Client Secret Reference",
+          "default": "X_OAUTH_CLIENT_SECRET"
+        },
+        "default_account": {
+          "type": "string",
+          "title": "Default Account",
+          "description": "Handle of the default account (used when tools omit account param)"
+        },
+        "accounts": {
+          "type": "object",
+          "title": "Accounts",
+          "description": "Map of X accounts keyed by handle (without @)",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "x_handle": {
+                "type": "string",
+                "description": "X handle (without @)"
+              },
+              "x_user_id": {
+                "type": "string",
+                "description": "Numeric X user ID"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "hub",
+                  "spoke"
+                ],
+                "default": "spoke"
+              },
+              "approval_modes": {
+                "type": "object",
+                "properties": {
+                  "posts": {
+                    "type": "string",
+                    "enum": [
+                      "required",
+                      "optional",
+                      "none"
+                    ],
+                    "default": "none"
+                  },
+                  "replies": {
+                    "type": "string",
+                    "enum": [
+                      "required",
+                      "optional",
+                      "none"
+                    ],
+                    "default": "none"
+                  },
+                  "quotes": {
+                    "type": "string",
+                    "enum": [
+                      "required",
+                      "optional",
+                      "none"
+                    ],
+                    "default": "none"
+                  },
+                  "reposts": {
+                    "type": "string",
+                    "enum": [
+                      "required",
+                      "optional",
+                      "none"
+                    ],
+                    "default": "none"
+                  },
+                  "scheduled": {
+                    "type": "string",
+                    "enum": [
+                      "required",
+                      "optional",
+                      "none"
+                    ],
+                    "default": "required"
+                  }
+                }
+              }
+            },
+            "required": [
+              "x_handle",
+              "x_user_id"
+            ]
+          }
+        },
+        "daily_post_limit": {
+          "type": "number",
+          "title": "Daily Post Limit",
+          "description": "Maximum posts per day per account (safety guardrail)",
+          "default": 25
+        },
+        "engagement_milestones": {
+          "type": "array",
+          "title": "Engagement Milestones",
+          "description": "Total engagement thresholds that trigger milestone events",
+          "items": {
+            "type": "number"
+          },
+          "default": [
+            50,
+            100,
+            500,
+            1000
+          ]
+        },
+        "metrics_capture_lookback_days": {
+          "type": "number",
+          "title": "Metrics Capture Lookback (days)",
+          "default": 7
+        },
+        "alert_agents": {
+          "type": "array",
+          "title": "Alert Agents",
+          "description": "Agents to notify on failures or milestones",
+          "items": {
+            "type": "object",
+            "properties": {
+              "agentId": {
+                "type": "string",
+                "description": "Paperclip agent UUID"
+              },
+              "memoryFile": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Path to user memory file"
+              }
+            },
+            "required": [
+              "agentId"
+            ]
+          },
+          "default": []
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "token-refresh",
+        "displayName": "Token Refresh",
+        "description": "Refresh OAuth2 access token before expiry. Alerts on failure.",
+        "schedule": "0 */2 * * *"
+      },
+      {
+        "jobKey": "publish-scheduled",
+        "displayName": "Publish Scheduled",
+        "description": "Publish approved drafts whose schedule_at has passed.",
+        "schedule": "*/15 * * * *"
+      },
+      {
+        "jobKey": "metrics-capture",
+        "displayName": "Metrics Capture",
+        "description": "Snapshot engagement metrics on recent published posts.",
+        "schedule": "0 */6 * * *"
+      },
+      {
+        "jobKey": "stale-draft-cleanup",
+        "displayName": "Stale Draft Cleanup",
+        "description": "Mark drafts older than 48h in draft/in_review status as stale.",
+        "schedule": "0 2 * * *"
+      }
+    ],
+    "tools": [
+      {
+        "name": "setup-oauth",
+        "displayName": "Setup OAuth",
+        "description": "Seed initial OAuth tokens from a manual PKCE flow. Call once per account during setup.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to store tokens for (must exist in accounts config)"
+            },
+            "access_token": {
+              "type": "string",
+              "description": "OAuth2 access token"
+            },
+            "refresh_token": {
+              "type": "string",
+              "description": "OAuth2 refresh token"
+            },
+            "expires_in": {
+              "type": "number",
+              "description": "Token TTL in seconds (default 7200)"
+            }
+          },
+          "required": [
+            "account",
+            "access_token",
+            "refresh_token"
+          ]
+        }
+      },
+      {
+        "name": "draft-post",
+        "displayName": "Draft Post",
+        "description": "Create a draft post for review or later publishing.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "Tweet text (max 280 chars)"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "single",
+                "reply",
+                "quote"
+              ],
+              "description": "Post format"
+            },
+            "reply_to_tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to reply to (for reply format)"
+            },
+            "quote_tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to quote (for quote format)"
+            },
+            "schedule_at": {
+              "type": "string",
+              "description": "ISO datetime to schedule publication"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Content metadata for feedback loop",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                },
+                "source_issue_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "draft-thread",
+        "displayName": "Draft Thread",
+        "description": "Create a draft thread (multiple tweets posted as a reply chain).",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "thread_tweets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of tweet texts (each max 280 chars)"
+            },
+            "schedule_at": {
+              "type": "string",
+              "description": "ISO datetime to schedule publication"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                },
+                "source_issue_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "thread_tweets"
+          ]
+        }
+      },
+      {
+        "name": "update-draft",
+        "displayName": "Update Draft",
+        "description": "Update an existing draft's text, metadata, or schedule.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID"
+            },
+            "text": {
+              "type": "string",
+              "description": "Updated tweet text"
+            },
+            "thread_tweets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "schedule_at": {
+              "type": "string"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                },
+                "source_issue_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "draft_id"
+          ]
+        }
+      },
+      {
+        "name": "publish-post",
+        "displayName": "Publish Post",
+        "description": "Publish a tweet to X. Accepts inline text or a draft_id.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to post as (defaults to default_account)"
+            },
+            "text": {
+              "type": "string",
+              "description": "Tweet text (if publishing inline)"
+            },
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID (if publishing from draft)"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "reply-to-tweet",
+        "displayName": "Reply to Tweet",
+        "description": "Post a reply to an existing tweet on X.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to post as (defaults to default_account)"
+            },
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to reply to"
+            },
+            "text": {
+              "type": "string",
+              "description": "Reply text (max 280 chars)"
+            },
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID (if from draft)"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "tweet_id",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "quote-tweet",
+        "displayName": "Quote Tweet",
+        "description": "Post a quote tweet on X.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to post as (defaults to default_account)"
+            },
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to quote"
+            },
+            "text": {
+              "type": "string",
+              "description": "Quote text (max 280 chars)"
+            },
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID (if from draft)"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "tweet_id",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "repost",
+        "displayName": "Repost",
+        "description": "Repost (retweet) an existing tweet on X.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to post as (defaults to default_account)"
+            },
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to repost"
+            },
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID (if from draft)"
+            }
+          },
+          "required": [
+            "tweet_id"
+          ]
+        }
+      },
+      {
+        "name": "schedule-post",
+        "displayName": "Schedule Post",
+        "description": "Create or update a draft with a scheduled publication time.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "draft_id": {
+              "type": "string",
+              "description": "Existing draft ID to schedule"
+            },
+            "text": {
+              "type": "string",
+              "description": "Tweet text (creates new draft if no draft_id)"
+            },
+            "schedule_at": {
+              "type": "string",
+              "description": "ISO datetime for publication"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "schedule_at"
+          ]
+        }
+      },
+      {
+        "name": "publish-thread",
+        "displayName": "Publish Thread",
+        "description": "Publish a multi-tweet thread to X with reply chaining. Retries on failure; leaves partial thread + alert on persistent failure.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle to post as (defaults to default_account)"
+            },
+            "thread_tweets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of tweet texts"
+            },
+            "draft_id": {
+              "type": "string",
+              "description": "Draft entity ID (if from draft)"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "voice": {
+                  "type": "string"
+                },
+                "content_bucket": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "source_tweet_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "get-drafts",
+        "displayName": "Get Drafts",
+        "description": "Query draft entities, optionally filtered by status.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "in_review",
+                "approved",
+                "rejected",
+                "stale"
+              ],
+              "description": "Filter by draft status"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            }
+          }
+        }
+      },
+      {
+        "name": "get-schedule",
+        "displayName": "Get Schedule",
+        "description": "Get upcoming scheduled posts (drafts with schedule_at set).",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "number",
+              "description": "Max results (default 20)"
+            }
+          }
+        }
+      },
+      {
+        "name": "get-post-metrics",
+        "displayName": "Get Post Metrics",
+        "description": "Get engagement metrics for a published post.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "tweet_id": {
+              "type": "string",
+              "description": "Tweet ID to get metrics for"
+            }
+          },
+          "required": [
+            "tweet_id"
+          ]
+        }
+      },
+      {
+        "name": "get-account-status",
+        "displayName": "Get Account Status",
+        "description": "Get account health: rate limits, daily post count, token validity. Returns all accounts if no account specified.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {
+            "account": {
+              "type": "string",
+              "description": "X handle (omit for all accounts)"
+            }
+          }
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "dashboardWidget",
+          "id": "x-publishing-dashboard",
+          "displayName": "X Publishing",
+          "exportName": "DashboardWidget"
+        },
+        {
+          "type": "settingsPage",
+          "id": "x-publishing-settings",
+          "displayName": "X Publishing Settings",
+          "exportName": "SettingsPage"
+        },
+        {
+          "type": "page",
+          "id": "x-publishing-content",
+          "displayName": "Content Queue",
+          "exportName": "ContentPage",
+          "routePath": "x-publishing"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:06.354Z"
+}

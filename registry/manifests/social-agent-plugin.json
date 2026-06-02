@@ -1,0 +1,681 @@
+{
+  "npmPackage": "@blaze283/social-agent-plugin",
+  "version": "0.7.3",
+  "manifest": {
+    "id": "konfirmity.social-agent-plugin",
+    "apiVersion": 1,
+    "version": "0.7.3",
+    "displayName": "Social Agent",
+    "description": "LinkedIn agent + analytics for Paperclip. Connects LinkedIn accounts (OAuth, multi-account per company), lets agents post / react / comment on their behalf, and surfaces engager-level analytics — engagers classified by ICP and region, triage workflow, URL-paste tracking — on tracked posts.",
+    "author": "blaze283",
+    "categories": [
+      "connector",
+      "automation",
+      "ui"
+    ],
+    "capabilities": [
+      "companies.read",
+      "activity.log.write",
+      "activity.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "database.namespace.migrate",
+      "database.namespace.read",
+      "database.namespace.write",
+      "http.outbound",
+      "secrets.read-ref",
+      "agent.tools.register",
+      "jobs.schedule",
+      "api.routes.register",
+      "ui.page.register",
+      "ui.sidebar.register",
+      "instance.settings.register",
+      "issues.create",
+      "issues.read",
+      "issues.update",
+      "issue.comments.create",
+      "projects.read",
+      "agents.read"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "database": {
+      "namespaceSlug": "social",
+      "migrationsDir": "migrations",
+      "coreReadTables": [
+        "companies"
+      ]
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "required": [
+        "dekRef",
+        "redirectBaseUrl",
+        "channels"
+      ],
+      "properties": {
+        "dekRef": {
+          "type": "string",
+          "format": "secret-ref",
+          "title": "Token Encryption Key (32 bytes, base64)",
+          "description": "Reference to a paperclip secret holding 32 random bytes, base64-encoded. Used to envelope OAuth tokens."
+        },
+        "redirectBaseUrl": {
+          "type": "string",
+          "title": "Public base URL",
+          "description": "Public origin of this paperclip instance, e.g. https://paperclip.example.com. Used to build OAuth redirect URIs."
+        },
+        "channels": {
+          "type": "object",
+          "properties": {
+            "linkedin": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "clientIdRef": {
+                  "type": "string",
+                  "format": "secret-ref"
+                },
+                "clientSecretRef": {
+                  "type": "string",
+                  "format": "secret-ref"
+                }
+              }
+            },
+            "analytics": {
+              "type": "object",
+              "properties": {
+                "issueProjectId": {
+                  "type": "string",
+                  "title": "Project for analytics issues"
+                },
+                "issueAssigneeAgentId": {
+                  "type": "string",
+                  "title": "Default assignee"
+                },
+                "refreshWebhookUrl": {
+                  "type": "string",
+                  "title": "Routine webhook URL"
+                },
+                "refreshWebhookSecretRef": {
+                  "type": "string",
+                  "format": "secret-ref"
+                },
+                "refreshWebhookAuthMode": {
+                  "type": "string",
+                  "enum": [
+                    "bearer",
+                    "hmac_sha256"
+                  ],
+                  "default": "bearer"
+                }
+              }
+            },
+            "leads": {
+              "type": "object",
+              "properties": {
+                "issueProjectId": {
+                  "type": "string",
+                  "title": "Project for lead issues",
+                  "description": "Paperclip project under which the plugin creates lead-DM-drafting issues."
+                },
+                "assigneeAgentId": {
+                  "type": "string",
+                  "title": "Lead-DM assignee agent",
+                  "description": "Agent assigned to each new lead issue. Generates 3 cold-DM drafts and writes them back via the plugin's agent-auth route. Optional — if blank, lead issues are unassigned."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "jobs": [
+      {
+        "jobKey": "reconcile-connections",
+        "displayName": "Reconcile Social Connections",
+        "schedule": "0 3 * * *"
+      }
+    ],
+    "apiRoutes": [
+      {
+        "routeKey": "my-connections",
+        "method": "GET",
+        "path": "/me/connections",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "team-connections",
+        "method": "GET",
+        "path": "/team/connections",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "audit-recent",
+        "method": "GET",
+        "path": "/audit/recent",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "oauth-start",
+        "method": "POST",
+        "path": "/oauth/start",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "oauth-complete",
+        "method": "POST",
+        "path": "/oauth/complete",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "disconnect",
+        "method": "POST",
+        "path": "/connections/:connectionId/disconnect",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "tools-dispatch",
+        "method": "POST",
+        "path": "/tools/dispatch",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-list-posts",
+        "method": "GET",
+        "path": "/analytics/posts",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-post-detail",
+        "method": "GET",
+        "path": "/analytics/posts/:id",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-engager-update",
+        "method": "POST",
+        "path": "/analytics/posts/:id/engagers/:engagerId",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-track-url",
+        "method": "POST",
+        "path": "/analytics/track-url",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-list-projects",
+        "method": "GET",
+        "path": "/analytics/projects",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-list-agents",
+        "method": "GET",
+        "path": "/analytics/agents",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-tracked-posts-list",
+        "method": "GET",
+        "path": "/analytics/agent/tracked-posts",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-tracked-posts-upsert",
+        "method": "POST",
+        "path": "/analytics/agent/tracked-posts",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-engagers-upsert",
+        "method": "POST",
+        "path": "/analytics/agent/posts/:id/engagers",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "analytics-snapshot",
+        "method": "POST",
+        "path": "/analytics/agent/posts/:id/snapshot",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-list",
+        "method": "GET",
+        "path": "/leads",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-detail",
+        "method": "GET",
+        "path": "/leads/:leadId",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-mark-contacted",
+        "method": "POST",
+        "path": "/leads/:leadId/contacted",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-archive",
+        "method": "POST",
+        "path": "/leads/:leadId/archive",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-restore",
+        "method": "POST",
+        "path": "/leads/:leadId/restore",
+        "auth": "board",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-agent-get",
+        "method": "GET",
+        "path": "/leads/agent/:leadId",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "query",
+          "key": "companyId"
+        }
+      },
+      {
+        "routeKey": "leads-agent-dm-suggestions",
+        "method": "POST",
+        "path": "/leads/agent/:leadId/dm-suggestions",
+        "auth": "agent",
+        "capability": "api.routes.register",
+        "companyResolution": {
+          "from": "body",
+          "key": "companyId"
+        }
+      }
+    ],
+    "tools": [
+      {
+        "name": "social-list-channels",
+        "displayName": "List Social Channels",
+        "description": "List social channels supported by this plugin and whether each is enabled in the current paperclip instance. Use this before calling a channel-specific post tool to confirm the channel is configured.",
+        "parametersSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "social-list-connections",
+        "displayName": "List Social Connections",
+        "description": "List connected social accounts on a given channel within the current company. Returns one entry per account with its connectionId, accountDisplayName, accountHandle, externalUrn, and status. Use this before calling a channel-specific post tool to find the destination connectionId.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "channel"
+          ],
+          "properties": {
+            "channel": {
+              "type": "string",
+              "description": "e.g. 'linkedin'"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "active",
+                "expired",
+                "revoked",
+                "any"
+              ],
+              "default": "active"
+            },
+            "match": {
+              "type": "string",
+              "description": "Optional substring matched (case-insensitive) against accountDisplayName and accountHandle."
+            }
+          }
+        }
+      },
+      {
+        "name": "linkedin-post",
+        "displayName": "Post to LinkedIn",
+        "description": "Publish a post to a connected LinkedIn account. Requires an active connection. Use 'social-list-connections' first to obtain a connectionId.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "connectionId",
+            "text"
+          ],
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "description": "Opaque connection id from social-list-connections."
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 3000
+            },
+            "visibility": {
+              "type": "string",
+              "enum": [
+                "PUBLIC",
+                "CONNECTIONS"
+              ],
+              "default": "PUBLIC"
+            },
+            "issueId": {
+              "type": "string",
+              "description": "Optional: paperclip issue id, for audit linkage."
+            }
+          }
+        }
+      },
+      {
+        "name": "linkedin-react",
+        "displayName": "React to LinkedIn Post",
+        "description": "Apply a reaction (LIKE by default) on a LinkedIn post on behalf of a connected account. Accepts a LinkedIn post URL or URN. Use 'social-list-connections' first to obtain a connectionId.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "connectionId",
+            "post"
+          ],
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "description": "Opaque connection id from social-list-connections."
+            },
+            "post": {
+              "type": "string",
+              "description": "LinkedIn post URL or URN. Accepted: urn:li:activity:..., urn:li:share:..., urn:li:ugcPost:..., https://www.linkedin.com/feed/update/<urn>/..., https://www.linkedin.com/posts/<slug>-activity-<id>-<hash>/."
+            },
+            "reactionType": {
+              "type": "string",
+              "enum": [
+                "LIKE",
+                "PRAISE",
+                "EMPATHY",
+                "INTEREST",
+                "APPRECIATION",
+                "ENTERTAINMENT"
+              ],
+              "default": "LIKE"
+            },
+            "issueId": {
+              "type": "string",
+              "description": "Optional: paperclip issue id, for audit linkage."
+            }
+          }
+        }
+      },
+      {
+        "name": "linkedin-repost",
+        "displayName": "Repost on LinkedIn",
+        "description": "Reshare a LinkedIn post on behalf of a connected account, optionally with quote commentary. Accepts a LinkedIn post URL or URN. Use 'social-list-connections' first to obtain a connectionId.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "connectionId",
+            "post"
+          ],
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "description": "Opaque connection id from social-list-connections."
+            },
+            "post": {
+              "type": "string",
+              "description": "LinkedIn post URL or URN to reshare. Accepted: urn:li:activity:..., urn:li:share:..., urn:li:ugcPost:..., https://www.linkedin.com/feed/update/<urn>/..., https://www.linkedin.com/posts/<slug>-activity-<id>-<hash>/."
+            },
+            "commentary": {
+              "type": "string",
+              "maxLength": 3000,
+              "description": "Optional quote text published with the reshare. Omit or pass an empty string for a bare reshare."
+            },
+            "visibility": {
+              "type": "string",
+              "enum": [
+                "PUBLIC",
+                "CONNECTIONS"
+              ],
+              "default": "PUBLIC"
+            },
+            "issueId": {
+              "type": "string",
+              "description": "Optional: paperclip issue id, for audit linkage."
+            }
+          }
+        }
+      },
+      {
+        "name": "linkedin-comment",
+        "displayName": "Comment on LinkedIn Post",
+        "description": "Post a top-level text comment on a LinkedIn post on behalf of a connected account. Supports inline @-mentions when the caller provides target URNs. Accepts a LinkedIn post URL or URN. Use 'social-list-connections' first to obtain a connectionId.",
+        "parametersSchema": {
+          "type": "object",
+          "required": [
+            "connectionId",
+            "post",
+            "text"
+          ],
+          "properties": {
+            "connectionId": {
+              "type": "string",
+              "description": "Opaque connection id from social-list-connections."
+            },
+            "post": {
+              "type": "string",
+              "description": "LinkedIn post URL or URN. Accepted: urn:li:activity:..., urn:li:share:..., urn:li:ugcPost:..., https://www.linkedin.com/feed/update/<urn>/..., https://www.linkedin.com/posts/<slug>-activity-<id>-<hash>/."
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1250,
+              "description": "Comment body. LinkedIn enforces ~1250 chars for comments."
+            },
+            "mentions": {
+              "type": "array",
+              "description": "Optional inline mentions. Each entry's [start, start+length) must fit within `text` and entries must not overlap. Caller supplies URNs; this tool does not resolve names to URNs.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "start",
+                  "length",
+                  "urn"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "length": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "urn": {
+                    "type": "string",
+                    "pattern": "^urn:li:(person|organization):.+"
+                  }
+                }
+              }
+            },
+            "issueId": {
+              "type": "string",
+              "description": "Optional: paperclip issue id, for audit linkage."
+            }
+          }
+        }
+      }
+    ],
+    "ui": {
+      "slots": [
+        {
+          "type": "page",
+          "id": "social",
+          "exportName": "SocialPage",
+          "displayName": "Social Accounts",
+          "routePath": "social"
+        },
+        {
+          "type": "page",
+          "id": "oauth-callback",
+          "exportName": "OAuthCallbackPage",
+          "displayName": "Connecting…",
+          "routePath": "social-callback"
+        },
+        {
+          "type": "settingsPage",
+          "id": "settings",
+          "exportName": "SettingsPage",
+          "displayName": "Social Agent"
+        },
+        {
+          "type": "sidebar",
+          "id": "sidebar",
+          "exportName": "SidebarEntry",
+          "displayName": "Social"
+        },
+        {
+          "type": "page",
+          "id": "analytics",
+          "exportName": "AnalyticsPage",
+          "displayName": "Analytics",
+          "routePath": "analytics"
+        },
+        {
+          "type": "sidebar",
+          "id": "sidebar-analytics",
+          "exportName": "SidebarEntryAnalytics",
+          "displayName": "Analytics"
+        },
+        {
+          "type": "page",
+          "id": "leads",
+          "exportName": "LeadsPage",
+          "displayName": "Leads",
+          "routePath": "leads"
+        },
+        {
+          "type": "sidebar",
+          "id": "sidebar-leads",
+          "exportName": "SidebarEntryLeads",
+          "displayName": "Leads"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:00.956Z"
+}

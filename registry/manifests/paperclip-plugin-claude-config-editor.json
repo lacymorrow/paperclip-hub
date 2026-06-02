@@ -1,0 +1,33 @@
+{
+  "npmPackage": "paperclip-plugin-claude-config-editor",
+  "version": "1.0.1",
+  "manifest": {
+    "id": "paperclip-claude-config-editor",
+    "apiVersion": 1,
+    "version": "1.0.0",
+    "displayName": "Claude Config Editor",
+    "description": "Allows instance admins to edit Claude Code configuration files (.claude.json and .credentials.json) through the Paperclip settings UI.",
+    "author": "Paperclip",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "instance.settings.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "settingsPage",
+          "id": "claude-config-settings-page",
+          "displayName": "Claude Config",
+          "exportName": "ClaudeConfigSettingsPage"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-06-02T07:55:14.356Z"
+}

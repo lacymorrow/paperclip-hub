@@ -17,13 +17,63 @@ export async function generateStaticParams() {
   return plugins.map((p) => ({ slug: p.slug }));
 }
 
+const CATEGORY_LABEL: Record<string, string> = {
+  auth: "auth",
+  provider: "provider",
+  tools: "tool",
+  integration: "integration",
+  observability: "observability",
+  memory: "memory",
+  other: "",
+};
+
+function pluginTitle(plugin: { name: string; category: string }): string {
+  const label = CATEGORY_LABEL[plugin.category] ?? "";
+  return label
+    ? `${plugin.name} — Paperclip ${label} plugin`
+    : `${plugin.name} — Paperclip plugin`;
+}
+
 export async function generateMetadata({ params }: PluginDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const plugin = await getPluginBySlug(slug);
   if (!plugin) return {};
+  const title = pluginTitle(plugin);
+  const description =
+    plugin.description ||
+    `${plugin.name} — a Paperclip plugin published as ${plugin.npmPackage} on npm.`;
+  const ogParams = new URLSearchParams({
+    title: plugin.name,
+    description,
+    url: `cliphub.fyi/plugins/${plugin.slug}`,
+  });
+  const ogImage = `/og?${ogParams.toString()}`;
+  const canonical = `https://cliphub.fyi/plugins/${plugin.slug}`;
   return {
-    title: `${plugin.name} — Paperclip Hub`,
-    description: plugin.description,
+    title,
+    description,
+    alternates: { canonical },
+    keywords: [
+      "Paperclip",
+      "Paperclip plugin",
+      plugin.npmPackage,
+      plugin.category,
+      ...plugin.capabilities.slice(0, 8),
+    ],
+    openGraph: {
+      type: "article",
+      url: canonical,
+      title,
+      description,
+      siteName: "Paperclip Hub",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: plugin.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
@@ -180,8 +230,36 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
     },
   ];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: plugin.name,
+    description: plugin.description,
+    applicationCategory: "DeveloperApplication",
+    applicationSubCategory: `Paperclip ${plugin.category} plugin`,
+    operatingSystem: "Any",
+    softwareVersion: plugin.version !== "unknown" ? plugin.version : undefined,
+    downloadUrl: `https://www.npmjs.com/package/${plugin.npmPackage}`,
+    installUrl: `https://www.npmjs.com/package/${plugin.npmPackage}`,
+    url: `https://cliphub.fyi/plugins/${plugin.slug}`,
+    sameAs: safeSourceRepo ? [safeSourceRepo] : undefined,
+    author: { "@type": "Person", name: plugin.author.name },
+    keywords: ["Paperclip plugin", plugin.category, ...plugin.capabilities].join(", "),
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    isPartOf: {
+      "@type": "SoftwareApplication",
+      name: "Paperclip",
+      url: "https://paperclip.ing",
+    },
+  };
+
   return (
     <div className="hub-c1">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Header */}
       <header className="hc-header">
         <Link href="/" className="hc-brand">
@@ -224,6 +302,19 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
             {plugin.category}
           </div>
           <h1>{plugin.name}.</h1>
+          <p
+            style={{
+              fontFamily: "var(--hub-font-mono)",
+              fontSize: 12,
+              color: "var(--ink-3)",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              marginTop: -4,
+              marginBottom: 14,
+            }}
+          >
+            A Paperclip plugin · published on npm as <code>{plugin.npmPackage}</code>
+          </p>
           <p className="hc-d-tag">
             <em>{plugin.description}</em>
           </p>

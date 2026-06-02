@@ -1,28 +1,36 @@
-# ShipKit
+# Paperclip Hub
 
-> Next.js starter kit with auth, CMS, payments, and everything apps need to ship fast.
+> The plugin directory for Paperclip — an agent orchestration platform at https://paperclip.ing.
 
-## What is ShipKit?
-ShipKit is a production-ready Next.js 15 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
+## What this is
 
-## Quick Start
-git clone https://github.com/shipkit-io/shipkit
-cd shipkit
-bun install --frozen-lockfile
-bun dev
+Paperclip Hub (cliphub.fyi) lists community-published plugins for Paperclip. It is *not* a product of its own — there is no API, no auth, no docs to read. It is a static directory that resolves each plugin's manifest from npm and serves the result.
 
-## Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fshipkit)
+For Paperclip itself:
+- Docs: https://docs.paperclip.ing
+- Discord: https://discord.gg/m4HZY7xNG3
+- GitHub: https://github.com/paperclipai/paperclip
 
-No environment variables needed to start. The setup wizard guides you through configuration after deployment.
+## Discovering plugins
 
-## Docs
-- Full Documentation: https://shipkit.io/docs
-- Deploy Guide: https://shipkit.io/docs/getting-started/deploy
-- Development Guide: https://shipkit.io/docs/development
+The full registry is published as JSON at:
 
-## Links
-- Website: https://shipkit.io
-- GitHub: https://github.com/shipkit-io/shipkit
-- Free Template: https://github.com/shipkit-io/bones
-- Twitter: https://twitter.com/lacybuilds
+  https://cliphub.fyi/plugins.json
+
+Each entry has: slug, npmPackage, addedBy, sourceRepo, version, manifest (id, displayName, description, capabilities, …), installs (weekly npm downloads), and resolvedAt timestamps. Prefer fetching this file over scraping HTML.
+
+Categories: auth, provider, tools, integration, observability, memory, other.
+
+## Installing a plugin
+
+Each plugin is an npm package. Install via the Paperclip CLI:
+
+  npx paperclipai@latest plugin install <package>
+
+## Submitting a plugin
+
+Plugin authors submit a small "pointer" file (just npm package name + GitHub handle + category) via https://cliphub.fyi/submit, which pre-fills a GitHub pull request. CI fetches the plugin's npm tarball, validates ownership against npm maintainers, and statically extracts the manifest. There is no review queue.
+
+## Source
+
+The hub itself lives at https://github.com/lacymorrow/paperclip-hub.

@@ -1,142 +1,175 @@
-# ShipKit
+# Paperclip Hub — full plugin index
 
-> Next.js starter kit with auth, CMS, payments, and everything apps need to ship fast.
+> Generated from the registry. The canonical structured form is /plugins.json.
 
-## What is ShipKit?
-ShipKit is a production-ready Next.js 15 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
+Generated: 2026-06-02T07:15:38.336Z
+Total plugins: 14
 
-## Quick Start
-git clone https://github.com/shipkit-io/shipkit
-cd shipkit
-bun install --frozen-lockfile
-bun dev
+Each entry below lists: name, npm package, category, install command, weekly downloads, version, capabilities, and source.
 
-## Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fshipkit)
+---
 
-No environment variables needed to start. The setup wizard guides you through configuration after deployment.
+## E2B Sandbox Provider
 
-## Docs
-- Full Documentation: https://shipkit.io/docs
-- Deploy Guide: https://shipkit.io/docs/getting-started/deploy
-- Development Guide: https://shipkit.io/docs/development
+First-party sandbox provider plugin that provisions E2B cloud sandboxes as Paperclip execution environments.
 
-## Links
-- Website: https://shipkit.io
-- GitHub: https://github.com/shipkit-io/shipkit
-- Free Template: https://github.com/shipkit-io/bones
-- Twitter: https://twitter.com/lacybuilds
+- URL: https://cliphub.fyi/plugins/plugin-e2b
+- npm: @paperclipai/plugin-e2b (v2026.529.0)
+- Category: tools
+- Weekly downloads: 2415
+- Source: https://github.com/paperclipai/paperclip
+- Capabilities: environment.drivers.register
+- Install: npx paperclipai@latest plugin install @paperclipai/plugin-e2b
 
-## Features
+## Hindsight Memory
 
-### Authentication
-ShipKit supports multiple auth providers out of the box. Swap providers without rewriting your app.
-- Auth.js (NextAuth v5): The default, supports dozens of OAuth providers and credentials.
-- Better Auth: Lightweight alternative with a simple API.
-- Clerk: Managed auth with prebuilt UI components.
-- Supabase Auth: Integrated with the Supabase ecosystem.
-- Stack Auth: Open-source auth with built-in user management.
+Persistent long-term memory for Paperclip agents. Automatically recalls relevant context before each run and retains agent output after — so every agent gets smarter over time.
 
-### Payments
-Integrated billing and subscription management. Configure your provider and start accepting payments.
-- Lemon Squeezy: Merchant of record, handles tax and compliance globally.
-- Stripe: Full-featured payment processing with subscriptions, invoices, and more.
-- Polar: Open-source-friendly monetization platform.
+- URL: https://cliphub.fyi/plugins/hindsight-paperclip
+- npm: @vectorize-io/hindsight-paperclip (v0.2.3)
+- Category: memory
+- Weekly downloads: 266
+- Source: https://github.com/vectorize-io/hindsight
+- Capabilities: events.subscribe, agent.tools.register, plugin.state.read, plugin.state.write, http.outbound, secrets.read-ref, agents.read, issues.read, issue.comments.read
+- Install: npx paperclipai@latest plugin install @vectorize-io/hindsight-paperclip
 
-### Content Management
-- Payload CMS v3: Headless CMS built directly into the Next.js app. Admin panel, collections, rich text, media, and access control included.
-- Builder.io: Visual drag-and-drop editor for marketing pages. Non-developers can edit content without touching code.
+## Telegram Bot
 
-### Email
-- Resend: Transactional email with React Email templates. Send welcome emails, password resets, notifications, and marketing campaigns.
+Bidirectional Telegram integration: push notifications, bot commands, escalation to humans, multi-agent sessions (native + ACP), media pipeline with transcription, custom workflow commands, and proactive suggestion watches.
 
-### AI
-- SmolLM: Lightweight local language model for on-device inference.
-- OpenAI: GPT models for chat, completion, and embeddings.
-- Anthropic: Claude models for advanced reasoning and content generation.
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-telegram
+- npm: paperclip-plugin-telegram (v0.6.1)
+- Category: integration
+- Weekly downloads: 191
+- Source: https://github.com/mvanhorn/paperclip-plugin-telegram
+- Capabilities: companies.read, projects.read, issues.read, issues.create, issues.update, issue.comments.read, issue.comments.create, agents.read, agents.invoke, agent.sessions.create, agent.sessions.list, agent.sessions.send, agent.sessions.close, agent.tools.register, events.subscribe, events.emit, plugin.state.read, plugin.state.write, http.outbound, secrets.read-ref, activity.log.write, metrics.write, jobs.schedule, instance.settings.register, ui.page.register
+- Install: npx paperclipai@latest plugin install paperclip-plugin-telegram
 
-### Analytics
-- PostHog: Product analytics, feature flags, session replay, and A/B testing.
-- Umami: Privacy-focused, lightweight web analytics.
-- Google Analytics: Standard web analytics integration.
-- Statsig: Feature gates, experiments, and dynamic configs.
+## Slack Chat OS
 
-### Database
-- PostgreSQL: The primary database, robust and production-proven.
-- Drizzle ORM: Type-safe SQL query builder with automatic migrations and schema management.
+Full Chat OS for Slack: escalation, multi-agent sessions, media pipeline, custom commands, and proactive suggestions. Push Paperclip notifications, receive slash commands, and manage agent workflows.
 
-### Storage
-- AWS S3: Object storage for files, images, and media.
-- Vercel Blob: Simple blob storage integrated with the Vercel platform.
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-slack
+- npm: paperclip-plugin-slack (v2.0.8)
+- Category: integration
+- Weekly downloads: 185
+- Source: https://github.com/mvanhorn/paperclip-plugin-slack
+- Capabilities: companies.read, issues.read, issues.create, agents.read, agent.sessions.create, agent.sessions.send, agent.sessions.close, agents.invoke, events.subscribe, events.emit, plugin.state.read, plugin.state.write, http.outbound, secrets.read-ref, webhooks.receive, instance.settings.register, activity.log.write, metrics.write, jobs.schedule, agent.tools.register
+- Install: npx paperclipai@latest plugin install paperclip-plugin-slack
 
-## Tech Stack
-- Next.js 15: React framework with App Router, Server Components, Server Actions, and streaming.
-- TypeScript: Full type safety across the entire codebase.
-- Tailwind CSS: Utility-first CSS framework for rapid styling.
-- Shadcn/UI: Accessible, composable UI components built on Radix primitives.
-- Drizzle ORM: Type-safe database toolkit with zero-overhead SQL.
-- Payload CMS v3: Headless CMS embedded in the Next.js process.
-- Builder.io: Visual page builder for no-code content editing.
-- Resend: Email delivery with React-based templates.
+## Discord Bot
 
-## Project Structure
-```
-shipkit/
-  src/
-    app/              # Next.js App Router pages and layouts
-      (app)/          # Main app layout group
-      (marketing)/    # Marketing pages layout group
-      api/            # API route handlers
-    components/       # Shared React components
-      ui/             # Shadcn/UI primitives
-      layouts/        # Layout components
-      modules/        # Feature-specific component modules
-    config/           # App configuration (site, metadata, fonts, navigation)
-    lib/              # Utility functions and shared logic
-    server/           # Server-side code (auth, db, providers, actions)
-      db/             # Drizzle schema and migrations
-      actions/        # Server Actions
-      providers/      # Payment and auth provider setup
-    styles/           # Global CSS and Tailwind config
-  public/             # Static assets
-  payload/            # Payload CMS configuration and collections
-  drizzle/            # Database migration files
-```
+Bidirectional Discord integration: push notifications on agent events, receive slash commands, gather community intelligence, multi-agent sessions, media pipeline, custom commands, and proactive suggestions.
 
-## Configuration
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-discord
+- npm: paperclip-plugin-discord (v0.9.1)
+- Category: integration
+- Weekly downloads: 128
+- Source: https://github.com/mvanhorn/paperclip-plugin-discord
+- Capabilities: companies.read, projects.read, issues.read, issue.comments.read, issues.create, issues.update, agents.read, agent.sessions.create, agent.sessions.send, agent.sessions.close, agents.invoke, events.subscribe, plugin.state.read, plugin.state.write, http.outbound, secrets.read-ref, webhooks.receive, activity.log.write, metrics.write, agent.tools.register, jobs.schedule, events.emit
+- Install: npx paperclipai@latest plugin install paperclip-plugin-discord
 
-### Environment Variables
-ShipKit uses a validated env schema (via `@t3-oss/env-nextjs`). Copy `.env.example` to `.env.local` and fill in values for the providers you want to use. No env vars are required to start the dev server; the setup wizard walks you through configuration.
+## Compass
 
-### Setup Wizard
-On first run, ShipKit detects missing configuration and launches an interactive setup wizard. It guides you through:
-- Selecting your auth provider
-- Connecting your payment provider
-- Configuring your database connection
-- Setting up email delivery
-- Enabling analytics
+Strategic consultant for AI company lifecycle — diagnose, found, revive, reposition
 
-## Customization
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-compass
+- npm: paperclip-plugin-compass (v1.1.8)
+- Category: tools
+- Weekly downloads: 113
+- Source: https://github.com/Tr1ckyMag1ca1/paperclip-plugin-compass
+- Capabilities: ui.page.register, ui.sidebar.register, agents.read, agents.pause, agents.resume, issues.read, issues.create, issues.update, issues.wakeup, issue.comments.read, issue.comments.create, issue.documents.read, issue.documents.write, plugin.state.read, plugin.state.write, companies.read, activity.log.write, events.subscribe, events.emit, jobs.schedule
+- Install: npx paperclipai@latest plugin install paperclip-plugin-compass
 
-### Adding Pages
-Create new routes in `src/app/`. Use the `(app)` group for authenticated app pages and `(marketing)` for public marketing pages. Each group has its own layout.
+## Company Wizard
 
-### Switching Auth Providers
-Set the `AUTH_PROVIDER` environment variable to your chosen provider (`authjs`, `better-auth`, `clerk`, `supabase`, or `stack`). ShipKit's auth abstraction layer handles the rest. Provider-specific configuration goes in `src/server/auth/`.
+AI-powered wizard to bootstrap agent companies from composable templates
 
-### Switching Payment Providers
-Set the `PAYMENT_PROVIDER` environment variable (`stripe`, `lemonsqueezy`, or `polar`). Configure API keys and webhook secrets. Product and pricing definitions live in `src/config/pricing.ts`.
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-company-wizard
+- npm: @yesterday-ai/paperclip-plugin-company-wizard (v0.1.16)
+- Category: tools
+- Weekly downloads: 68
+- Capabilities: companies.read, issues.create, issues.read, issues.update, goals.create, goals.read, agents.read, projects.read, plugin.state.read, plugin.state.write, events.subscribe, ui.page.register, ui.sidebar.register
+- Install: npx paperclipai@latest plugin install @yesterday-ai/paperclip-plugin-company-wizard
 
-### Adding UI Components
-Run `bunx shadcn@latest add <component>` to add new Shadcn/UI components. They install into `src/components/ui/`.
+## File Navigator
 
-## AI Assistant Guide
-ShipKit includes a `CLAUDE.md` file at the repository root. This file provides AI coding assistants (Claude, Cursor, Copilot, and others) with project context, coding conventions, architecture decisions, and instructions for working effectively with the codebase.
+Browse projects with real names and open them directly in your external filebrowser.
 
-## License
-ShipKit is open source software. See the repository for license details.
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-navigator
+- npm: paperclip-plugin-navigator (v0.2.1)
+- Category: tools
+- Weekly downloads: 47
+- Source: https://github.com/rjvc/paperclip-plugin-navigator
+- Capabilities: projects.read, project.workspaces.read, companies.read, ui.page.register, ui.sidebar.register, http.outbound
+- Install: npx paperclipai@latest plugin install paperclip-plugin-navigator
 
-## Support
-- GitHub Issues: https://github.com/shipkit-io/shipkit/issues
-- Documentation: https://shipkit.io/docs
-- Twitter: https://twitter.com/lacybuilds
+## Kubernetes Sandbox Provider
+
+Provisions a long-lived Kubernetes pod per environment lease and routes adapter command execution through the K8s exec API.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-k8s
+- npm: @farhoodlabs/paperclip-plugin-k8s (v0.3.7)
+- Category: tools
+- Weekly downloads: 42
+- Capabilities: environment.drivers.register, instance.settings.register
+- Install: npx paperclipai@latest plugin install @farhoodlabs/paperclip-plugin-k8s
+
+## Agent Analytics Live
+
+Paperclip plugin for viewing live Agent Analytics signals inside a company workspace.
+
+- URL: https://cliphub.fyi/plugins/paperclip-live-analytics-plugin
+- npm: @agent-analytics/paperclip-live-analytics-plugin (v0.1.11)
+- Category: observability
+- Weekly downloads: 35
+- Source: https://github.com/Agent-Analytics/paperclip-live-analytics-plugin
+- Capabilities: http.outbound, plugin.state.read, plugin.state.write, companies.read, projects.read, ui.page.register, ui.dashboardWidget.register, ui.sidebar.register, instance.settings.register
+- Install: npx paperclipai@latest plugin install @agent-analytics/paperclip-live-analytics-plugin
+
+## Linear
+
+Two-way sync between Paperclip projects and a Linear workspace. Pick which Paperclip project links to which Linear project; new Paperclip issues push to the linked Linear project, Linear issues that carry a configured label are imported back so agents can pick them up.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-linear
+- npm: @oldharlem/paperclip-plugin-linear (v0.7.0)
+- Category: integration
+- Weekly downloads: 12
+- Source: https://github.com/Oldharlem/paperclip-linear-plugin
+- Capabilities: companies.read, projects.read, issues.read, issues.create, issues.update, issues.wakeup, issue.comments.read, issue.comments.create, issue.documents.read, activity.log.write, plugin.state.read, plugin.state.write, events.subscribe, events.emit, jobs.schedule, webhooks.receive, http.outbound, secrets.read-ref, agent.tools.register, instance.settings.register, ui.page.register, ui.dashboardWidget.register, ui.detailTab.register, ui.sidebar.register
+- Install: npx paperclipai@latest plugin install @oldharlem/paperclip-plugin-linear
+
+## Agent Usage Tracker
+
+Monitors AI provider usage quotas (Claude, etc.) and exposes real-time usage data to agents and the dashboard so they can make smart decisions based on remaining capacity.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-agent-usage
+- npm: paperclip-plugin-agent-usage (v0.1.3)
+- Category: observability
+- Weekly downloads: 11
+- Source: https://github.com/lacymorrow/paperclip-plugin-agent-usage
+- Capabilities: companies.read, plugin.state.read, plugin.state.write, events.subscribe, events.emit, jobs.schedule, http.outbound, metrics.write, agent.tools.register, ui.dashboardWidget.register, ui.page.register, instance.settings.register
+- Install: npx paperclipai@latest plugin install paperclip-plugin-agent-usage
+
+## DriftWatch
+
+Audit agent instructions in read-only mode. Detect drift, overlap, and handoff mismatches across your agent system.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-driftwatch
+- npm: @octofloworg/paperclip-plugin-driftwatch (v0.1.10)
+- Category: observability
+- Weekly downloads: 9
+- Capabilities: agents.read, http.outbound, secrets.read-ref, ui.page.register
+- Install: npx paperclipai@latest plugin install @octofloworg/paperclip-plugin-driftwatch
+
+## Workflow Studio
+
+Visual workflow editor that publishes Paperclip Company Skills
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-workflow-studio
+- npm: @vlbog/paperclip-plugin-workflow-studio (v0.1.3)
+- Category: tools
+- Weekly downloads: 9
+- Source: https://github.com/Vladick-Pick/paperclip-plugin-workflow-studio
+- Capabilities: plugin.state.read, plugin.state.write, ui.sidebar.register, ui.page.register, ui.action.register
+- Install: npx paperclipai@latest plugin install @vlbog/paperclip-plugin-workflow-studio

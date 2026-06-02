@@ -6,10 +6,45 @@ import { getPlugins } from "@/lib/registry";
 
 import "../plugins/hub.css";
 
+const HOME_TITLE = "Paperclip Hub — Plugins for Paperclip";
+const HOME_DESCRIPTION =
+  "The plugin directory for Paperclip. Browse connectors, providers, tools, and memory backends — published by the community, indexed nightly, installable with `paperclipai plugin install`.";
+const HOME_OG_IMAGE = `/og?${new URLSearchParams({
+  title: "Paperclip Hub",
+  description: "The plugin directory for Paperclip.",
+  url: "cliphub.fyi",
+}).toString()}`;
+
 export const metadata: Metadata = {
-  title: "Paperclip Hub — A registry for autonomous teams",
-  description:
-    "The Paperclip Hub is a curated directory of connectors, providers, tools and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
+  alternates: {
+    canonical: "https://cliphub.fyi/",
+    types: { "application/json": "/plugins.json" },
+  },
+  keywords: [
+    "Paperclip",
+    "Paperclip plugin",
+    "Paperclip plugins",
+    "Paperclip registry",
+    "Paperclip Hub",
+    "agent plugin",
+    "AI agent plugin",
+  ],
+  openGraph: {
+    type: "website",
+    url: "https://cliphub.fyi/",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    siteName: "Paperclip Hub",
+    images: [{ url: HOME_OG_IMAGE, width: 1200, height: 630, alt: "Paperclip Hub" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [HOME_OG_IMAGE],
+  },
 };
 
 interface HomePageProps {

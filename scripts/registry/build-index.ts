@@ -108,9 +108,55 @@ async function main(): Promise<void> {
 
   if (!existsSync("public")) mkdirSync("public", { recursive: true });
   writeFileSync("public/plugins.json", `${JSON.stringify(out, null, 2)}\n`);
+  writeFileSync("public/llms-full.txt", renderLlmsFull(builtPlugins, quarantined));
   console.log(
     `built public/plugins.json — ${builtPlugins.length} plugins, ${quarantined.length} quarantined`
   );
+}
+
+function renderLlmsFull(
+  plugins: BuiltPlugin[],
+  quarantined: { slug: string; reason: string }[]
+): string {
+  const lines: string[] = [
+    "# Paperclip Hub — full plugin index",
+    "",
+    "> Generated from the registry. The canonical structured form is /plugins.json.",
+    "",
+    `Generated: ${new Date().toISOString()}`,
+    `Total plugins: ${plugins.length}`,
+    "",
+    "Each entry below lists: name, npm package, category, install command, weekly downloads, version, capabilities, and source.",
+    "",
+    "---",
+    "",
+  ];
+  for (const p of plugins) {
+    const m = (p.manifest ?? {}) as {
+      displayName?: string;
+      description?: string;
+      capabilities?: string[];
+    };
+    lines.push(`## ${m.displayName ?? p.npmPackage}`);
+    lines.push("");
+    if (m.description) lines.push(m.description, "");
+    lines.push(`- URL: https://cliphub.fyi/plugins/${p.slug}`);
+    lines.push(`- npm: ${p.npmPackage} (v${p.version ?? "unknown"})`);
+    lines.push(`- Category: ${p.category}`);
+    lines.push(`- Weekly downloads: ${p.installs}`);
+    if (p.sourceRepo) lines.push(`- Source: ${p.sourceRepo}`);
+    if (Array.isArray(m.capabilities) && m.capabilities.length > 0) {
+      lines.push(`- Capabilities: ${m.capabilities.join(", ")}`);
+    }
+    lines.push(`- Install: npx paperclipai@latest plugin install ${p.npmPackage}`);
+    lines.push("");
+  }
+  if (quarantined.length > 0) {
+    lines.push("## Quarantined", "");
+    for (const q of quarantined) lines.push(`- ${q.slug}: ${q.reason}`);
+    lines.push("");
+  }
+  return lines.join("\n");
 }
 
 function readPointers(): { slug: string; pointer: PointerEntry }[] {

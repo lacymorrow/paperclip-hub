@@ -19,10 +19,29 @@ function getExistingRegistrySlugs(): string[] {
   }
 }
 
+const SUBMIT_TITLE = "Submit a Paperclip plugin — Paperclip Hub";
+const SUBMIT_DESCRIPTION =
+  "Add your npm package to the Paperclip plugin directory. The form pre-fills a GitHub pull request — CI extracts your manifest, validates npm ownership, and indexes the plugin nightly.";
+const SUBMIT_OG = `/og?${new URLSearchParams({
+  title: "Submit a plugin",
+  description: SUBMIT_DESCRIPTION,
+  url: "cliphub.fyi/submit",
+}).toString()}`;
+
 export const metadata: Metadata = {
-  title: "Submit a Plugin — Paperclip Hub",
-  description:
-    "Submit your plugin to the Paperclip Hub registry. Open a pull request directly from your browser.",
+  title: SUBMIT_TITLE,
+  description: SUBMIT_DESCRIPTION,
+  alternates: { canonical: "https://cliphub.fyi/submit" },
+  keywords: ["Paperclip plugin", "submit Paperclip plugin", "Paperclip Hub"],
+  openGraph: {
+    type: "website",
+    url: "https://cliphub.fyi/submit",
+    title: SUBMIT_TITLE,
+    description: SUBMIT_DESCRIPTION,
+    siteName: "Paperclip Hub",
+    images: [{ url: SUBMIT_OG, width: 1200, height: 630, alt: "Submit a plugin" }],
+  },
+  twitter: { card: "summary_large_image", title: SUBMIT_TITLE, description: SUBMIT_DESCRIPTION, images: [SUBMIT_OG] },
 };
 
 export default function SubmitPage() {

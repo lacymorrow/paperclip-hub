@@ -1,57 +1,46 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/logo.png" alt="Paperclip Hub" width="80" />
   <h1>Paperclip Hub</h1>
-  <p><strong>A curated registry for autonomous teams.</strong></p>
-  <p>Connectors, providers, tools, and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.</p>
+  <p><strong>The plugin directory for <a href="https://paperclip.ing">Paperclip</a>.</strong></p>
+  <p>Browse at <a href="https://cliphub.fyi">cliphub.fyi</a>.</p>
 </div>
 
 ---
 
-![Paperclip Hub — home page](https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-desktop.png)
+## What this repo is
 
-## What is Paperclip Hub?
+The source for `cliphub.fyi` — a plugin directory for [Paperclip](https://paperclip.ing). The hub itself has no docs and no API surface; it's a thin Next.js site that reads a registry of pointer files (`registry/plugins/*.json`), pulls each plugin's manifest from npm at PR/refresh time, and serves the result.
 
-The Paperclip Hub is the official plugin registry for [Paperclip](https://paperclip.ing) — the agent orchestration platform for autonomous teams. Browse and install community-published plugins directly from the registry.
+For Paperclip itself, see:
 
-### Features
+- [docs.paperclip.ing](https://docs.paperclip.ing)
+- [Discord](https://discord.gg/m4HZY7xNG3)
+- [github.com/paperclipai/paperclip](https://github.com/paperclipai/paperclip)
 
-- **Browse & Search** — Filter plugins by category, sort by installs or date, and search by name or keyword
-- **One-line Install** — `paperclip plugin install <name>` wires any plugin into your team in seconds
-- **Plugin Detail Pages** — README, capabilities, and versions for every plugin
+## Submitting a plugin
 
-![Plugin detail page](https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-plugin.png)
+The easiest path is the [submission form](https://cliphub.fyi/submit) — it pre-fills a GitHub PR for you. CI extracts the manifest from your published npm tarball, validates ownership against your npm maintainers list, and posts the resolved manifest as a PR comment.
 
-- **Submit a Plugin** — Any npm package with a Paperclip manifest is indexed nightly — no review queue, no waitlist
-- **Mobile-ready** — Full responsive UI across devices
+If you'd rather open the PR by hand, add a pointer at `registry/plugins/{your-package}.json`:
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/lacymorrow/paperclip-hub/HEAD/public/app/screenshots/screenshot-mobile.png" alt="Paperclip Hub on mobile" width="320" />
-</div>
+```json
+{
+  "$schema": "../schema.json",
+  "npmPackage": "your-paperclip-plugin",
+  "addedBy": "your-github-handle",
+  "category": "tools"
+}
+```
 
-## Stack
+Validation rules are enforced by `.github/workflows/validate-plugin.yml`.
 
-- ⚡️ [Next.js 15](https://nextjs.org) with App Router
-- 🎨 [Tailwind CSS](https://tailwindcss.com) + [Shadcn/UI](https://ui.shadcn.com)
-- 📦 [Bun](https://bun.sh) as the package manager
-
-## Quick Start
+## Running locally
 
 ```bash
-git clone https://github.com/lacymorrow/paperclip-hub
-cd paperclip-hub
 bun install
+bun run registry:build-index   # builds public/plugins.json
 bun dev
 ```
 
-## Deploy in 30 Seconds
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fpaperclip-hub)
-
-## Documentation
-
-- 📚 [Paperclip Docs](https://paperclip.ing/docs)
-- 🌐 [Paperclip.ing](https://paperclip.ing)
-
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE).

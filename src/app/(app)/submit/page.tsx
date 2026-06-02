@@ -42,7 +42,8 @@ export default function SubmitPage() {
           <Link href="/submit" className="is-active">
             Submit
           </Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub#readme">Docs</Link>
+          <Link href="https://docs.paperclip.ing">Docs</Link>
+          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
         </nav>
         <div className="hc-header-actions">
           <Link href="https://paperclip.ing" className="hc-btn">
@@ -110,7 +111,7 @@ export default function SubmitPage() {
               {
                 num: "01",
                 title: "Build your plugin",
-                desc: "Follow the Plugin SDK docs to create and publish your npm package.",
+                desc: "Follow the Paperclip docs at docs.paperclip.ing to build and publish your npm package.",
               },
               {
                 num: "02",
@@ -249,7 +250,10 @@ export default function SubmitPage() {
         </div>
         <div className="r">
           <Link href="/submit">Submit</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
+          <Link href="https://docs.paperclip.ing">Docs</Link>
+          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
+          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
         </div>
       </footer>
     </div>

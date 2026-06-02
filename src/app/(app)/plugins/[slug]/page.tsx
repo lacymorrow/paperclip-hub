@@ -195,7 +195,8 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
             Browse
           </Link>
           <Link href="/submit">Submit</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub#readme">Docs</Link>
+          <Link href="https://docs.paperclip.ing">Docs</Link>
+          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
         </nav>
         <div className="hc-header-actions">
           <Link href="https://paperclip.ing" className="hc-btn">
@@ -359,7 +360,10 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
         </div>
         <div className="r">
           <Link href="/submit">Submit</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">GitHub</Link>
+          <Link href="https://docs.paperclip.ing">Docs</Link>
+          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
+          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
+          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
         </div>
       </footer>
     </div>

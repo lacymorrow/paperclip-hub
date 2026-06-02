@@ -60,14 +60,6 @@ function describeCapability(cap: string): string {
   return map[cap] ?? "Custom capability registered by this plugin.";
 }
 
-function camelize(pkgName: string): string {
-  return pkgName
-    .replace(/^@[^/]+\//, "")
-    .split(/[-_/]/)
-    .map((s, i) => (i === 0 ? s : s.charAt(0).toUpperCase() + s.slice(1)))
-    .join("");
-}
-
 function safeHttpUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   try {
@@ -98,7 +90,6 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
     : null;
   const releasesUrl = safeSourceRepo ? `${safeSourceRepo.replace(/\/$/, "")}/releases` : null;
   const issueUrl = safeSourceRepo ? `${safeSourceRepo.replace(/\/$/, "")}/issues/new` : null;
-  const safeAuthorUrl = safeHttpUrl(plugin.author.url);
 
   const versionTab =
     plugin.version === "unknown" ? (
@@ -147,19 +138,14 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
       label: "Readme",
       content: (
         <article className="hc-d-readme">
-          <h2>Getting started</h2>
+          <h2>About</h2>
           <p>{plugin.description}</p>
-          <pre>{`import { paperclip } from "@paperclip/core";
-import ${camelize(plugin.npmPackage)} from "${plugin.npmPackage}";
-
-paperclip.use(${camelize(plugin.npmPackage)}({
-  // configuration goes here
-}));`}</pre>
-          <h2>Configuration</h2>
+          <h2>Install</h2>
+          <pre>{plugin.installCommand}</pre>
           <p>
-            The plugin reads its configuration from environment variables by default, but every
-            option can be overridden inline. Pass <code>debug: true</code> while wiring it up to get
-            verbose logs scoped to this plugin only.
+            Full usage docs live with the plugin source — see the npm package
+            {safeSourceRepo ? " or GitHub repo " : " "}
+            linked in the sidebar.
           </p>
           <h2>Capabilities</h2>
           <p>
@@ -253,10 +239,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
               <b>{plugin.capabilities.length}</b>
               <small>{plugin.capabilities.length === 1 ? "capability" : "capabilities"}</small>
             </div>
-            <div>
-              <b>MIT</b>
-              <small>license</small>
-            </div>
           </div>
         </div>
         <div>
@@ -278,13 +260,7 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                 <div className="hc-d-author">
                   <div className="avatar">{plugin.author.name[0]?.toUpperCase()}</div>
                   <div>
-                    {safeAuthorUrl ? (
-                      <a href={safeAuthorUrl} target="_blank" rel="noreferrer">
-                        <b>{plugin.author.name.toLowerCase()}</b>
-                      </a>
-                    ) : (
-                      <b>{plugin.author.name.toLowerCase()}</b>
-                    )}
+                    <b>{plugin.author.name.toLowerCase()}</b>
                     <small>Community publisher</small>
                   </div>
                 </div>
@@ -368,13 +344,6 @@ paperclip.use(${camelize(plugin.npmPackage)}({
                       ↗ Report an issue
                     </a>
                   )}
-                  <a
-                    href={`https://github.com/sponsors/${plugin.author.name.toLowerCase()}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    ↗ Sponsor this plugin
-                  </a>
                 </div>
               </div>
             </aside>

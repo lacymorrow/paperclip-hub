@@ -97,11 +97,23 @@ export async function getPluginBySlug(slug: string): Promise<Plugin | undefined>
   return plugins.find((p) => p.slug === slug);
 }
 
+// npm "author" fields are free-form strings shaped like
+// `"Name <email@host> (https://url)"`. Strip the email and URL parts so the
+// value is safe to interpolate into a URL or render as a handle.
+function sanitizeAuthorName(raw: string): string {
+  return raw
+    .replace(/<[^>]*>/g, "")
+    .replace(/\([^)]*\)/g, "")
+    .trim();
+}
+
 function synthesizePlugin(record: RegistryRecord, installs: number): Plugin {
   const { pointer, manifest } = record;
   const m = manifest?.manifest as
     | { id?: string; displayName?: string; description?: string; author?: string; capabilities?: string[] }
     | undefined;
+  const manifestAuthor = m?.author ? sanitizeAuthorName(m.author) : "";
+  const authorName = manifestAuthor || pointer.addedBy;
   return {
     id: m?.id ?? pointer.npmPackage,
     slug: toSlug(pointer.npmPackage),
@@ -110,7 +122,7 @@ function synthesizePlugin(record: RegistryRecord, installs: number): Plugin {
     description: m?.description ?? "",
     category: pointer.category,
     author: {
-      name: m?.author ?? pointer.addedBy,
+      name: authorName,
       url: `https://github.com/${pointer.addedBy}`,
     },
     installs,

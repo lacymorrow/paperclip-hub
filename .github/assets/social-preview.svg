@@ -47,11 +47,11 @@
 
 	<!-- Pill: install command -->
 	<g transform="translate(440, 400)">
-		<rect width="468" height="56" rx="12" fill="#f4f0e8" stroke="#1a2235" stroke-opacity="0.10"/>
+		<rect width="720" height="56" rx="12" fill="#f4f0e8" stroke="#1a2235" stroke-opacity="0.10"/>
 		<text x="24" y="36"
 			font-family="Inter" font-size="22" font-weight="600"
 			fill="#1a2235" letter-spacing="-0.2">
-			<tspan fill="#5a6478">$ </tspan>paperclip plugin install <tspan fill="#e25a4a">&lt;name&gt;</tspan>
+			<tspan fill="#5a6478">$ </tspan>npx paperclipai@latest plugin install <tspan fill="#e25a4a">&lt;name&gt;</tspan>
 		</text>
 	</g>
 

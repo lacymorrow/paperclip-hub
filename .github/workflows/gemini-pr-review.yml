@@ -82,7 +82,7 @@ jobs:
         run: |
           echo 'Skipping Gemini PR Review: GEMINI_API_KEY not set'
       - name: 'Checkout PR code'
-        uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # ratchet:actions/checkout@v4
+        uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # ratchet:actions/checkout@v6
 
       - name: 'Generate GitHub App Token'
         id: 'generate_token'

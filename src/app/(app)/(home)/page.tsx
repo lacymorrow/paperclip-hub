@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 interface HomePageProps {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>;
 }
 
 const SORT_LABELS: Record<string, string> = {
@@ -74,10 +74,11 @@ function pickFeatured(all: Plugin[]): Plugin | undefined {
 
 function buildHref(
   base: string,
-  params: { q?: string; category?: string; sort?: string },
+  params: { q?: string; category?: string; sort?: string; page?: string },
   patch: Record<string, string | undefined>
 ): string {
   const merged = { ...params, ...patch };
+  if (!("page" in patch)) delete merged.page;
   const qs = new URLSearchParams();
   for (const [k, v] of Object.entries(merged)) {
     if (v) qs.set(k, v);
@@ -105,7 +106,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     featured && !isSearching && !isFiltered
       ? results.filter((p) => p.slug !== featured.slug)
       : results;
-  const grid = baseResults.slice(0, isSearching ? 24 : 8);
+  const PAGE_SIZE = 8;
+  const page = Math.max(1, Number.parseInt(params.page ?? "") || 1);
+  const totalPages = Math.ceil(baseResults.length / PAGE_SIZE);
+  const safePage = Math.min(page, Math.max(totalPages, 1));
+  const gridStart = (safePage - 1) * PAGE_SIZE;
+  const grid = baseResults.slice(gridStart, gridStart + PAGE_SIZE);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
   const recent = [...allPlugins]
@@ -187,8 +193,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <div className="hc-eyebrow">
                 <span className="vol">Paperclip Hub</span>
                 <span>
-                  The plugin directory for{" "}
-                  <Link href="https://paperclip.ing">Paperclip</Link>.
+                  The plugin directory for <Link href="https://paperclip.ing">Paperclip</Link>.
                 </span>
               </div>
               <h1>
@@ -465,6 +470,93 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </div>
         </aside>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="hc-pagination">
+          <div className="hc-pagination-info">
+            Page {safePage} of {totalPages}
+          </div>
+          <div className="hc-pagination-arrows">
+            {safePage > 1 ? (
+              <Link
+                href={buildHref("/", params, { page: String(safePage - 1) })}
+                className="hc-pagination-link"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                Previous
+              </Link>
+            ) : (
+              <span className="hc-pagination-link is-disabled">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                Previous
+              </span>
+            )}
+            {safePage < totalPages ? (
+              <Link
+                href={buildHref("/", params, { page: String(safePage + 1) })}
+                className="hc-pagination-link"
+              >
+                Next
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </Link>
+            ) : (
+              <span className="hc-pagination-link is-disabled">
+                Next
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Recently shipped */}
       <section className="hc-recent">

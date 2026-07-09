@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import type React from "react";
 import { fontSans, fontSerif } from "@/config/fonts";
@@ -58,6 +60,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         className={`${fontSans.variable} ${fontSerif.variable} min-h-screen font-sans antialiased`}
       >
         <main>{children}</main>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

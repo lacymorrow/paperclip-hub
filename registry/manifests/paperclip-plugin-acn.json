@@ -1,12 +1,12 @@
 {
   "npmPackage": "@acnlabs/paperclip-plugin-acn",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "manifest": {
     "id": "acnlabs.acn",
     "apiVersion": 1,
-    "version": "0.1.0",
+    "version": "0.3.0",
     "displayName": "ACN — Agent Collaboration Network",
-    "description": "Connect Paperclip to ACN: sync tasks, manage agent identity, and settle work through the ACN protocol layer.",
+    "description": "Connect Paperclip to ACN Org Harness: issues → Org work, identity/fencing via subnet, optional legacy Task mirror inbound.",
     "author": "acnlabs",
     "categories": [
       "connector",
@@ -60,30 +60,43 @@
           "default": "",
           "description": "Secret reference to the shared HMAC-SHA256 secret used to sign and verify ACN harness webhook deliveries (X-ACN-Signature). Leave blank to skip verification (NOT recommended in production)."
         },
+        "acnOrgId": {
+          "type": "string",
+          "title": "ACN Org ID",
+          "default": "",
+          "description": "Existing Org Harness org_id (org_…). If empty, the plugin creates one bound to ACN Subnet ID on first setup and stores it in plugin state."
+        },
         "acnSubnetId": {
           "type": "string",
           "title": "ACN Subnet ID",
           "default": "",
-          "description": "The ACN subnet whose tasks this plugin syncs into Paperclip issues."
+          "description": "Fence subnet for harness webhooks. Required when ACN Org ID is empty (used to create/bind the Org). Prefer the Org's fence subnet."
         },
         "autoCreateIssues": {
           "type": "boolean",
-          "title": "Auto-create Paperclip issues for new ACN tasks",
-          "default": true
+          "title": "Auto-create Paperclip issues for inbound Org work",
+          "default": true,
+          "description": "When true, external org.work_created webhooks create a Paperclip Issue. Does not control Task Pool mirroring."
+        },
+        "enableLegacyTaskMirror": {
+          "type": "boolean",
+          "title": "Enable legacy Task Pool → Issue mirror",
+          "default": false,
+          "description": "Opt-in: task.created creates Issues and startup syncs open Task Pool tasks. Prefer Org org.* inbound. Already-mapped Task Issues still receive lifecycle updates when off."
         },
         "autoApproveOnDone": {
           "type": "boolean",
-          "title": "Auto-approve ACN task when Paperclip issue moves to 'done'",
+          "title": "Sync 'done' to ACN when Paperclip issue completes",
           "default": false,
-          "description": "When disabled, a board member must click Approve in the ACN tab to release payment."
+          "description": "When true: Org-mapped issues PATCH work status to done; legacy Task-mirrored issues call /review approve. Cancelled always syncs."
         }
       }
     },
     "webhooks": [
       {
         "endpointKey": "acn-events",
-        "displayName": "ACN Task Events",
-        "description": "Receives HMAC-signed lifecycle events from ACN (task.created, task.submitted, task.completed, ...)."
+        "displayName": "ACN Harness Events",
+        "description": "Receives HMAC-signed lifecycle events from ACN (org.work_* / org.loop_tick preferred; task.* legacy)."
       }
     ],
     "ui": {
@@ -99,6 +112,5 @@
         }
       ]
     }
-  },
-  "resolvedAt": "2026-06-02T07:54:58.000Z"
+  }
 }

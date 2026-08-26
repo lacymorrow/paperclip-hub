@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Paperclip Hub — Hero options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* real paperclip / clawhub tokens */
+  --paper:#f6f5f3; --surface:#ffffff; --raised:#efece7;
+  --ink:#17171a; --ink-2:#46464e; --ink-3:#6c6c74; --ink-4:#9a9aa2;
+  --rule:#e6e2db; --rule-2:#dcd7cf;
+  --accent:#d84a31; --accent-deep:#b23a28;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --tight:'Inter Tight','Inter',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:#e9e6e1;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+
+/* review chrome — not part of the design */
+.frame{margin:0 auto 34px;max-width:1240px;box-shadow:0 1px 0 rgba(0,0,0,.04);border-radius:14px;overflow:hidden;border:1px solid #d7d3cc}
+.tag{max-width:1240px;margin:34px auto 10px;padding:0 4px;display:flex;align-items:baseline;gap:12px}
+.tag b{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#7c7770}
+.tag span{font-size:13px;color:#8b867f}
+.tag .opt{font-family:var(--tight);font-weight:700;font-size:16px;color:#2b2b2f;letter-spacing:-.01em}
+
+/* ---------- shared header ---------- */
+.topbar{background:var(--paper);border-bottom:1px solid var(--rule)}
+.topbar.dark{background:#111114;border-bottom:1px solid #222226}
+.hd{display:flex;align-items:center;gap:24px;height:60px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px}
+.brand .clip{width:20px;height:20px}
+.brand .sub{font-family:var(--mono);font-size:11px;color:var(--ink-4);letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+nav.main{display:flex;gap:22px;margin-left:6px}
+nav.main a{font-size:14px;color:var(--ink-3);font-weight:500}
+nav.main a.on{color:var(--ink)}
+.hd-search{margin-left:auto;display:flex;align-items:center;gap:8px;width:280px;height:36px;padding:0 12px;background:var(--surface);border:1px solid var(--rule-2);border-radius:8px;color:var(--ink-4);font-size:13px}
+.hd-search svg{width:15px;height:15px;flex:none}
+.hd-search .kbd{margin-left:auto;font-family:var(--mono);font-size:11px;border:1px solid var(--rule-2);border-radius:4px;padding:1px 5px;color:var(--ink-4)}
+.btn-dark{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 15px;background:var(--ink);color:#fff;border-radius:8px;font-size:13.5px;font-weight:500}
+/* dark header variants */
+.dark .brand{color:#fff}
+.dark nav.main a{color:#9a9aa2}
+.dark nav.main a.on{color:#fff}
+.dark .hd-search{background:#1c1c20;border-color:#2a2a30;color:#7e7e88}
+.dark .hd-search .kbd{border-color:#33333a;color:#7e7e88}
+.dark .btn-dark{background:#fff;color:#111}
+
+/* ============================================================
+   OPTION 1 — SIBLING  (clawhub twin: warm paper, coral mono headline)
+   ============================================================ */
+.h1{background:var(--paper);text-align:center;padding:118px 0 120px}
+.h1 h1{font-family:var(--mono);font-weight:800;color:var(--accent);font-size:60px;line-height:1.03;letter-spacing:-.02em}
+.h1 p{margin:22px auto 0;max-width:440px;color:var(--ink-3);font-size:17px}
+.h1 .stats{margin-top:30px;display:flex;justify-content:center;gap:8px;font-family:var(--mono);font-size:12.5px;color:var(--ink-4);letter-spacing:.01em}
+.h1 .stats b{color:var(--ink-2);font-weight:700}
+.h1 .stats .sep{opacity:.5}
+
+/* ============================================================
+   OPTION 2 — SIGNAL  (paperclip.ing: dark, gradient arc, Inter Tight)
+   ============================================================ */
+.h2{position:relative;background:#0d0d10;color:#fff;text-align:center;padding:96px 0 104px;overflow:hidden}
+.h2 .arc{position:absolute;top:-70px;left:50%;transform:translateX(-50%);width:660px;height:400px;display:flex;gap:10px;justify-content:center;filter:blur(11px) saturate(1.12);opacity:.92;pointer-events:none}
+.h2 .arc i{display:block;width:78px;border-radius:60px}
+.h2 .arc i:nth-child(1){height:230px;background:linear-gradient(#ff4d6d,#ffb84d)}
+.h2 .arc i:nth-child(2){height:320px;background:linear-gradient(#c14dff,#4d8bff)}
+.h2 .arc i:nth-child(3){height:280px;background:linear-gradient(#4dd0ff,#ffe14d)}
+.h2 .arc i:nth-child(4){height:340px;background:linear-gradient(#ff4d9e,#ff9a4d)}
+.h2 .arc i:nth-child(5){height:270px;background:linear-gradient(#4dff9e,#4d8bff)}
+.h2 .arc i:nth-child(6){height:300px;background:linear-gradient(#7c6cff,#ff4d6d)}
+.h2 .arc-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,16,.15) 0%,rgba(13,13,16,.72) 46%,#0d0d10 74%);pointer-events:none}
+.h2 .in{position:relative;z-index:2}
+.h2 h1{font-family:var(--tight);font-weight:700;font-size:56px;line-height:1.02;letter-spacing:-.025em;margin-top:120px}
+.h2 p{margin:20px auto 0;max-width:440px;color:#a2a2ac;font-size:17px}
+.h2 .cta{margin-top:32px;display:inline-flex;align-items:center;height:48px;padding:0 26px;background:#fff;color:#111;border-radius:999px;font-weight:600;font-size:15px}
+.h2 .alt{margin-top:16px;font-family:var(--mono);font-size:13px;color:#8a8a94}
+.h2 .alt b{color:#d0d0d6;font-weight:500}
+
+/* ============================================================
+   OPTION 3 — COMMAND  (product-true: headline + live install terminal)
+   ============================================================ */
+.h3{background:var(--paper);padding:84px 0 88px}
+.h3 .in{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.h3 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--accent);margin-bottom:18px}
+.h3 h1{font-family:var(--tight);font-weight:700;font-size:46px;line-height:1.05;letter-spacing:-.02em}
+.h3 p{margin:18px 0 0;max-width:420px;color:var(--ink-3);font-size:16px}
+.h3 .stats{margin-top:24px;display:flex;gap:8px;font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+.h3 .stats b{color:var(--ink-2);font-weight:700}
+.h3 .stats .sep{opacity:.5}
+.term{background:#131316;border:1px solid #26262c;border-radius:12px;overflow:hidden;font-family:var(--mono);font-size:13px;box-shadow:0 20px 50px -24px rgba(0,0,0,.4)}
+.term .bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid #222227}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#3a3a42}
+.term .bar span{margin-left:8px;color:#6e6e78;font-size:11.5px}
+.term .body{padding:18px 18px 22px;line-height:1.85;color:#c7c7d0}
+.term .p{color:var(--accent);font-weight:700}
+.term .cmd{color:#fff}
+.term .muted{color:#7c7c86}
+.term .ok{color:#4dd08a}
+.term .bar-pkg{color:#e0e0e6}
+
+/* ============================================================
+   OPTION 4 — REGISTRY  (search-first, utilitarian package-index)
+   ============================================================ */
+.h4{background:var(--paper);text-align:center;padding:92px 0 96px}
+.h4 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:20px}
+.h4 h1{font-family:var(--tight);font-weight:700;font-size:40px;line-height:1.08;letter-spacing:-.02em;max-width:640px;margin:0 auto}
+.h4 .search{margin:34px auto 0;max-width:600px;display:flex;align-items:center;gap:12px;height:58px;padding:0 8px 0 20px;background:var(--surface);border:1px solid var(--rule-2);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.h4 .search svg{width:20px;height:20px;color:var(--ink-4);flex:none}
+.h4 .search input{flex:1;border:0;outline:0;background:transparent;font-family:var(--sans);font-size:16px;color:var(--ink)}
+.h4 .search input::placeholder{color:var(--ink-4)}
+.h4 .search button{height:42px;padding:0 22px;background:var(--accent);color:#fff;border:0;border-radius:9px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer}
+.h4 .chips{margin-top:18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.h4 .chips span{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);background:var(--surface);border:1px solid var(--rule-2);border-radius:999px;padding:5px 12px}
+.h4 .chips .lead{background:none;border:0;color:var(--ink-4);padding-left:0}
+.h4 .stats{margin-top:30px;display:flex;justify-content:center;gap:8px;font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+.h4 .stats b{color:var(--ink-2);font-weight:700}
+.h4 .stats .sep{opacity:.5}
+</style>
+</head>
+<body>
+
+<!-- ============ OPTION 1 : SIBLING ============ -->
+<div class="tag"><b>Option 1</b><span class="opt">Sibling</span><span>Warm paper, coral monospace headline, one line, huge whitespace. The literal twin of clawhub.ai. Search lives in the header.</span></div>
+<div class="frame">
+  <div class="topbar"><div class="wrap hd">
+    <a class="brand"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Paperclip <span class="sub">Hub</span></a>
+    <nav class="main"><a class="on">Browse</a><a>Submit</a><a>Docs</a><a>Discord</a></nav>
+    <div class="hd-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search the library<span class="kbd">⌘K</span></div>
+    <a class="btn-dark">Get Paperclip →</a>
+  </div></div>
+  <section class="h1"><div class="wrap">
+    <h1>Plugins for<br>your Paperclips</h1>
+    <p>Connectors, tools and memory backends for autonomous agents, published by the community.</p>
+    <div class="stats"><span><b>21</b> plugins</span><span class="sep">·</span><span><b>16</b> publishers</span><span class="sep">·</span><span><b>154k</b> downloads / wk</span></div>
+  </div></section>
+</div>
+
+<!-- ============ OPTION 2 : SIGNAL ============ -->
+<div class="tag"><b>Option 2</b><span class="opt">Signal</span><span>Dark band with the paperclip.ing gradient arc, bold Inter Tight headline, white pill plus a quiet command link.</span></div>
+<div class="frame">
+  <div class="topbar dark"><div class="wrap hd">
+    <a class="brand"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Paperclip <span class="sub">Hub</span></a>
+    <nav class="main"><a class="on">Browse</a><a>Submit</a><a>Docs</a><a>Discord</a></nav>
+    <div class="hd-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search the library<span class="kbd">⌘K</span></div>
+    <a class="btn-dark">Get Paperclip →</a>
+  </div></div>
+  <section class="h2">
+    <div class="arc"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="arc-fade"></div>
+    <div class="in wrap">
+      <h1>Every tool your<br>agents need.</h1>
+      <p>The open directory of plugins for Paperclip. Connectors, providers, tools and memory, installed in one line.</p>
+      <div><a class="cta">Browse the library</a></div>
+      <div class="alt">or run <b>paperclip plugin search</b></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ OPTION 3 : COMMAND ============ -->
+<div class="tag"><b>Option 3</b><span class="opt">Command</span><span>Product-true: the hero shows the actual install running in a terminal. Left copy, right live output.</span></div>
+<div class="frame">
+  <div class="topbar"><div class="wrap hd">
+    <a class="brand"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Paperclip <span class="sub">Hub</span></a>
+    <nav class="main"><a class="on">Browse</a><a>Submit</a><a>Docs</a><a>Discord</a></nav>
+    <div class="hd-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search the library<span class="kbd">⌘K</span></div>
+    <a class="btn-dark">Get Paperclip →</a>
+  </div></div>
+  <section class="h3"><div class="wrap in">
+    <div>
+      <div class="eyebrow">The plugin directory for Paperclip</div>
+      <h1>Install any plugin<br>in one line.</h1>
+      <p>Browse connectors, providers, tools and memory backends built by the community, then add them to any agent run.</p>
+      <div class="stats"><span><b>21</b> plugins</span><span class="sep">·</span><span><b>16</b> publishers</span><span class="sep">·</span><span><b>154k</b> downloads / wk</span></div>
+    </div>
+    <div class="term">
+      <div class="bar"><i></i><i></i><i></i><span>zsh · paperclip</span></div>
+      <div class="body">
+        <div><span class="p">$</span> <span class="cmd">paperclip plugin install github</span></div>
+        <div class="muted">resolving @paperclip/github ...</div>
+        <div><span class="bar-pkg">@paperclip/github</span> <span class="muted">v3.0.1</span></div>
+        <div class="muted">linked 1 plugin, 0 conflicts</div>
+        <div><span class="ok">✓</span> <span class="muted">ready · 42 tools registered</span></div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ OPTION 4 : REGISTRY ============ -->
+<div class="tag"><b>Option 4</b><span class="opt">Registry</span><span>Search-first and utilitarian. The search field is the hero, with example queries. Reads like a real package index.</span></div>
+<div class="frame">
+  <div class="topbar"><div class="wrap hd">
+    <a class="brand"><svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>Paperclip <span class="sub">Hub</span></a>
+    <nav class="main"><a class="on">Browse</a><a>Submit</a><a>Docs</a><a>Discord</a></nav>
+    <div class="hd-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search the library<span class="kbd">⌘K</span></div>
+    <a class="btn-dark">Get Paperclip →</a>
+  </div></div>
+  <section class="h4"><div class="wrap">
+    <div class="eyebrow">Paperclip plugin registry</div>
+    <h1>Find the plugin, add it to your agent.</h1>
+    <form class="search" onsubmit="return false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input placeholder="Search 21 plugins by name, category or publisher" />
+      <button>Search</button>
+    </form>
+    <div class="chips"><span class="lead">Popular</span><span>github</span><span>memory</span><span>discord</span><span>playwright</span><span>stripe</span></div>
+    <div class="stats"><span><b>21</b> plugins</span><span class="sep">·</span><span><b>16</b> publishers</span><span class="sep">·</span><span><b>154k</b> downloads / wk</span></div>
+  </div></section>
+</div>
+
+</body>
+</html>

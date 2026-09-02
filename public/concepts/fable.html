@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Paperclip Hub — Concept C · Fable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Ink & stationery. Warm paper, graphite ink, one signature hue: ledger green. */
+    --paper: #fbfaf6;
+    --panel: #ffffff;
+    --ink: #1c1b17;
+    --ink-2: #5d5a51;
+    --ink-3: #96917f;
+    --line: #e9e5d9;      /* warm hairline */
+    --line-2: #ddd7c7;
+    --green: #175e46;     /* ledger green — the signature */
+    --green-deep: #0f3a2d;
+    --manila: #f3ecda;
+    --manila-line: #e2d8bd;
+    /* stationery-ink category colors — muted, from the same drawer */
+    --c-connector: #1b5e48;
+    --c-provider: #8a5a22;
+    --c-memory: #4a5f82;
+    --c-tool: #9c4a2f;
+    --display: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 36px; }
+
+  .ribbon {
+    background: var(--manila);
+    color: var(--green);
+    border-bottom: 1px solid var(--manila-line);
+    text-align: center;
+    font-size: 12.5px;
+    padding: 8px;
+    font-weight: 500;
+  }
+
+  /* ————— Header: Studio treatment — brand left, centered nav, solid button right ————— */
+  header.site {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(251,250,246,.86);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
+  .brand .clip { color: var(--green); display: grid; place-items: center; }
+  .brand .clip svg { display: block; }
+  .brand em { font-family: var(--display); font-style: italic; font-weight: 500; color: var(--ink-2); font-size: 15px; }
+  nav.links { display: flex; gap: 8px; margin: 0 auto; }
+  nav.links a { padding: 7px 13px; font-size: 14.5px; color: var(--ink-2); font-weight: 500; border-radius: 7px; }
+  nav.links a:hover { color: var(--ink); }
+  nav.links a.active { color: var(--ink); }
+  nav.links a.active::after { content: ""; display: block; height: 2px; margin: 1px 2px 0; background: var(--green); border-radius: 2px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500; padding: 9px 17px;
+    border-radius: 8px; border: 1px solid transparent; cursor: pointer;
+  }
+  .btn.primary { background: var(--green-deep); color: #f6f4ec; }
+  .btn.primary:hover { background: var(--green); }
+  .btn.paper { background: #fff; color: var(--green-deep); }
+  .btn.paper:hover { background: var(--manila); }
+
+  /* ————— Hero: Registry structure — left-aligned, search, stats ————— */
+  .hero { padding: 88px 0 44px; }
+  .hero .over {
+    font-family: var(--display); font-style: italic; font-size: 17px;
+    color: var(--green); margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: 58px; line-height: 1.04; font-weight: 560;
+    letter-spacing: -.012em; margin: 0 0 22px; max-width: 17ch;
+    font-variation-settings: "opsz" 100;
+  }
+  .hero h1 em { font-style: italic; font-weight: 500; color: var(--green); }
+  .hero p.lede { font-size: 17.5px; color: var(--ink-2); max-width: 56ch; margin: 0 0 34px; line-height: 1.6; }
+
+  .search {
+    display: flex; align-items: center; gap: 10px; max-width: 580px;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px;
+    padding: 5px 5px 5px 16px;
+    box-shadow: 0 1px 0 rgba(28,27,23,.03);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(23,94,70,.12); }
+  .search svg { color: var(--ink-3); flex: none; }
+  .search input { flex: 1; border: 0; outline: 0; font-family: var(--sans); font-size: 15px; color: var(--ink); background: transparent; padding: 10px 0; }
+  .search input::placeholder { color: var(--ink-3); }
+  .search button {
+    border: 0; background: var(--green-deep); color: #f6f4ec;
+    font-family: var(--sans); font-size: 14px; font-weight: 500;
+    padding: 10px 17px; border-radius: 7px; cursor: pointer;
+  }
+  .search button:hover { background: var(--green); }
+
+  .stats { display: flex; gap: 48px; margin-top: 38px; }
+  .stats .stat b {
+    display: block; font-family: var(--display); font-size: 30px; font-weight: 500;
+    letter-spacing: -.01em; line-height: 1.1; font-variation-settings: "opsz" 40;
+  }
+  .stats .stat span { font-size: 13px; color: var(--ink-3); }
+
+  /* ————— Split: featured (a clipped stack of paper) + trending (a ledger) ————— */
+  .split { display: grid; grid-template-columns: 1.55fr 1fr; gap: 56px; align-items: start; margin-top: 52px; }
+
+  .featured {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+    border-radius: 3px; /* paper, not pill */
+    padding: 34px 34px 30px;
+    box-shadow: 0 1px 2px rgba(28,27,23,.04);
+  }
+  /* the manila sheet underneath */
+  .featured::before {
+    content: "";
+    position: absolute; inset: 0; z-index: -1;
+    background: var(--manila);
+    border: 1px solid var(--manila-line);
+    border-radius: 3px;
+    transform: rotate(-1.6deg) translate(-9px, 9px);
+  }
+  /* the paperclip, clamped over the top edge */
+  .featured .holdfast {
+    position: absolute; top: -25px; left: 36px;
+    color: var(--green);
+    transform: rotate(-9deg);
+  }
+  .featured .tag {
+    font-family: var(--display); font-style: italic; font-size: 14.5px; color: var(--ink-3);
+  }
+  .featured h3 {
+    font-family: var(--display); font-size: 32px; font-weight: 560;
+    letter-spacing: -.01em; margin: 10px 0 10px; line-height: 1.1;
+  }
+  .featured .cmd {
+    font-family: var(--mono); font-size: 13px; color: var(--ink-2);
+    border-bottom: 1px dotted var(--line-2); padding-bottom: 3px; display: inline-block;
+  }
+  .featured p { color: var(--ink-2); font-size: 15px; max-width: 46ch; line-height: 1.6; margin: 16px 0 0; }
+  .featured .frow { display: flex; align-items: center; gap: 30px; margin-top: 24px; }
+  .featured .frow .s b { display: block; font-family: var(--display); font-size: 20px; font-weight: 500; font-variation-settings: "opsz" 30; }
+  .featured .frow .s span { font-size: 12px; color: var(--ink-3); }
+  .featured .frow .btn { margin-left: auto; }
+
+  .side h4 {
+    font-family: var(--display); font-style: italic; font-weight: 500;
+    font-size: 18px; margin: 2px 0 6px; color: var(--ink);
+  }
+  .trend { display: flex; flex-direction: column; }
+  .trow { display: flex; align-items: center; gap: 16px; padding: 13px 2px; border-bottom: 1px dotted var(--line-2); }
+  .trow:last-child { border-bottom: 0; }
+  .trow .rk {
+    font-family: var(--display); font-style: italic; font-size: 17px;
+    color: var(--green); width: 22px; text-align: right; flex: none;
+  }
+  .trow .bd { flex: 1; min-width: 0; }
+  .trow .bd b { display: block; font-size: 14px; font-weight: 500; }
+  .trow .bd span { font-size: 12px; color: var(--ink-3); }
+  .trow .dl { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+
+  /* ————— Directory head + toolbar ————— */
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 88px 0 6px; }
+  .sec-head h2 { font-family: var(--display); font-size: 27px; font-weight: 560; letter-spacing: -.01em; margin: 0; }
+  .sec-head .count { font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); }
+  .sec-sub { font-size: 14px; color: var(--ink-2); margin: 0 0 24px; }
+
+  .toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding-bottom: 24px; }
+  .pills { display: flex; gap: 7px; flex-wrap: wrap; }
+  .pill {
+    font-size: 13.5px; color: var(--ink-2); padding: 6px 14px;
+    border-radius: 999px; border: 1px solid var(--line-2); background: var(--panel);
+    font-weight: 500; cursor: pointer;
+  }
+  .pill:hover { border-color: var(--ink-3); color: var(--ink); }
+  .pill.active { background: var(--green-deep); color: #f6f4ec; border-color: var(--green-deep); }
+  .pill .n { color: var(--ink-3); margin-left: 5px; font-size: 12px; font-family: var(--mono); }
+  .pill.active .n { color: rgba(246,244,236,.6); }
+  .toolbar .right { margin-left: auto; font-size: 13px; color: var(--ink-2); }
+  .toolbar .right b { color: var(--ink); font-weight: 500; }
+
+  /* ————— Grid ————— */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card {
+    border: 1px solid var(--line); border-top: 2px solid var(--line-2);
+    border-radius: 6px; padding: 20px 20px 16px; background: var(--panel);
+    display: flex; flex-direction: column; gap: 11px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .card:hover { border-color: var(--line-2); box-shadow: 0 8px 24px -16px rgba(28,27,23,.25); }
+  .card.connector:hover { border-top-color: var(--c-connector); }
+  .card.provider:hover  { border-top-color: var(--c-provider); }
+  .card.memory:hover    { border-top-color: var(--c-memory); }
+  .card.tool:hover      { border-top-color: var(--c-tool); }
+  .card .top { display: flex; align-items: center; justify-content: space-between; }
+  .card .cat { font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+  .card .cat .d { width: 7px; height: 7px; border-radius: 2px; }
+  .card.connector .cat { color: var(--c-connector); } .card.connector .cat .d { background: var(--c-connector); }
+  .card.provider  .cat { color: var(--c-provider); }  .card.provider  .cat .d { background: var(--c-provider); }
+  .card.memory    .cat { color: var(--c-memory); }    .card.memory    .cat .d { background: var(--c-memory); }
+  .card.tool      .cat { color: var(--c-tool); }      .card.tool      .cat .d { background: var(--c-tool); }
+  .card .ver { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .card h3 { font-family: var(--display); font-size: 19px; font-weight: 540; letter-spacing: 0; margin: 0; line-height: 1.2; }
+  .card .pkg { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: -7px; }
+  .card p { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.55; flex: 1; }
+  .card .foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px dotted var(--line-2); padding-top: 12px; }
+  .card .foot .meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 12px; }
+  .card .foot .meta b { color: var(--ink); font-weight: 600; }
+  .card .install { font-size: 12.5px; font-weight: 500; color: var(--green); }
+  .card:hover .install { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ————— CTA band: full-bleed ledger green with a ghost clip ————— */
+  .band { background: var(--green-deep); color: #f6f4ec; margin-top: 96px; position: relative; overflow: hidden; }
+  .band .ghost {
+    position: absolute; right: 90px; top: -34px;
+    color: rgba(246,244,236,.09); transform: rotate(22deg);
+    pointer-events: none;
+  }
+  .band .in { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 64px 0; position: relative; }
+  .band h3 { font-family: var(--display); font-size: 30px; font-weight: 540; letter-spacing: -.01em; margin: 0 0 10px; }
+  .band h3 em { font-style: italic; font-weight: 480; }
+  .band p { margin: 0; color: rgba(246,244,236,.68); font-size: 14.5px; max-width: 54ch; line-height: 1.6; }
+  .band code { font-family: var(--mono); font-size: 13px; color: #f6f4ec; }
+  .band .btn { flex: none; }
+
+  /* ————— Footer ————— */
+  footer.site { border-top: 1px solid var(--line); }
+  .foot { display: flex; align-items: center; justify-content: space-between; padding: 30px 0 34px; font-size: 13px; color: var(--ink-3); }
+  .foot .l { display: flex; align-items: center; gap: 9px; }
+  .foot .l svg { color: var(--green); opacity: .8; }
+  .foot .r { display: flex; gap: 22px; }
+  .foot .r a:hover { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .split { grid-template-columns: 1fr; gap: 44px; }
+    .hero h1 { font-size: 42px; }
+    nav.links { display: none; }
+    .band .in { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } .stats { gap: 28px; } }
+</style>
+</head>
+<body>
+  <div class="ribbon">Concept C · “Fable” — Registry layout + Studio header, crafted. Mockup for LAC-3358.</div>
+
+  <header class="site">
+    <div class="wrap nav">
+      <a class="brand" href="#">
+        <span class="clip">
+          <svg width="17" height="26" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" />
+          </svg>
+        </span>
+        Paperclip <em>Hub</em>
+      </a>
+      <nav class="links">
+        <a href="#" class="active">Browse</a>
+        <a href="#">Submit</a>
+        <a href="#">Docs</a>
+      </nav>
+      <a class="btn primary" href="#">Get Paperclip →</a>
+    </div>
+  </header>
+
+  <section class="hero wrap">
+    <div class="over">The registry for autonomous teams</div>
+    <h1>Plugins for teams that <em>build</em> with agents.</h1>
+    <p class="lede">A curated directory of connectors, providers, tools and memory backends for Paperclip — published by the community, indexed nightly, installed in one line.</p>
+    <form class="search" onsubmit="return false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input placeholder='Search 240 plugins — try "github", "memory", "hermes"' aria-label="Search plugins" />
+      <button type="submit">Search</button>
+    </form>
+    <div class="stats">
+      <div class="stat"><b>240</b><span>plugins indexed</span></div>
+      <div class="stat"><b>68</b><span>publishers</span></div>
+      <div class="stat"><b>1.2M</b><span>downloads / week</span></div>
+    </div>
+  </section>
+
+  <section class="split wrap">
+    <article class="featured">
+      <span class="holdfast">
+        <svg width="26" height="62" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" />
+        </svg>
+      </span>
+      <span class="tag">Clipped to the top this month</span>
+      <h3>GitHub Connector</h3>
+      <span class="cmd">paperclip add @paperclip/github</span>
+      <p>Wire issues, pull requests and Actions into your agent team. Two-way sync, webhook triggers, and scoped tokens out of the box.</p>
+      <div class="frow">
+        <div class="s"><b>184k</b><span>downloads / wk</span></div>
+        <div class="s"><b>v2.4.0</b><span>updated May 12</span></div>
+        <a class="btn primary" href="#">Install</a>
+      </div>
+    </article>
+    <div class="side">
+      <h4>Trending this week</h4>
+      <div class="trend">
+        <div class="trow"><span class="rk">1</span><div class="bd"><b>GitHub Connector</b><span>connector</span></div><span class="dl">184k/wk</span></div>
+        <div class="trow"><span class="rk">2</span><div class="bd"><b>Anthropic Provider</b><span>provider</span></div><span class="dl">152k/wk</span></div>
+        <div class="trow"><span class="rk">3</span><div class="bd"><b>Postgres Memory</b><span>memory</span></div><span class="dl">98k/wk</span></div>
+        <div class="trow"><span class="rk">4</span><div class="bd"><b>Slack Connector</b><span>connector</span></div><span class="dl">74k/wk</span></div>
+        <div class="trow"><span class="rk">5</span><div class="bd"><b>Linear Connector</b><span>connector</span></div><span class="dl">61k/wk</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sec-head"><h2>The directory</h2><span class="count">240 plugins · updated nightly</span></div>
+    <p class="sec-sub">Everything that ships a Paperclip manifest, in one place.</p>
+    <div class="toolbar">
+      <div class="pills">
+        <span class="pill active">All <span class="n">240</span></span>
+        <span class="pill">Connectors <span class="n">96</span></span>
+        <span class="pill">Providers <span class="n">44</span></span>
+        <span class="pill">Tools <span class="n">62</span></span>
+        <span class="pill">Memory <span class="n">38</span></span>
+      </div>
+      <div class="right">Sort <b>Most downloaded ▾</b></div>
+    </div>
+
+    <div class="grid">
+      <a class="card connector" href="#"><div class="top"><span class="cat"><span class="d"></span>connector</span><span class="ver">v2.4.0</span></div><h3>GitHub</h3><span class="pkg">@paperclip/github</span><p>Issues, PRs and Actions wired into your agent team with two-way sync and webhook triggers.</p><div class="foot"><span class="meta"><span><b>184k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card provider" href="#"><div class="top"><span class="cat"><span class="d"></span>provider</span><span class="ver">v1.8.2</span></div><h3>Anthropic</h3><span class="pkg">@paperclip/anthropic</span><p>Claude models with streaming, tool use, and prompt caching configured for agent workloads.</p><div class="foot"><span class="meta"><span><b>152k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card memory" href="#"><div class="top"><span class="cat"><span class="d"></span>memory</span><span class="ver">v3.1.0</span></div><h3>Postgres Memory</h3><span class="pkg">@paperclip/postgres-memory</span><p>Durable vector + relational memory backend with pgvector, migrations, and per-agent scoping.</p><div class="foot"><span class="meta"><span><b>98k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card connector" href="#"><div class="top"><span class="cat"><span class="d"></span>connector</span><span class="ver">v2.0.1</span></div><h3>Slack</h3><span class="pkg">@paperclip/slack</span><p>Post, thread and react from agents. Slash-command triggers and channel-scoped permissions.</p><div class="foot"><span class="meta"><span><b>74k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card connector" href="#"><div class="top"><span class="cat"><span class="d"></span>connector</span><span class="ver">v1.5.0</span></div><h3>Linear</h3><span class="pkg">@paperclip/linear</span><p>Read and write issues, cycles and projects. Ideal for agent-run engineering workflows.</p><div class="foot"><span class="meta"><span><b>61k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card tool" href="#"><div class="top"><span class="cat"><span class="d"></span>tool</span><span class="ver">v0.9.4</span></div><h3>Hermes</h3><span class="pkg">@paperclip/hermes</span><p>Lightweight message bus for inter-agent coordination with typed events and replay.</p><div class="foot"><span class="meta"><span><b>43k</b>/wk</span><span>@lacy</span></span><span class="install">Install →</span></div></a>
+      <a class="card provider" href="#"><div class="top"><span class="cat"><span class="d"></span>provider</span><span class="ver">v2.2.0</span></div><h3>OpenAI</h3><span class="pkg">@paperclip/openai</span><p>GPT models with function calling and structured output, tuned for orchestration.</p><div class="foot"><span class="meta"><span><b>39k</b>/wk</span><span>@paperclip</span></span><span class="install">Install →</span></div></a>
+      <a class="card memory" href="#"><div class="top"><span class="cat"><span class="d"></span>memory</span><span class="ver">v1.3.1</span></div><h3>Pinecone</h3><span class="pkg">@paperclip/pinecone</span><p>Managed vector memory with namespaces, metadata filters, and hybrid search.</p><div class="foot"><span class="meta"><span><b>28k</b>/wk</span><span>@community</span></span><span class="install">Install →</span></div></a>
+    </div>
+  </div>
+
+  <section class="band">
+    <span class="ghost">
+      <svg width="240" height="560" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" />
+      </svg>
+    </span>
+    <div class="wrap in">
+      <div>
+        <h3>Have a plugin? <em>Ship it.</em></h3>
+        <p>The Hub is fully open. Any npm package that exposes a Paperclip manifest gets indexed nightly — no review queue, no waitlist. Publish, tag <code>paperclip-plugin</code>, we do the rest.</p>
+      </div>
+      <a class="btn paper" href="#">Submit a plugin →</a>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="wrap foot">
+      <span class="l">
+        <svg width="12" height="20" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" /></svg>
+        Paperclip Hub — the registry for autonomous teams
+      </span>
+      <span class="r"><a href="#">Docs</a><a href="#">Submit</a><a href="#">GitHub</a></span>
+    </div>
+  </footer>
+</body>
+</html>

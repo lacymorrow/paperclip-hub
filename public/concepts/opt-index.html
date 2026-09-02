@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Paperclip Hub — Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f6f5f1;      /* warm near-white */
+    --paper-2: #efeee8;    /* faint fill for header/hover bands */
+    --ink: #16140f;        /* warm near-black text */
+    --ink-2: #55524a;      /* secondary */
+    --ink-3: #8a877d;      /* tertiary / units */
+    --rule: #d9d7cd;       /* hairline */
+    --rule-2: #c7c5ba;     /* slightly stronger hairline */
+    --accent: #b1442d;     /* single restrained hue: links + active filter */
+    --sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "tnum" 1, "cv05" 1;
+    line-height: 1.45;
+    font-size: 14px;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .accent { color: var(--accent); }
+
+  /* ---- Masthead ---- */
+  .mast-top { border-bottom: 1px solid var(--rule); background: var(--paper); }
+  .mast-top .in { display: flex; align-items: center; height: 46px; gap: 26px; }
+  .brand { display: flex; align-items: baseline; gap: 9px; }
+  .brand .name { font-weight: 600; font-size: 14px; letter-spacing: 0.01em; }
+  .brand .name em { font-style: normal; color: var(--ink-3); font-weight: 500; }
+  .brand .idx { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--rule-2); padding: 1px 6px; }
+  nav.top { display: flex; gap: 20px; margin-left: 4px; }
+  nav.top a { font-size: 12.5px; color: var(--ink-2); letter-spacing: 0.01em; }
+  nav.top a:hover, nav.top a.on { color: var(--ink); }
+  nav.top a.on { border-bottom: 1px solid var(--accent); padding-bottom: 13px; margin-bottom: -14px; }
+  .mast-top .right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  .mast-top .right a { font-size: 12.5px; color: var(--ink-2); }
+  .mast-top .right a:hover { color: var(--ink); }
+  .mast-top .right .cli { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+  .mast-top .right .cli b { color: var(--ink); font-weight: 500; }
+
+  /* ---- Masthead body: title line + search + figures ---- */
+  .mast { border-bottom: 2px solid var(--ink); padding: 22px 0 0; }
+  .mast .headline { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+  .mast h1 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .mast .fact { font-size: 13px; color: var(--ink-2); max-width: 62ch; margin: 6px 0 0; }
+  .mast .fact b { color: var(--ink); font-weight: 500; }
+  .mast .stamp { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; line-height: 1.6; white-space: nowrap; }
+  .mast .stamp b { color: var(--ink); font-weight: 500; }
+
+  .searchbar { display: flex; align-items: stretch; margin: 20px 0 0; border: 1px solid var(--rule-2); background: #fff; }
+  .searchbar label { display: flex; align-items: center; gap: 9px; padding: 0 13px; flex: 1; }
+  .searchbar svg { color: var(--ink-3); flex: none; }
+  .searchbar input { flex: 1; border: 0; outline: 0; background: transparent; font-family: var(--sans); font-size: 13.5px; color: var(--ink); padding: 11px 0; }
+  .searchbar input::placeholder { color: var(--ink-3); }
+  .searchbar .go { border: 0; border-left: 1px solid var(--rule-2); background: var(--paper-2); font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); padding: 0 18px; cursor: pointer; }
+  .searchbar .go:hover { background: var(--ink); color: var(--paper); }
+
+  .figrow { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--rule); border-top: 0; margin-bottom: 26px; background: #fff; }
+  .fig { padding: 12px 15px; border-right: 1px solid var(--rule); }
+  .fig:last-child { border-right: 0; }
+  .fig b { display: block; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+  .fig span { font-size: 11px; color: var(--ink-3); letter-spacing: 0.02em; }
+
+  /* ---- Two-column: directory + rail ---- */
+  .cols { display: grid; grid-template-columns: 1fr 268px; gap: 40px; align-items: start; padding-bottom: 8px; }
+
+  /* toolbar: segmented filter + sort note */
+  .toolbar { display: flex; align-items: center; gap: 0; border: 1px solid var(--rule-2); margin-bottom: 0; }
+  .seg { display: flex; }
+  .seg a { font-size: 12px; color: var(--ink-2); padding: 8px 14px; border-right: 1px solid var(--rule); display: flex; align-items: baseline; gap: 6px; letter-spacing: 0.005em; }
+  .seg a:hover { background: var(--paper-2); color: var(--ink); }
+  .seg a.on { background: var(--ink); color: var(--paper); }
+  .seg a .n { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+  .seg a.on .n { color: rgba(246,245,241,.6); }
+  .toolbar .filt { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding: 0 13px; }
+  .toolbar .filt b { color: var(--ink); font-weight: 500; }
+
+  /* ---- The table ---- */
+  table.index { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.index thead th {
+    text-align: left; font-weight: 500; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--ink-3); padding: 9px 10px; border-bottom: 1px solid var(--ink); white-space: nowrap; user-select: none;
+  }
+  table.index thead th.sortable { cursor: pointer; }
+  table.index thead th.sortable:hover { color: var(--ink); }
+  th .car { color: var(--rule-2); font-size: 9px; margin-left: 3px; }
+  th.up .car, th.up:hover .car { color: var(--accent); }
+  th.num { text-align: right; }
+  th.c-name { width: 30%; }
+
+  table.index tbody td { padding: 11px 10px; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+  table.index tbody tr:hover td { background: var(--paper-2); }
+  td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  .nm { display: flex; align-items: baseline; gap: 8px; }
+  .nm a.pn { font-weight: 600; font-size: 13.5px; color: var(--ink); letter-spacing: -0.005em; }
+  .nm a.pn:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  .nm .flag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); padding: 0 4px; line-height: 1.5; position: relative; top: -1px; }
+  .pkg { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  td .scope { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+  td .cat { font-size: 12px; color: var(--ink-2); }
+  td .cat::before { content: ""; display: inline-block; width: 5px; height: 5px; background: var(--ink-3); margin-right: 7px; position: relative; top: -2px; }
+  td .cat.k-connector::before { background: #6b6a62; }
+  td .cat.k-provider::before { background: var(--accent); }
+  td .cat.k-tool::before { background: #9a9890; }
+  td .cat.k-memory::before { background: #33312b; }
+  td .ver { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+  td .dl b { font-weight: 500; }
+  td .dl span { color: var(--ink-3); font-size: 10.5px; }
+  td .upd { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+
+  .tblfoot { display: flex; align-items: center; justify-content: space-between; padding: 14px 2px 0; font-size: 12px; color: var(--ink-3); }
+  .tblfoot a { color: var(--accent); }
+  .tblfoot a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .tblfoot .mono { font-size: 11px; }
+
+  /* ---- Rail ---- */
+  .rail { position: sticky; top: 20px; }
+  .rail section { border: 1px solid var(--rule); background: #fff; margin-bottom: 18px; }
+  .rail h2 { font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin: 0; padding: 11px 14px; border-bottom: 1px solid var(--rule); background: var(--paper-2); }
+  .rank { padding: 4px 0; }
+  .rank a { display: grid; grid-template-columns: 20px 1fr auto; align-items: baseline; gap: 9px; padding: 7px 14px; }
+  .rank a:hover { background: var(--paper-2); }
+  .rank .rk { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; }
+  .rank .t b { font-weight: 500; font-size: 12.5px; }
+  .rank .t span { display: block; font-size: 10.5px; color: var(--ink-3); }
+  .rank .d { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 11px; color: var(--ink-2); }
+  .rank a:hover .t b { color: var(--accent); }
+
+  /* featured detail in rail */
+  .feat { padding: 14px; }
+  .feat .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.02em; color: var(--ink-3); }
+  .feat h3 { font-size: 15px; font-weight: 600; margin: 6px 0 2px; }
+  .feat .cmd { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--paper); border: 1px solid var(--rule-2); padding: 7px 9px; margin: 8px 0 10px; overflow-x: auto; }
+  .feat p { font-size: 12px; color: var(--ink-2); margin: 0 0 12px; line-height: 1.5; }
+  .feat .kv { display: flex; border-top: 1px solid var(--rule); }
+  .feat .kv div { flex: 1; padding: 9px 0 0; }
+  .feat .kv b { display: block; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 500; }
+  .feat .kv span { font-size: 10px; color: var(--ink-3); }
+
+  .submit { padding: 14px; }
+  .submit p { font-size: 12px; color: var(--ink-2); margin: 0 0 9px; line-height: 1.5; }
+  .submit code { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+  .submit a.act { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--accent); padding-bottom: 1px; }
+  .submit a.act:hover { color: var(--accent); }
+
+  /* ---- Footer / colophon ---- */
+  footer { border-top: 2px solid var(--ink); margin-top: 40px; }
+  .colophon { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 30px; padding: 30px 0 34px; }
+  .colophon .about { font-size: 12px; color: var(--ink-2); max-width: 40ch; line-height: 1.55; }
+  .colophon .about .b { display: flex; align-items: baseline; gap: 8px; margin-bottom: 9px; }
+  .colophon .about .b b { font-size: 13px; color: var(--ink); font-weight: 600; }
+  .colophon h4 { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin: 2px 0 11px; }
+  .colophon ul { list-style: none; margin: 0; padding: 0; }
+  .colophon li { margin-bottom: 7px; }
+  .colophon li a { font-size: 12.5px; color: var(--ink-2); }
+  .colophon li a:hover { color: var(--ink); }
+  .fineprint { border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); display: flex; justify-content: space-between; padding: 13px 0 26px; letter-spacing: 0.01em; }
+  .fineprint span b { color: var(--ink-2); font-weight: 500; }
+
+  @media (max-width: 940px) {
+    .cols { grid-template-columns: 1fr; }
+    .rail { position: static; }
+    .figrow { grid-template-columns: repeat(2, 1fr); }
+    .fig:nth-child(2n) { border-right: 0; }
+    .colophon { grid-template-columns: 1fr 1fr; }
+    .pkg, td .scope { display: none; }
+  }
+  @media (max-width: 620px) {
+    th.c-cat, td.c-cat, th.c-ver, td.c-ver { display: none; }
+    nav.top, .mast-top .right .cli { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Masthead top bar -->
+  <div class="mast-top">
+    <div class="wrap in">
+      <a class="brand" href="#">
+        <span class="name">Paperclip <em>Hub</em></span>
+        <span class="idx">Index</span>
+      </a>
+      <nav class="top">
+        <a href="#" class="on">Registry</a>
+        <a href="#">Publishers</a>
+        <a href="#">Docs</a>
+        <a href="#">Feeds</a>
+      </nav>
+      <div class="right">
+        <span class="cli">install: <b>paperclip add &lt;pkg&gt;</b></span>
+        <a href="#">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Masthead body -->
+  <div class="mast">
+    <div class="wrap">
+      <div class="headline">
+        <div>
+          <h1>Registry of Paperclip plugins</h1>
+          <p class="fact">Connectors, providers, tools, and memory backends with a published Paperclip manifest. Indexed nightly from npm. Install any row with <b>paperclip add</b>.</p>
+        </div>
+        <div class="stamp">
+          BUILD <b>2026.08.25</b><br>
+          REV <b>4181</b> · nightly 03:00 UTC<br>
+          SOURCE <b>npm + git</b>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <label>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input placeholder="Search name, scope, or keyword.  e.g.  github   memory   @paperclip   hermes" aria-label="Search the registry" />
+        </label>
+        <button class="go" type="button">Search</button>
+      </div>
+
+      <div class="wrap" style="padding:0;">
+        <div class="figrow">
+          <div class="fig"><b>240</b><span>plugins indexed</span></div>
+          <div class="fig"><b>68</b><span>publishers</span></div>
+          <div class="fig"><b>1.24M</b><span>installs / week</span></div>
+          <div class="fig"><b>19</b><span>updated today</span></div>
+          <div class="fig"><b>4</b><span>categories</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="wrap">
+    <div class="cols">
+
+      <!-- Directory table -->
+      <main>
+        <div class="toolbar">
+          <div class="seg">
+            <a href="#" class="on">All <span class="n">240</span></a>
+            <a href="#">Connectors <span class="n">96</span></a>
+            <a href="#">Providers <span class="n">44</span></a>
+            <a href="#">Tools <span class="n">62</span></a>
+            <a href="#">Memory <span class="n">38</span></a>
+          </div>
+          <div class="filt">sort <b>installs desc</b></div>
+        </div>
+
+        <table class="index">
+          <thead>
+            <tr>
+              <th class="c-name sortable">Name <span class="car">&#9662;</span></th>
+              <th class="sortable">Publisher <span class="car">&#9662;</span></th>
+              <th class="c-cat sortable">Category <span class="car">&#9662;</span></th>
+              <th class="c-ver">Version</th>
+              <th class="num sortable up">Installs / wk <span class="car">&#9660;</span></th>
+              <th class="num sortable">Updated <span class="car">&#9662;</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">GitHub</a><span class="flag">Featured</span></span><span class="pkg">@paperclip/github</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">2.4.0</span></td>
+              <td class="num dl"><b>184,210</b></td>
+              <td class="num"><span class="upd">May 12</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Anthropic</a></span><span class="pkg">@paperclip/anthropic</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-provider">provider</span></td>
+              <td class="c-ver"><span class="ver">1.8.2</span></td>
+              <td class="num dl"><b>152,004</b></td>
+              <td class="num"><span class="upd">May 09</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Postgres Memory</a></span><span class="pkg">@paperclip/postgres-memory</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-memory">memory</span></td>
+              <td class="c-ver"><span class="ver">3.1.0</span></td>
+              <td class="num dl"><b>98,470</b></td>
+              <td class="num"><span class="upd">May 11</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Slack</a></span><span class="pkg">@paperclip/slack</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">2.0.1</span></td>
+              <td class="num dl"><b>74,318</b></td>
+              <td class="num"><span class="upd">May 07</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Linear</a></span><span class="pkg">@paperclip/linear</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.5.0</span></td>
+              <td class="num dl"><b>61,092</b></td>
+              <td class="num"><span class="upd">May 10</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Hermes</a></span><span class="pkg">@lacy/hermes</span></td>
+              <td><span class="scope">@lacy</span></td>
+              <td class="c-cat"><span class="cat k-tool">tool</span></td>
+              <td class="c-ver"><span class="ver">0.9.4</span></td>
+              <td class="num dl"><b>43,551</b></td>
+              <td class="num"><span class="upd">May 03</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">OpenAI</a></span><span class="pkg">@paperclip/openai</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-provider">provider</span></td>
+              <td class="c-ver"><span class="ver">2.2.0</span></td>
+              <td class="num dl"><b>39,006</b></td>
+              <td class="num"><span class="upd">Apr 28</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Pinecone</a></span><span class="pkg">@community/pinecone</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-memory">memory</span></td>
+              <td class="c-ver"><span class="ver">1.3.1</span></td>
+              <td class="num dl"><b>28,140</b></td>
+              <td class="num"><span class="upd">Apr 30</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Notion</a></span><span class="pkg">@paperclip/notion</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.2.0</span></td>
+              <td class="num dl"><b>26,733</b></td>
+              <td class="num"><span class="upd">May 06</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Google Drive</a></span><span class="pkg">@paperclip/gdrive</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.1.4</span></td>
+              <td class="num dl"><b>24,015</b></td>
+              <td class="num"><span class="upd">May 01</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Redis Memory</a></span><span class="pkg">@community/redis-memory</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-memory">memory</span></td>
+              <td class="c-ver"><span class="ver">2.0.3</span></td>
+              <td class="num dl"><b>22,388</b></td>
+              <td class="num"><span class="upd">Apr 27</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Stripe</a></span><span class="pkg">@paperclip/stripe</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.0.7</span></td>
+              <td class="num dl"><b>19,204</b></td>
+              <td class="num"><span class="upd">Apr 25</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">SQLite Memory</a></span><span class="pkg">@lacy/sqlite-memory</span></td>
+              <td><span class="scope">@lacy</span></td>
+              <td class="c-cat"><span class="cat k-memory">memory</span></td>
+              <td class="c-ver"><span class="ver">0.7.2</span></td>
+              <td class="num dl"><b>17,662</b></td>
+              <td class="num"><span class="upd">Apr 22</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Gmail</a></span><span class="pkg">@paperclip/gmail</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.3.0</span></td>
+              <td class="num dl"><b>16,090</b></td>
+              <td class="num"><span class="upd">Apr 29</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Playwright Runner</a></span><span class="pkg">@community/playwright</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-tool">tool</span></td>
+              <td class="c-ver"><span class="ver">0.5.1</span></td>
+              <td class="num dl"><b>14,417</b></td>
+              <td class="num"><span class="upd">Apr 20</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Discord</a></span><span class="pkg">@community/discord</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-connector">connector</span></td>
+              <td class="c-ver"><span class="ver">1.4.2</span></td>
+              <td class="num dl"><b>12,051</b></td>
+              <td class="num"><span class="upd">Apr 18</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Ollama</a></span><span class="pkg">@community/ollama</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-provider">provider</span></td>
+              <td class="c-ver"><span class="ver">0.3.0</span></td>
+              <td class="num dl"><b>11,286</b></td>
+              <td class="num"><span class="upd">Apr 16</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">S3 Storage</a></span><span class="pkg">@paperclip/s3</span></td>
+              <td><span class="scope">@paperclip</span></td>
+              <td class="c-cat"><span class="cat k-tool">tool</span></td>
+              <td class="c-ver"><span class="ver">1.2.1</span></td>
+              <td class="num dl"><b>9,842</b></td>
+              <td class="num"><span class="upd">Apr 14</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Cron Scheduler</a></span><span class="pkg">@lacy/cron</span></td>
+              <td><span class="scope">@lacy</span></td>
+              <td class="c-cat"><span class="cat k-tool">tool</span></td>
+              <td class="c-ver"><span class="ver">0.4.0</span></td>
+              <td class="num dl"><b>8,113</b></td>
+              <td class="num"><span class="upd">Apr 12</span></td>
+            </tr>
+            <tr>
+              <td class="c-name"><span class="nm"><a class="pn" href="#">Qdrant</a></span><span class="pkg">@community/qdrant</span></td>
+              <td><span class="scope">@community</span></td>
+              <td class="c-cat"><span class="cat k-memory">memory</span></td>
+              <td class="c-ver"><span class="ver">1.0.5</span></td>
+              <td class="num dl"><b>7,336</b></td>
+              <td class="num"><span class="upd">Apr 11</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tblfoot">
+          <span class="mono">rows 1 to 20 of 240</span>
+          <span><a href="#">Load next 20</a> · <a href="#">view all as JSON feed</a></span>
+        </div>
+      </main>
+
+      <!-- Rail -->
+      <aside class="rail">
+        <section>
+          <h2>Trending, 7 days</h2>
+          <div class="rank">
+            <a href="#"><span class="rk">01</span><span class="t"><b>GitHub</b><span>connector · @paperclip</span></span><span class="d">184k</span></a>
+            <a href="#"><span class="rk">02</span><span class="t"><b>Anthropic</b><span>provider · @paperclip</span></span><span class="d">152k</span></a>
+            <a href="#"><span class="rk">03</span><span class="t"><b>Postgres Memory</b><span>memory · @paperclip</span></span><span class="d">98k</span></a>
+            <a href="#"><span class="rk">04</span><span class="t"><b>Slack</b><span>connector · @paperclip</span></span><span class="d">74k</span></a>
+            <a href="#"><span class="rk">05</span><span class="t"><b>Linear</b><span>connector · @paperclip</span></span><span class="d">61k</span></a>
+            <a href="#"><span class="rk">06</span><span class="t"><b>Hermes</b><span>tool · @lacy</span></span><span class="d">44k</span></a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Featured this month</h2>
+          <div class="feat">
+            <span class="k">connector · @paperclip · v2.4.0</span>
+            <h3>GitHub Connector</h3>
+            <code class="cmd">paperclip add @paperclip/github</code>
+            <p>Issues, pull requests, and Actions wired into an agent team. Two-way sync, webhook triggers, scoped tokens.</p>
+            <div class="kv">
+              <div><b>184k</b><span>INSTALLS / WK</span></div>
+              <div><b>May 12</b><span>LAST UPDATE</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Publish</h2>
+          <div class="submit">
+            <p>Any npm package that exposes a Paperclip manifest and carries the <code>paperclip-plugin</code> keyword is picked up on the next nightly run. No review queue.</p>
+            <a class="act" href="#">Read the publish guide</a>
+          </div>
+        </section>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Colophon -->
+  <footer>
+    <div class="wrap">
+      <div class="colophon">
+        <div class="about">
+          <div class="b">
+            <svg width="10" height="17" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" /></svg>
+            <b>Paperclip Hub</b>
+          </div>
+          A public index of plugins for Paperclip agent teams. Rebuilt nightly from npm and git tags. Counts reflect the trailing 7 day window.
+        </div>
+        <div>
+          <h4>Registry</h4>
+          <ul>
+            <li><a href="#">All plugins</a></li>
+            <li><a href="#">Connectors</a></li>
+            <li><a href="#">Providers</a></li>
+            <li><a href="#">Tools</a></li>
+            <li><a href="#">Memory</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Publish</h4>
+          <ul>
+            <li><a href="#">Publish guide</a></li>
+            <li><a href="#">Manifest spec</a></li>
+            <li><a href="#">Claim a scope</a></li>
+            <li><a href="#">JSON feed</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Project</h4>
+          <ul>
+            <li><a href="#">Docs</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="fineprint">
+        <span>PAPERCLIP HUB · INDEX <b>rev 4181</b> · built <b>2026.08.25 03:00 UTC</b></span>
+        <span>240 plugins · 68 publishers · <b>data reused for LAC-3358 mockup</b></span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

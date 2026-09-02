@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Paperclip Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #fafafa;
+    --panel: #ffffff;
+    --ink: #0a0a0a;
+    --ink-2: #545454;
+    --ink-3: #8a8a8a;
+    --line: #ececec;
+    --line-2: #e0e0e0;
+    --accent: #0a0a0a;
+    --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+  .label { background: var(--bg-soft); border-bottom: 1px solid var(--line); text-align: center; font-size: 12px; color: var(--ink-3); padding: 7px; font-family: var(--mono); }
+
+  /* Header: brand left, centered nav, solid button right */
+  header.site { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.82); backdrop-filter: saturate(140%) blur(12px); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: center; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 15.5px; letter-spacing: -0.02em; }
+  .brand .mark { width: 20px; height: 20px; display: grid; place-items: center; }
+  .brand .sub { color: var(--ink-3); font-weight: 500; }
+  nav.links { display: flex; gap: 4px; margin: 0 auto; }
+  nav.links a { padding: 7px 13px; font-size: 14px; color: var(--ink-2); font-weight: 450; border-radius: 7px; }
+  nav.links a:hover { color: var(--ink); background: var(--bg-soft); }
+  nav.links a.active { color: var(--ink); font-weight: 500; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; font-family: var(--sans); font-size: 13.5px; font-weight: 500; padding: 9px 15px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; letter-spacing: -0.01em; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #262626; }
+  .btn.ghost { background: #fff; color: var(--ink); border-color: var(--line-2); }
+  .btn.ghost:hover { border-color: var(--ink-3); }
+
+  /* Hero: left-aligned, search, stats */
+  .hero { padding: 92px 0 40px; }
+  .over { font-size: 12.5px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px; }
+  .hero h1 { font-size: 52px; line-height: 1.06; font-weight: 600; letter-spacing: -0.03em; margin: 0 0 20px; max-width: 15ch; }
+  .hero p.lede { font-size: 17px; color: var(--ink-2); max-width: 54ch; margin: 0 0 32px; line-height: 1.6; letter-spacing: -0.006em; }
+
+  .search { display: flex; align-items: center; gap: 10px; max-width: 560px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px; padding: 5px 5px 5px 15px; transition: border-color .15s, box-shadow .15s; }
+  .search:focus-within { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(10,10,10,.06); }
+  .search svg { color: var(--ink-3); flex: none; }
+  .search input { flex: 1; border: 0; outline: 0; font-family: var(--sans); font-size: 14.5px; color: var(--ink); background: transparent; padding: 10px 0; letter-spacing: -0.01em; }
+  .search input::placeholder { color: var(--ink-3); }
+  .search button { border: 0; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 13.5px; font-weight: 500; padding: 10px 16px; border-radius: 7px; cursor: pointer; }
+  .search button:hover { background: #262626; }
+
+  .stats { display: flex; gap: 44px; margin-top: 40px; }
+  .stats .stat b { display: block; font-size: 27px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  .stats .stat span { font-size: 12.5px; color: var(--ink-3); }
+
+  /* Split: featured + trending */
+  .split { display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: start; margin-top: 56px; }
+  .featured { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px; padding: 30px; }
+  .featured .tag { font-size: 12px; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink-3); }
+  .featured h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 12px 0 8px; line-height: 1.2; }
+  .featured .cmd { font-family: var(--mono); font-size: 13px; color: var(--ink-2); background: #fff; border: 1px solid var(--line); border-radius: 7px; padding: 8px 11px; display: inline-block; }
+  .featured p { color: var(--ink-2); font-size: 14.5px; max-width: 46ch; line-height: 1.6; margin: 16px 0 0; }
+  .featured .frow { display: flex; align-items: center; gap: 28px; margin-top: 22px; }
+  .featured .frow .s b { display: block; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .featured .frow .s span { font-size: 11.5px; color: var(--ink-3); }
+  .featured .frow .btn { margin-left: auto; }
+
+  .side h4 { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink-3); margin: 4px 0 6px; }
+  .trend { display: flex; flex-direction: column; }
+  .trow { display: flex; align-items: center; gap: 15px; padding: 13px 2px; border-bottom: 1px solid var(--line); }
+  .trow:last-child { border-bottom: 0; }
+  .trow .rk { font-size: 13px; font-weight: 600; color: var(--ink-3); width: 18px; text-align: right; flex: none; }
+  .trow .bd { flex: 1; min-width: 0; }
+  .trow .bd b { display: block; font-size: 14px; font-weight: 500; }
+  .trow .bd span { font-size: 12px; color: var(--ink-3); }
+  .trow .dl { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+
+  /* Directory head + toolbar */
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 88px 0 4px; }
+  .sec-head h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+  .sec-head .count { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .sec-sub { font-size: 14.5px; color: var(--ink-2); margin: 0 0 26px; }
+
+  .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 24px; }
+  .pills { display: flex; gap: 7px; flex-wrap: wrap; }
+  .pill { font-size: 13px; color: var(--ink-2); padding: 6px 13px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); font-weight: 450; cursor: pointer; }
+  .pill:hover { border-color: var(--ink-3); color: var(--ink); }
+  .pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pill .n { color: var(--ink-3); margin-left: 5px; font-size: 12px; }
+  .pill.active .n { color: rgba(255,255,255,.55); }
+  .toolbar .right { margin-left: auto; font-size: 13px; color: var(--ink-2); }
+  .toolbar .right b { color: var(--ink); font-weight: 500; }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .card:hover { border-color: var(--line-2); box-shadow: 0 10px 30px -20px rgba(10,10,10,.35); transform: translateY(-1px); }
+  .card .top { display: flex; align-items: center; justify-content: space-between; }
+  .card .cat { font-size: 11.5px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink-3); }
+  .card .ver { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .card h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; margin: 0; line-height: 1.25; }
+  .card .pkg { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: -6px; }
+  .card p { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.55; flex: 1; }
+  .card .foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 13px; }
+  .card .foot .meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 12px; }
+  .card .foot .meta b { color: var(--ink); font-weight: 600; }
+  .card .install { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+  .card:hover .install { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* CTA */
+  .band { margin-top: 92px; border-top: 1px solid var(--line); background: var(--bg-soft); }
+  .band .in { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 60px 0; }
+  .band h3 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .band p { margin: 0; color: var(--ink-2); font-size: 14.5px; max-width: 52ch; line-height: 1.6; }
+  .band code { font-family: var(--mono); font-size: 13px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+  .band .btn { flex: none; }
+
+  /* Footer */
+  footer.site { border-top: 1px solid var(--line); }
+  .foot { display: flex; align-items: center; justify-content: space-between; padding: 28px 0 32px; font-size: 13px; color: var(--ink-3); }
+  .foot .l { display: flex; align-items: center; gap: 8px; }
+  .foot .r { display: flex; gap: 20px; }
+  .foot .r a:hover { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .split { grid-template-columns: 1fr; gap: 40px; }
+    .hero h1 { font-size: 40px; }
+    nav.links { display: none; }
+    .band .in { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .stats { gap: 26px; } }
+</style>
+</head>
+<body>
+  <div class="label">Paperclip Hub · clean redesign · mockup for LAC-3358</div>
+
+  <header class="site">
+    <div class="wrap nav">
+      <a class="brand" href="#">
+        <span class="mark">
+          <svg width="14" height="20" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" /></svg>
+        </span>
+        Paperclip <span class="sub">Hub</span>
+      </a>
+      <nav class="links">
+        <a href="#" class="active">Browse</a>
+        <a href="#">Submit</a>
+        <a href="#">Docs</a>
+      </nav>
+      <a class="btn primary" href="#">Get Paperclip</a>
+    </div>
+  </header>
+
+  <section class="hero wrap">
+    <div class="over">The registry for autonomous teams</div>
+    <h1>Plugins for teams that build with agents.</h1>
+    <p class="lede">A curated directory of connectors, providers, tools, and memory backends for Paperclip. Published by the community, indexed nightly, installed in one line.</p>
+    <form class="search" onsubmit="return false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input placeholder='Search 240 plugins. Try "github", "memory", "hermes"' aria-label="Search plugins" />
+      <button type="submit">Search</button>
+    </form>
+    <div class="stats">
+      <div class="stat"><b>240</b><span>plugins indexed</span></div>
+      <div class="stat"><b>68</b><span>publishers</span></div>
+      <div class="stat"><b>1.2M</b><span>downloads / week</span></div>
+    </div>
+  </section>
+
+  <section class="split wrap">
+    <article class="featured">
+      <span class="tag">Featured this month</span>
+      <h3>GitHub Connector</h3>
+      <span class="cmd">paperclip add @paperclip/github</span>
+      <p>Wire issues, pull requests, and Actions into your agent team. Two-way sync, webhook triggers, and scoped tokens out of the box.</p>
+      <div class="frow">
+        <div class="s"><b>184k</b><span>downloads / wk</span></div>
+        <div class="s"><b>v2.4.0</b><span>updated May 12</span></div>
+        <a class="btn primary" href="#">Install</a>
+      </div>
+    </article>
+    <div class="side">
+      <h4>Trending this week</h4>
+      <div class="trend">
+        <div class="trow"><span class="rk">1</span><div class="bd"><b>GitHub Connector</b><span>connector</span></div><span class="dl">184k/wk</span></div>
+        <div class="trow"><span class="rk">2</span><div class="bd"><b>Anthropic Provider</b><span>provider</span></div><span class="dl">152k/wk</span></div>
+        <div class="trow"><span class="rk">3</span><div class="bd"><b>Postgres Memory</b><span>memory</span></div><span class="dl">98k/wk</span></div>
+        <div class="trow"><span class="rk">4</span><div class="bd"><b>Slack Connector</b><span>connector</span></div><span class="dl">74k/wk</span></div>
+        <div class="trow"><span class="rk">5</span><div class="bd"><b>Linear Connector</b><span>connector</span></div><span class="dl">61k/wk</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sec-head"><h2>The directory</h2><span class="count">240 plugins · updated nightly</span></div>
+    <p class="sec-sub">Everything that ships a Paperclip manifest, in one place.</p>
+    <div class="toolbar">
+      <div class="pills">
+        <span class="pill active">All <span class="n">240</span></span>
+        <span class="pill">Connectors <span class="n">96</span></span>
+        <span class="pill">Providers <span class="n">44</span></span>
+        <span class="pill">Tools <span class="n">62</span></span>
+        <span class="pill">Memory <span class="n">38</span></span>
+      </div>
+      <div class="right">Sort <b>Most downloaded</b></div>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="#"><div class="top"><span class="cat">connector</span><span class="ver">v2.4.0</span></div><h3>GitHub</h3><span class="pkg">@paperclip/github</span><p>Issues, PRs, and Actions wired into your agent team with two-way sync and webhook triggers.</p><div class="foot"><span class="meta"><span><b>184k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">provider</span><span class="ver">v1.8.2</span></div><h3>Anthropic</h3><span class="pkg">@paperclip/anthropic</span><p>Claude models with streaming, tool use, and prompt caching configured for agent workloads.</p><div class="foot"><span class="meta"><span><b>152k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">memory</span><span class="ver">v3.1.0</span></div><h3>Postgres Memory</h3><span class="pkg">@paperclip/postgres-memory</span><p>Durable vector and relational memory backend with pgvector, migrations, and per-agent scoping.</p><div class="foot"><span class="meta"><span><b>98k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">connector</span><span class="ver">v2.0.1</span></div><h3>Slack</h3><span class="pkg">@paperclip/slack</span><p>Post, thread, and react from agents. Slash-command triggers and channel-scoped permissions.</p><div class="foot"><span class="meta"><span><b>74k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">connector</span><span class="ver">v1.5.0</span></div><h3>Linear</h3><span class="pkg">@paperclip/linear</span><p>Read and write issues, cycles, and projects. Built for agent-run engineering workflows.</p><div class="foot"><span class="meta"><span><b>61k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">tool</span><span class="ver">v0.9.4</span></div><h3>Hermes</h3><span class="pkg">@paperclip/hermes</span><p>Lightweight message bus for inter-agent coordination with typed events and replay.</p><div class="foot"><span class="meta"><span><b>43k</b>/wk</span><span>@lacy</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">provider</span><span class="ver">v2.2.0</span></div><h3>OpenAI</h3><span class="pkg">@paperclip/openai</span><p>GPT models with function calling and structured output, tuned for orchestration.</p><div class="foot"><span class="meta"><span><b>39k</b>/wk</span><span>@paperclip</span></span><span class="install">Install</span></div></a>
+      <a class="card" href="#"><div class="top"><span class="cat">memory</span><span class="ver">v1.3.1</span></div><h3>Pinecone</h3><span class="pkg">@paperclip/pinecone</span><p>Managed vector memory with namespaces, metadata filters, and hybrid search.</p><div class="foot"><span class="meta"><span><b>28k</b>/wk</span><span>@community</span></span><span class="install">Install</span></div></a>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap in">
+      <div>
+        <h3>Have a plugin? Ship it.</h3>
+        <p>The Hub is fully open. Any npm package that exposes a Paperclip manifest gets indexed nightly. No review queue, no waitlist. Publish, tag <code>paperclip-plugin</code>, and we do the rest.</p>
+      </div>
+      <a class="btn primary" href="#">Submit a plugin</a>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="wrap foot">
+      <span class="l">
+        <svg width="11" height="18" viewBox="0 0 24 58" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 42 V10 A7 7 0 0 1 21.5 10 V47 A9.5 9.5 0 0 1 2.5 47 V16" /></svg>
+        Paperclip Hub. The registry for autonomous teams.
+      </span>
+      <span class="r"><a href="#">Docs</a><a href="#">Submit</a><a href="#">GitHub</a></span>
+    </div>
+  </footer>
+</body>
+</html>

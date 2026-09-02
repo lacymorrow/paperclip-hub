@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Paperclip Hub — Redesign Concepts (LAC-3358)</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { --ink:#111113; --ink-2:#6b6b70; --ink-3:#9a9aa0; --line:#ececee; --line-2:#e2e2e5; --panel:#fff; --bg:#fafafa; --accent:#4f46e5;
+    --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --mono:"Geist Mono",ui-monospace,Menlo,Consolas,monospace; }
+  * { box-sizing:border-box; } html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; line-height:1.55; }
+  a{ color:inherit; }
+  .wrap{ max-width:920px; margin:0 auto; padding:64px 32px 80px; }
+  .kick{ font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+  h1{ font-size:40px; letter-spacing:-.03em; font-weight:600; margin:12px 0 14px; }
+  .lede{ font-size:17px; color:var(--ink-2); max-width:62ch; }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:40px 0 8px; }
+  .cardlink{ display:block; text-decoration:none; border:1px solid var(--line); border-radius:14px; padding:26px; background:var(--panel); transition:box-shadow .16s, border-color .16s, transform .16s; }
+  .cardlink:hover{ box-shadow:0 16px 40px -22px rgba(17,17,19,.24); border-color:var(--line-2); transform:translateY(-2px); }
+  .cardlink .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  .cardlink h2{ font-size:22px; letter-spacing:-.02em; margin:8px 0 8px; font-weight:600; }
+  .cardlink p{ font-size:14px; color:var(--ink-2); margin:0 0 16px; }
+  .cardlink .go{ font-size:13px; font-weight:500; color:var(--accent); }
+  ul.notes{ margin:6px 0 0; padding-left:18px; color:var(--ink-2); font-size:13.5px; }
+  ul.notes li{ margin:4px 0; }
+  .principles{ margin-top:48px; border-top:1px solid var(--line); padding-top:32px; }
+  .principles h3{ font-size:15px; font-weight:600; margin:0 0 14px; }
+  .prow{ display:grid; grid-template-columns:180px 1fr; gap:16px; padding:12px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .prow:last-child{ border-bottom:0; }
+  .prow .k{ color:var(--ink-3); }
+  .prow .was{ color:#b13a2a; }
+  .prow .now{ color:var(--ink); }
+  .foot{ margin-top:40px; font-size:13px; color:var(--ink-3); }
+  @media(max-width:760px){ .grid{ grid-template-columns:1fr; } .prow{ grid-template-columns:1fr; gap:4px; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="kick">LAC-3358 · Redesign concepts</span>
+    <h1>Paperclip Hub — two directions</h1>
+    <p class="lede">The current hub reads busy and “AI-generated”: newspaper tropes (volume markers, <code style="font-family:var(--mono)">§ ii — the directory</code>, tickers, stamps), a warm ruled-paper texture, and serif flourishes competing for attention. These two concepts strip that back toward the new Paperclip design language — monochrome, type-forward, whitespace-driven, calm — the direction set by <a href="https://paperclip.ing">paperclip.ing</a> and <a href="https://clawhub.ai">clawhub.ai</a>. Pick one to take to a full implementation.</p>
+
+    <div class="grid">
+      <a class="cardlink" href="./registry.html">
+        <span class="tag">Concept A</span>
+        <h2>Registry</h2>
+        <p>Directory-first and utilitarian, in the clawhub / Linear vein. Left-aligned hero, featured + trending split, dense but calm card grid.</p>
+        <ul class="notes">
+          <li>Best when the primary job is <b>browse &amp; install fast</b>.</li>
+          <li>One indigo accent, everything else greyscale.</li>
+          <li>Sidebar keeps “trending” always visible.</li>
+        </ul>
+        <p class="go" style="margin-top:14px">View Concept A →</p>
+      </a>
+      <a class="cardlink" href="./studio.html">
+        <span class="tag">Concept B</span>
+        <h2>Studio</h2>
+        <p>Product-forward and branded, in the paperclip.ing vein. Centered hero, a 3-step “how it works”, then the directory, closing on a dark CTA band.</p>
+        <ul class="notes">
+          <li>Best when the hub also has to <b>sell the platform</b>.</li>
+          <li>Pure monochrome (black ink), no color accent.</li>
+          <li>More marketing surface above the grid.</li>
+        </ul>
+        <p class="go" style="margin-top:14px">View Concept B →</p>
+      </a>
+    </div>
+
+    <div class="principles">
+      <h3>What changes, either way</h3>
+      <div class="prow"><span class="k">Texture</span><span><span class="was">ruled-paper gradient + warm cream</span> → <span class="now">flat white / near-white</span></span></div>
+      <div class="prow"><span class="k">Type</span><span><span class="was">Instrument Serif italics + editorial voice</span> → <span class="now">one sans (Geist), tight tracking, clear hierarchy</span></span></div>
+      <div class="prow"><span class="k">Decoration</span><span><span class="was">volume markers, § numerals, tickers, stamps</span> → <span class="now">removed — whitespace does the work</span></span></div>
+      <div class="prow"><span class="k">Color</span><span><span class="was">red accent + multiple warm tones</span> → <span class="now">greyscale + at most one restrained accent</span></span></div>
+      <div class="prow"><span class="k">Cards</span><span><span class="was">heavy rules &amp; borders everywhere</span> → <span class="now">light 1px lines, space + subtle shadow on hover</span></span></div>
+      <div class="prow"><span class="k">Kept intact</span><span class="now">search, category filters, sort, featured, grid, trending top-5, submit CTA, stats, footer</span></div>
+    </div>
+
+    <p class="foot">Static mockups with representative data — not the production build. Once a direction is chosen, it becomes the real Next.js homepage + a rewrite of <code style="font-family:var(--mono)">hub.css</code>, preserving all current functionality.</p>
+  </div>
+</body>
+</html>

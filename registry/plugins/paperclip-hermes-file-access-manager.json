@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-hermes-file-access-manager",
+  "addedBy": "marospekarik",
+  "category": "tools",
+  "sourceRepo": "https://github.com/marospekarik/paperclip-hermes-file-access-manager"
+}

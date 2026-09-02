@@ -125,8 +125,31 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         : allPlugins.filter((p) => p.category === c.value).length,
   })).filter((c) => c.key === "all" || c.count > 0 || c.key === activeCategory);
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    url: "https://cliphub.fyi/",
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: allPlugins.length,
+      itemListElement: allPlugins.slice(0, 20).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `https://cliphub.fyi/plugins/${p.slug}`,
+        name: p.name,
+      })),
+    },
+  };
+
   return (
     <div className="hub-c1">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
       {/* Header */}
       <header className="hc-header">
         <Link href="/" className="hc-brand">
@@ -187,8 +210,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <div className="hc-eyebrow">
                 <span className="vol">Paperclip Hub</span>
                 <span>
-                  The plugin directory for{" "}
-                  <Link href="https://paperclip.ing">Paperclip</Link>.
+                  The plugin directory for <Link href="https://paperclip.ing">Paperclip</Link>.
                 </span>
               </div>
               <h1>

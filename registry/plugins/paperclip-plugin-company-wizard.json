@@ -1,6 +1,14 @@
 {
   "$schema": "../schema.json",
-  "npmPackage": "@yesterday-ai/paperclip-plugin-company-wizard",
+  "name": "Company Wizard",
+  "npmPackage": "@starlein/paperclip-plugin-company-wizard",
+  "description": "Bootstrap AI agent companies from modular templates, roles, workflows, skills, and tasks in a few clicks. Answer few questions and it creates the company, records Board Operations / Hiring Plan issues, submits governed agent-hire requests, creates routines, and adds the bootstrap task in Paperclip.",
+  "category": "tools",
+  "capabilities": [
+    "config"
+  ],
+  "sourceRepo": "https://github.com/starlein/paperclip-plugin-company-wizard",
+  "author": "starlein",
   "addedBy": "lacymorrow",
-  "category": "tools"
+  "submittedAt": "2026-09-09T21:47:19.909Z"
 }

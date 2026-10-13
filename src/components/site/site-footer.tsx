@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BuildAndServeLink } from "./build-and-serve-link";
 
 export function SiteFooter() {
   return (
@@ -9,8 +8,9 @@ export function SiteFooter() {
         <span>The Hub</span>
       </div>
       <p className="hc-foot-bas">
-        Need a custom plugin?{" "}
-        <BuildAndServeLink placement="footer">Build &amp; Serve</BuildAndServeLink> builds them.
+        <Link href="/support" className="hc-bas-link">
+          Support the Hub
+        </Link>
       </p>
       <nav className="r" aria-label="Footer">
         <Link href="/submit">Submit</Link>

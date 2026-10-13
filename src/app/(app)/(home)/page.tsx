@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
 import { SiteFooter } from "@/components/site/site-footer";
-import { buildAndServeEvent, buildAndServeUrl } from "@/config/build-and-serve";
 import { CATEGORIES, filterPlugins } from "@/data/plugins";
 import { getPlugins } from "@/lib/registry";
 
@@ -392,14 +391,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               Submit a plugin →
             </Link>
             <p className="hc-submit-feature">
-              <a
-                href={buildAndServeUrl("featured")}
-                target="_blank"
-                rel="noopener"
-                {...buildAndServeEvent("featured")}
-              >
-                Feature your plugin
-              </a>
+              <Link href="/support#business">Feature your plugin</Link>
             </p>
           </div>
         </aside>

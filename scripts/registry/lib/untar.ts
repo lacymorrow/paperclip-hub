@@ -53,7 +53,8 @@ async function readTarball(
     }
     const chunks: Buffer[] = [];
     let size = 0;
-    entryStream.on("data", (chunk: Buffer) => {
+    entryStream.on("data", (data: unknown) => {
+      const chunk = data as Buffer;
       size += chunk.byteLength;
       if (size > FILE_MAX_BYTES) {
         entryStream.resume();

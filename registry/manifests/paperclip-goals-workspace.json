@@ -1,0 +1,65 @@
+{
+  "npmPackage": "paperclip-goals-workspace",
+  "version": "1.2.2",
+  "manifest": {
+    "id": "ordillect.goals-workspace",
+    "apiVersion": 1,
+    "version": "1.2.2",
+    "displayName": "Goals Workspace",
+    "description": "A complete goal-management workspace: reassign owners and parents, link projects and tasks, see progress rolled up through the tree, and delete goals safely by detaching what is attached to them first.",
+    "author": "Ordillect",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "goals.read",
+      "projects.read",
+      "issues.read",
+      "agents.read",
+      "events.subscribe",
+      "ui.sidebar.register",
+      "ui.page.register",
+      "ui.detailTab.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "sidebar",
+          "id": "goals-workspace-nav",
+          "displayName": "Goals",
+          "exportName": "GoalsNavItem"
+        },
+        {
+          "type": "page",
+          "id": "goals-workspace-page",
+          "displayName": "Goals",
+          "routePath": "goals-workspace",
+          "exportName": "GoalsWorkspacePage"
+        },
+        {
+          "type": "detailTab",
+          "id": "issue-goal",
+          "displayName": "Goal",
+          "entityTypes": [
+            "issue"
+          ],
+          "exportName": "IssueGoalTab"
+        },
+        {
+          "type": "detailTab",
+          "id": "project-goals",
+          "displayName": "Goals",
+          "entityTypes": [
+            "project"
+          ],
+          "exportName": "ProjectGoalsTab"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-10-13T18:34:56.140Z"
+}

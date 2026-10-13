@@ -50,9 +50,35 @@ describe("walker", () => {
     expect(() => extractDefaultExport(src)).toThrow(WalkerError);
   });
 
-  it("rejects binary expressions (would be a computed value, not a literal)", () => {
+  it("rejects arithmetic (would be a computed value, not a literal)", () => {
     const src = "export default { sum: 1 + 1 };";
     expect(() => extractDefaultExport(src)).toThrow(WalkerError);
+  });
+
+  it("rejects binary operators other than +", () => {
+    expect(() => extractDefaultExport('export default { a: "x" - 1 };')).toThrow(WalkerError);
+    expect(() => extractDefaultExport('export default { a: "x" == "x" };')).toThrow(WalkerError);
+  });
+
+  it("resolves string concatenation, as esbuild emits for long descriptions", () => {
+    const src = `
+			var ROUTE = "file-access";
+			var pkg = { version: "0.5.3" };
+			export default {
+				description: "Configure isolation, " + "then enforce it.",
+				path: "/" + ROUTE,
+				label: "v" + pkg.version + " build " + 2,
+			};
+		`;
+    expect(extractDefaultExport(src)).toEqual({
+      description: "Configure isolation, then enforce it.",
+      path: "/file-access",
+      label: "v0.5.3 build 2",
+    });
+  });
+
+  it("rejects concatenation with a non-text value", () => {
+    expect(() => extractDefaultExport('export default { a: "x" + [1] };')).toThrow(WalkerError);
   });
 
   it("rejects spread in objects and arrays", () => {

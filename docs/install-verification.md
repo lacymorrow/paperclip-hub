@@ -56,7 +56,8 @@ Result: **39 of 53 install, 14 fail**. All 14 failures are quarantined. One more
 | `@wil0x91/paperclip-plugin-github-issues` | 0.2.4 | plugin | `npx paperclipai@latest plugin install @wil0x91/paperclip-plugin-github-issues` | FAIL | Not on npm: registry.npmjs.org returns 404, so the install cannot work. |
 | `@yesterday-ai/paperclip-plugin-company-wizard` | 0.1.16 | plugin | `npx paperclipai@latest plugin install @yesterday-ai/paperclip-plugin-company-wizard` | PASS |  |
 | `paperclip-file-viewer` | 0.3.1 | plugin | `npx paperclipai@latest plugin install paperclip-file-viewer` | PASS |  |
-| `paperclip-hermes-file-access-manager` | n/a | plugin | `npx paperclipai@latest plugin install paperclip-hermes-file-access-manager` | PASS (install), quarantined | Installs fine, but its manifest.js is not a static data literal (BinaryExpression at line 10), so the registry cannot extract a manifest. Hidden until upstream ships a literal manifest. |
+| `paperclip-hermes-file-access-manager` | 0.3.0 | plugin | `npx paperclipai@latest plugin install paperclip-hermes-file-access-manager` | PASS | Listed again 2026-10-13: the walker now resolves string concatenation in bundled manifests. |
+| `paperclip-goals-workspace` | 1.2.2 | plugin | `npx paperclipai@latest plugin install paperclip-goals-workspace` | PASS | Added 2026-10-13 from community PR #70; same concatenation fix. |
 | `paperclip-plugin-agent-usage` | 0.1.3 | plugin | `npx paperclipai@latest plugin install paperclip-plugin-agent-usage` | PASS |  |
 | `paperclip-plugin-bcp-commerce` | 0.1.0 | plugin | `npx paperclipai@latest plugin install paperclip-plugin-bcp-commerce` | PASS |  |
 | `paperclip-plugin-claude-config-editor` | 1.0.1 | plugin | `npx paperclipai@latest plugin install paperclip-plugin-claude-config-editor` | PASS |  |

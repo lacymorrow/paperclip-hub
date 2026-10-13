@@ -5,8 +5,9 @@
  * **The walker never executes code.** It uses `acorn` to produce an ESTree
  * AST and then resolves a subset of expression nodes: literals, arrays,
  * objects, identifiers (looked up in a module-local symbol table), member
- * expressions, unary `-`/`!`/`+`, and template literals whose expressions
- * themselves resolve statically. Anything else throws `WalkerError`.
+ * expressions, unary `-`/`!`/`+`, binary `+` as string concatenation
+ * (esbuild keeps `"a" + "b"` for long string literals), and template
+ * literals whose expressions themselves resolve statically. Anything else throws `WalkerError`.
  *
  * This matches what `esbuild` emits for a manifest module like
  * `export default { id, version, capabilities: [...] }`: the bundler inlines
@@ -260,12 +261,13 @@ function resolve(node: Node, ctx: Ctx, depth: number): unknown {
       return resolveLogical(n, ctx, depth);
     case "ConditionalExpression":
       return resolveConditional(n, ctx, depth);
+    case "BinaryExpression":
+      return resolveBinary(n, ctx, depth);
     case "TaggedTemplateExpression":
     case "CallExpression":
     case "NewExpression":
     case "ArrowFunctionExpression":
     case "FunctionExpression":
-    case "BinaryExpression":
       throw new WalkerError(
         `expression of type ${n.type} is not statically analyzable; manifests must be pure data literals`,
         locOf(node)
@@ -335,6 +337,28 @@ function resolveConditional(
   return resolve(n.test, ctx, depth + 1)
     ? resolve(n.consequent, ctx, depth + 1)
     : resolve(n.alternate, ctx, depth + 1);
+}
+
+/**
+ * Resolve `a + b` as string concatenation: at least one side must resolve to
+ * a string and the other to a string or number. Arithmetic and every other
+ * binary operator are rejected; concatenation is all a data literal needs.
+ */
+function resolveBinary(
+  n: { operator: string; left: Node; right: Node },
+  ctx: Ctx,
+  depth: number
+): string {
+  if (n.operator !== "+") {
+    throw new WalkerError(`binary operator ${n.operator} not supported`);
+  }
+  const left = resolve(n.left, ctx, depth + 1);
+  const right = resolve(n.right, ctx, depth + 1);
+  const isText = (v: unknown) => typeof v === "string" || typeof v === "number";
+  if ((typeof left === "string" || typeof right === "string") && isText(left) && isText(right)) {
+    return String(left) + String(right);
+  }
+  throw new WalkerError(`binary + applied to ${typeof left} and ${typeof right}`);
 }
 
 function resolveUnary(

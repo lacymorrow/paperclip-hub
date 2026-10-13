@@ -7,7 +7,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["scripts/registry/__tests__/**/*.test.ts"],
+    include: ["scripts/registry/__tests__/**/*.test.ts", "src/config/__tests__/**/*.test.ts"],
     watch: false,
   },
 });

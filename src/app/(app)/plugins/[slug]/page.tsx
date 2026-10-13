@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
 import { SiteFooter } from "@/components/site/site-footer";
 
 import { getPluginBySlug, getPlugins } from "@/lib/registry";
@@ -440,9 +439,10 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
         />
       </section>
       <p className="hc-d-bas">
-        Need this adapted to your stack?{" "}
-        <BuildAndServeLink placement="plugin-detail">Build &amp; Serve</BuildAndServeLink> builds
-        custom Paperclip plugins.
+        The Hub is free.{" "}
+        <Link href="/support" className="hc-bas-link">
+          Help keep it that way.
+        </Link>
       </p>
 
       <SiteFooter />

@@ -14,6 +14,10 @@ interface PluginDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+// The plugin list is fixed at build time; unknown slugs get a real 404 instead
+// of a 200 streamed past the (app)/loading.tsx boundary.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const plugins = await getPlugins();
   return plugins.map((p) => ({ slug: p.slug }));

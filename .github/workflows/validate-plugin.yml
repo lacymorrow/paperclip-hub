@@ -8,7 +8,9 @@ on:
       - "registry/schema.json"
       - "registry/manifest.schema.json"
       - "scripts/registry/**"
-    types: [opened, synchronize, reopened]
+    # labeled/unlabeled: the escape-hatch labels (submitted-on-behalf,
+    # multi-plugin-pr) must re-run the checks without a new push.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 concurrency:
   group: "plugin-validate-${{ github.event.pull_request.number }}"

@@ -1,0 +1,62 @@
+{
+  "npmPackage": "paperclip-hermes-file-access-manager",
+  "version": "0.3.0",
+  "manifest": {
+    "id": "ordillect.file-access-manager",
+    "apiVersion": 1,
+    "version": "0.5.3",
+    "displayName": "File Access Manager",
+    "description": "Configure OS-level filesystem isolation per Hermes profile: discover profiles, mark host paths Read/Write, Read Only, or Denied, and enforce them with Docker bind mounts. Writes only to the profiles you select — never the router by accident.",
+    "author": "Ordillect",
+    "categories": [
+      "ui"
+    ],
+    "capabilities": [
+      "agents.read",
+      "plugin.state.read",
+      "plugin.state.write",
+      "instance.settings.register",
+      "ui.page.register",
+      "ui.sidebar.register",
+      "ui.detailTab.register"
+    ],
+    "entrypoints": {
+      "worker": "./dist/worker.js",
+      "ui": "./dist/ui"
+    },
+    "ui": {
+      "slots": [
+        {
+          "type": "companySettingsPage",
+          "id": "file-access-manager",
+          "displayName": "File Access",
+          "routePath": "file-access",
+          "exportName": "FileAccessPage"
+        },
+        {
+          "type": "sidebar",
+          "id": "file-access-nav",
+          "displayName": "File Access",
+          "exportName": "FileAccessNavItem"
+        },
+        {
+          "type": "page",
+          "id": "file-access-page",
+          "displayName": "File Access",
+          "routePath": "file-access",
+          "exportName": "FileAccessRoutePage"
+        },
+        {
+          "type": "detailTab",
+          "id": "agent-file-access",
+          "displayName": "File Access",
+          "entityTypes": [
+            "agent"
+          ],
+          "exportName": "AgentFileAccessTab"
+        }
+      ]
+    }
+  },
+  "resolvedAt": "2026-10-13T18:34:41.650Z"
+}

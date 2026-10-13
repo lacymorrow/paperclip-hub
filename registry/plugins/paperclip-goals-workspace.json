@@ -1,0 +1,7 @@
+{
+  "$schema": "../schema.json",
+  "npmPackage": "paperclip-goals-workspace",
+  "addedBy": "marospekarik",
+  "category": "tools",
+  "sourceRepo": "https://github.com/marospekarik/paperclip-goals-workspace"
+}

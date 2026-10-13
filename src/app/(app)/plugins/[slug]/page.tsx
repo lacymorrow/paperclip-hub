@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
+import { SiteFooter } from "@/components/site/site-footer";
 
 import { getPluginBySlug, getPlugins } from "@/lib/registry";
 
@@ -29,9 +31,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 function pluginTitle(plugin: { name: string; category: string }): string {
   const label = CATEGORY_LABEL[plugin.category] ?? "";
-  return label
-    ? `${plugin.name} — Paperclip ${label} plugin`
-    : `${plugin.name} — Paperclip plugin`;
+  return label ? `${plugin.name} | Paperclip ${label} plugin` : `${plugin.name} | Paperclip plugin`;
 }
 
 export async function generateMetadata({ params }: PluginDetailPageProps): Promise<Metadata> {
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PluginDetailPageProps): Promi
   const title = pluginTitle(plugin);
   const description =
     plugin.description ||
-    `${plugin.name} — a Paperclip plugin published as ${plugin.npmPackage} on npm.`;
+    `${plugin.name} is a Paperclip plugin published as ${plugin.npmPackage} on npm.`;
   const ogParams = new URLSearchParams({
     title: plugin.name,
     description,
@@ -143,14 +143,14 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
 
   const versionTab =
     plugin.version === "unknown" ? (
-      <p className="hc-d-empty">npm registry hasn't responded yet — try again in a moment.</p>
+      <p className="hc-d-empty">npm registry hasn't responded yet. Try again in a moment.</p>
     ) : (
       <>
         <div className="hc-d-versions">
           <div className="hc-d-version-row">
             <span className="v">v{plugin.version}</span>
             <span className="d">{longDate(plugin.submittedAt)}</span>
-            <span className="t latest">Latest · published</span>
+            <span className="t latest">Latest</span>
             {releasesUrl ? (
               <a href={releasesUrl} target="_blank" rel="noreferrer">
                 view release →
@@ -190,18 +190,10 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
         <article className="hc-d-readme">
           <h2>About</h2>
           <p>{plugin.description}</p>
-          <h2>Install</h2>
-          <pre>{plugin.installCommand}</pre>
           <p>
-            Full usage docs live with the plugin source — see the npm package
+            Full usage docs live with the plugin source. See the npm package
             {safeSourceRepo ? " or GitHub repo " : " "}
             linked in the sidebar.
-          </p>
-          <h2>Capabilities</h2>
-          <p>
-            This plugin registers <code>{plugin.capabilities.length}</code>{" "}
-            {plugin.capabilities.length === 1 ? "capability" : "capabilities"} with the Paperclip
-            runtime — switch to the <em>Capabilities</em> tab for the full list.
           </p>
         </article>
       ),
@@ -285,8 +277,6 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
 
       {/* Breadcrumb */}
       <div className="hc-d-crumb">
-        <Link href="/">← back to the library</Link>
-        <span>·</span>
         <Link href="/">Browse</Link>
         <span>/</span>
         <Link href={`/?category=${plugin.category}`}>{plugin.category}</Link>
@@ -325,7 +315,7 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
             </div>
             <div>
               <b>{plugin.version !== "unknown" ? `v${plugin.version}` : "—"}</b>
-              <small>shipped {longDate(plugin.submittedAt)}</small>
+              <small>added {longDate(plugin.submittedAt)}</small>
             </div>
             <div>
               <b>{plugin.capabilities.length}</b>
@@ -342,18 +332,21 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
       <section className="hc-d-tabs-wrap">
         <DetailTabs
           tabs={tabs}
-          lastUpdated={`shipped ${longDate(plugin.submittedAt)}`}
           sidebar={
             <aside className="hc-d-side">
               <div className="hc-d-side-card">
                 <div className="hc-d-side-hd">
-                  <span className="eyebrow">§ author</span>
+                  <span className="eyebrow">Author</span>
                 </div>
                 <div className="hc-d-author">
                   <div className="avatar">{plugin.author.name[0]?.toUpperCase()}</div>
                   <div>
                     <b>{plugin.author.name.toLowerCase()}</b>
-                    <small>Community publisher</small>
+                    <small>
+                      {plugin.npmPackage.startsWith("@paperclipai/")
+                        ? "First party"
+                        : "Community publisher"}
+                    </small>
                   </div>
                 </div>
                 <div className="hc-d-provenance">
@@ -384,7 +377,7 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
 
               <div className="hc-d-side-card">
                 <div className="hc-d-side-hd">
-                  <span className="eyebrow">§ related plugins</span>
+                  <span className="eyebrow">Related plugins</span>
                 </div>
                 <div className="hc-d-related">
                   {related.length === 0 ? (
@@ -416,7 +409,7 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
 
               <div className="hc-d-side-card">
                 <div className="hc-d-side-hd">
-                  <span className="eyebrow">§ links</span>
+                  <span className="eyebrow">Links</span>
                 </div>
                 <div className="hc-d-links">
                   {safeSourceRepo && sourceHost && (
@@ -442,21 +435,13 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
           }
         />
       </section>
+      <p className="hc-d-bas">
+        Need this adapted to your stack?{" "}
+        <BuildAndServeLink placement="plugin-detail">Build &amp; Serve</BuildAndServeLink> builds
+        custom Paperclip plugins.
+      </p>
 
-      {/* Footer */}
-      <footer className="hc-foot">
-        <div className="l">
-          <b>Paperclip</b>
-          <span>The Hub</span>
-        </div>
-        <div className="r">
-          <Link href="/submit">Submit</Link>
-          <Link href="https://docs.paperclip.ing">Docs</Link>
-          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
-          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

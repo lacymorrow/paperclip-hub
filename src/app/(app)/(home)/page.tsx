@@ -1,13 +1,17 @@
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
+import { SiteFooter } from "@/components/site/site-footer";
+import { buildAndServeEvent, buildAndServeUrl } from "@/config/build-and-serve";
 import { CATEGORIES, filterPlugins } from "@/data/plugins";
 import { getPlugins } from "@/lib/registry";
 
 import "../plugins/hub.css";
 
-const HOME_TITLE = "Paperclip Hub — Plugins for Paperclip";
+const HOME_TITLE = "Paperclip Hub | Plugins for Paperclip";
 const HOME_DESCRIPTION =
-  "The plugin directory for Paperclip. Browse connectors, providers, tools, and memory backends — published by the community, indexed nightly, installable with `paperclipai plugin install`.";
+  "The plugin directory for Paperclip. Browse connectors, providers, tools, and memory backends, published by the community and installable with one command.";
 const HOME_OG_IMAGE = `/og?${new URLSearchParams({
   title: "Paperclip Hub",
   description: "The plugin directory for Paperclip.",
@@ -60,6 +64,10 @@ function fmtK(n: number): string {
   return n.toString();
 }
 
+function handle(name: string): string {
+  return name.replace(/^@/, "").toLowerCase();
+}
+
 function shortDate(date: string): string {
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
@@ -97,7 +105,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const isSearching = Boolean(params.q);
   const baseResults = results;
   const PAGE_SIZE = 8;
-  const page = Math.max(1, Number.parseInt(params.page ?? "") || 1);
+  const page = Math.max(1, Number.parseInt(params.page ?? "", 10) || 1);
   const totalPages = Math.ceil(baseResults.length / PAGE_SIZE);
   const safePage = Math.min(page, Math.max(totalPages, 1));
   const gridStart = (safePage - 1) * PAGE_SIZE;
@@ -165,20 +173,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="hc-header-actions">
           {!isSearching && (
             <form action="/" method="get" className="hc-hd-search" aria-label="Search plugins">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+              <Search size={16} aria-hidden />
               <input name="q" placeholder="Search the library" aria-label="Search plugins" />
             </form>
           )}
@@ -190,21 +185,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       {isSearching ? (
         <section className="hc-search-bar">
+          <h1 className="sr-only">Search results</h1>
           <form action="/" method="get" className="hc-hero-search" aria-label="Search plugins">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--ink-2)"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
+            <Search size={20} aria-hidden />
             <input
               name="q"
               defaultValue={params.q ?? ""}
@@ -269,7 +252,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       {/* Section header */}
       <div className="hc-section-hd" id="directory">
         <div className="l">
-          <span className="eyebrow">§ ii — the directory</span>
+          <span className="eyebrow">The directory</span>
           <h2>
             Browse the <em>shelves.</em>
           </h2>
@@ -288,6 +271,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               href={buildHref("/", params, {
                 category: c.key === "all" ? undefined : c.key,
               })}
+              aria-current={c.key === activeCategory ? "true" : undefined}
               className={`hc-pill${c.key === activeCategory ? " is-active" : ""}`}
             >
               {c.key !== "all" && <span className="pl-dot" />}
@@ -301,25 +285,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <summary>
               <small>Sort</small>
               <b>{SORT_LABELS[sortKey] ?? SORT_LABELS.popular}</b>
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
+              <ChevronDown size={11} aria-hidden />
             </summary>
-            <div className="hc-sort-menu" role="menu">
+            <div className="hc-sort-menu">
               {Object.entries(SORT_LABELS).map(([key, label]) => (
                 <Link
                   key={key}
-                  role="menuitem"
                   href={buildHref("/", params, {
                     sort: key === "popular" ? undefined : key,
                   })}
@@ -337,9 +308,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <div className="hc-body">
         {grid.length === 0 ? (
           <div className="hc-empty-state">
-            No plugins found. Try adjusting the filters.
-            <div className="hc-empty-clear">
-              <Link href="/">Clear all filters</Link>
+            {isSearching ? (
+              <>
+                <b>No plugin for that yet.</b>
+                <p>
+                  <BuildAndServeLink placement="empty-search">Build &amp; Serve</BuildAndServeLink>{" "}
+                  builds custom Paperclip plugins.
+                </p>
+              </>
+            ) : (
+              <b>Nothing in this view.</b>
+            )}
+            <div className="hc-empty-actions">
+              <Link href="/">Clear filters</Link>
+              <Link href="/submit">Submit a plugin</Link>
             </div>
           </div>
         ) : (
@@ -361,23 +343,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <span>
                       <b>{fmtK(p.installs)}</b>/wk
                     </span>
-                    <span>@{p.author.name.toLowerCase()}</span>
+                    <span>@{handle(p.author.name)}</span>
                   </div>
                   <span className="hc-btn-mock" aria-hidden>
                     Install
-                    <svg
-                      width="11"
-                      height="11"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
+                    <ArrowRight size={11} aria-hidden />
                   </span>
                 </div>
               </Link>
@@ -415,13 +385,22 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               Have a plugin? <em>Ship it.</em>
             </h3>
             <p>
-              The Hub is fully open. Any npm package that exposes a Paperclip manifest gets indexed
-              nightly — no review queue, no waitlist. Publish to npm, tag{" "}
-              <code>paperclip-plugin</code>, we do the rest.
+              Publish a package to npm with a Paperclip manifest, then open a pull request. CI
+              checks the manifest and your npm ownership, and the Hub indexes it.
             </p>
             <Link href="/submit" className="hc-submit-cta">
               Submit a plugin →
             </Link>
+            <p className="hc-submit-feature">
+              <a
+                href={buildAndServeUrl("featured")}
+                target="_blank"
+                rel="noopener"
+                {...buildAndServeEvent("featured")}
+              >
+                Feature your plugin
+              </a>
+            </p>
           </div>
         </aside>
       </div>
@@ -438,36 +417,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 href={buildHref("/", params, { page: String(safePage - 1) })}
                 className="hc-pagination-link"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="m15 18-6-6 6-6" />
-                </svg>
+                <ChevronLeft size={14} aria-hidden />
                 Previous
               </Link>
             ) : (
               <span className="hc-pagination-link is-disabled">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="m15 18-6-6 6-6" />
-                </svg>
+                <ChevronLeft size={14} aria-hidden />
                 Previous
               </span>
             )}
@@ -477,36 +432,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 className="hc-pagination-link"
               >
                 Next
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
+                <ChevronRight size={14} aria-hidden />
               </Link>
             ) : (
               <span className="hc-pagination-link is-disabled">
                 Next
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
+                <ChevronRight size={14} aria-hidden />
               </span>
             )}
           </div>
@@ -517,44 +448,27 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <section className="hc-recent">
         <div className="hc-recent-hd">
           <div>
-            <span className="eyebrow">§ iii — freshly shipped</span>
+            <span className="eyebrow">Recently added</span>
             <h2>
-              Just <em>off the press.</em>
+              Newest <em>additions.</em>
             </h2>
           </div>
-          <span className="text-muted-foreground">freshly shipped</span>
         </div>
         <div className="hc-recent-row">
           {recent.map((p) => (
             <Link key={p.id} href={`/plugins/${p.slug}`} className="hc-recent-card">
-              <span className="stamp">
-                New · {p.version !== "unknown" ? `v${p.version}` : "fresh"}
-              </span>
+              <span className="stamp">{p.version !== "unknown" ? `v${p.version}` : "new"}</span>
               <b>{p.name}</b>
               <p>{p.description.split(".")[0]}.</p>
               <div className="meta">
-                <span>@{p.author.name.toLowerCase()}</span>
+                <span>@{handle(p.author.name)}</span>
                 <span className="ver">{shortDate(p.submittedAt)}</span>
               </div>
             </Link>
           ))}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="hc-foot">
-        <div className="l">
-          <b>Paperclip</b>
-          <span>The Hub</span>
-        </div>
-        <div className="r">
-          <Link href="/submit">Submit</Link>
-          <Link href="https://docs.paperclip.ing">Docs</Link>
-          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
-          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

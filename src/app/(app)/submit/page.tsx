@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
+import { SiteFooter } from "@/components/site/site-footer";
 
 import "../plugins/hub.css";
 
@@ -19,9 +19,9 @@ function getExistingRegistrySlugs(): string[] {
   }
 }
 
-const SUBMIT_TITLE = "Submit a Paperclip plugin — Paperclip Hub";
+const SUBMIT_TITLE = "Submit a Paperclip plugin | Paperclip Hub";
 const SUBMIT_DESCRIPTION =
-  "Add your npm package to the Paperclip plugin directory. The form pre-fills a GitHub pull request — CI extracts your manifest, validates npm ownership, and indexes the plugin nightly.";
+  "Add your npm package to the Paperclip plugin directory. The form pre-fills a GitHub pull request. CI extracts your manifest, validates npm ownership, and indexes the plugin nightly.";
 const SUBMIT_OG = `/og?${new URLSearchParams({
   title: "Submit a plugin",
   description: SUBMIT_DESCRIPTION,
@@ -41,7 +41,12 @@ export const metadata: Metadata = {
     siteName: "Paperclip Hub",
     images: [{ url: SUBMIT_OG, width: 1200, height: 630, alt: "Submit a plugin" }],
   },
-  twitter: { card: "summary_large_image", title: SUBMIT_TITLE, description: SUBMIT_DESCRIPTION, images: [SUBMIT_OG] },
+  twitter: {
+    card: "summary_large_image",
+    title: SUBMIT_TITLE,
+    description: SUBMIT_DESCRIPTION,
+    images: [SUBMIT_OG],
+  },
 };
 
 export default function SubmitPage() {
@@ -82,7 +87,7 @@ export default function SubmitPage() {
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
           <span className="eyebrow" style={{ display: "block", marginBottom: 12 }}>
-            § submit — share your work
+            Submit, share your work
           </span>
           <h1
             style={{
@@ -107,7 +112,7 @@ export default function SubmitPage() {
             }}
           >
             Share your plugin with the Paperclip community. Fill out the form and open a pull
-            request directly on GitHub — no account required here.
+            request directly on GitHub. No account needed here.
           </p>
           <p
             style={{
@@ -121,10 +126,10 @@ export default function SubmitPage() {
               maxWidth: 560,
             }}
           >
-            <b style={{ color: "var(--ink)" }}>Already listed?</b> Plugins are added either by
-            their npm maintainers via this form, or by hub maintainers curating from npm
-            packages tagged <code>paperclip-plugin</code>. To claim ownership, edit metadata, or
-            request removal of a curated listing, open a PR against{" "}
+            <b style={{ color: "var(--ink)" }}>Already listed?</b> Plugins are added either by their
+            npm maintainers via this form, or by hub maintainers curating from npm packages tagged{" "}
+            <code>paperclip-plugin</code>. To claim ownership, edit metadata, or request removal of
+            a curated listing, open a PR against{" "}
             <code>registry/plugins/&lt;your-plugin&gt;.json</code>.
           </p>
         </div>
@@ -158,7 +163,7 @@ export default function SubmitPage() {
               {
                 num: "03",
                 title: "Open a PR on GitHub",
-                desc: "We pre-fill the pull request — just click commit on GitHub.",
+                desc: "We pre-fill the pull request. Just click commit on GitHub.",
               },
             ].map((step) => (
               <div
@@ -273,26 +278,12 @@ export default function SubmitPage() {
             >
               lacymorrow/paperclip-hub
             </a>{" "}
-            adding a pointer file under <code>registry/plugins/</code>. CI extracts the manifest
-            and validates ownership against your npm maintainers list.
+            adding a pointer file under <code>registry/plugins/</code>. CI extracts the manifest and
+            validates ownership against your npm maintainers list.
           </p>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="hc-foot">
-        <div className="l">
-          <b>Paperclip</b>
-          <span>The Hub</span>
-        </div>
-        <div className="r">
-          <Link href="/submit">Submit</Link>
-          <Link href="https://docs.paperclip.ing">Docs</Link>
-          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
-          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

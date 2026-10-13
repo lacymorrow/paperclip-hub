@@ -11,9 +11,7 @@ export default function GlobalError({
     <html lang="en" suppressHydrationWarning>
       <body style={{ fontFamily: "system-ui, sans-serif", margin: 0, padding: "48px 24px" }}>
         <div style={{ maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
-          <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
-            Something went wrong.
-          </h1>
+          <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>Something went wrong.</h1>
           {process.env.NODE_ENV === "development" && (
             <pre
               style={{

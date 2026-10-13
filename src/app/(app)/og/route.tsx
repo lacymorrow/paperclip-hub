@@ -42,11 +42,18 @@ async function loadAssets(): Promise<
   ];
 }
 
+function clamp(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max).replace(/\s+\S*$/, "");
+  return `${cut.replace(/[.,:;+\s]+$/, "")}...`;
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const origin = new URL(request.url).origin;
-  const title = searchParams.get("title") ?? siteConfig.title;
-  const description = searchParams.get("description") ?? siteConfig.description;
+  const title = clamp(searchParams.get("title") ?? siteConfig.title, 56);
+  // Real plugin descriptions run to several sentences; keep the card readable.
+  const description = clamp(searchParams.get("description") ?? siteConfig.description, 110);
   const url = searchParams.get("url") ?? siteConfig?.url.replace(/https?:\/\//, "");
   const theme = searchParams.get("theme") === "light" ? "light" : "dark";
 
@@ -83,6 +90,7 @@ export async function GET(request: Request) {
         style={{ borderTop: `1px solid ${colors.border}` }}
       />
       <div tw="flex absolute bottom-24 right-24">
+        {/* biome-ignore lint/performance/noImgElement: next/og renders plain img */}
         <img src={`${origin}/app/og-logo.png`} width={80} height={80} alt="Logo" />
       </div>
       <div
@@ -104,7 +112,7 @@ export async function GET(request: Request) {
           {title}
         </div>
         <div
-          tw="text-[40px] leading-[1.5] flex-grow-1"
+          tw="text-[36px] leading-[1.4] flex-grow-1"
           style={{
             fontWeight: 500,
             textWrap: "balance",

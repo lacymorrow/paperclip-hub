@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import type React from "react";
+import { Umami } from "@/components/site/umami";
 import { fontSans, fontSerif } from "@/config/fonts";
 import {
   metadata as defaultMetadata,
@@ -21,6 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <script
           type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -62,6 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <main>{children}</main>
         <Analytics />
         <SpeedInsights />
+        <Umami />
       </body>
     </html>
   );

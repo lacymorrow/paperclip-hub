@@ -54,6 +54,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }),
           }}
         />
+        {/* Hub fonts as a parallel stylesheet link; a CSS @import chains the request behind hub.css. */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+        />
         {headLinkHints.map((l: HeadLinkHint) => (
           <link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
         ))}

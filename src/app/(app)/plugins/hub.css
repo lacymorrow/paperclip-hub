@@ -4,7 +4,6 @@
    doesn't leak into the rest of the app.
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap");
 
 .hub-c1 {
   --bg: #faf7f1;

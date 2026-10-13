@@ -38,6 +38,7 @@ export function InstallCard({ cliCommand, pluginName }: InstallCardProps) {
         <span>Install</span>
         <span className="kbd">via paperclipai</span>
       </div>
+      {/* biome-ignore lint/a11y/useSemanticElements: contains a nested Copy button, so it cannot be a <button> */}
       <div
         className="hc-d-install-cmd"
         onClick={() => copy("cli", cliCommand)}

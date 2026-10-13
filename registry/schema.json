@@ -28,6 +28,17 @@
       "type": "string",
       "description": "Optional. URL of the plugin's source repository (informational).",
       "format": "uri"
+    },
+    "kind": {
+      "type": "string",
+      "description": "Optional, default \"plugin\". Decides the install command shown: plugin -> `plugin install`, adapter -> `adapter install`, library (SDKs etc.) -> not installable, never listed.",
+      "enum": ["plugin", "adapter", "library"]
+    },
+    "quarantine": {
+      "type": "string",
+      "description": "Optional. If set, the entry is hidden from the site and the index, and this short reason is published under `quarantined`. Used when the package fails to install on a real Paperclip instance.",
+      "minLength": 1,
+      "maxLength": 300
     }
   }
 }

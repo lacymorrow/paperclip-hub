@@ -3,5 +3,6 @@
   "npmPackage": "@wil0x91/paperclip-plugin-github-issues",
   "addedBy": "lacymorrow",
   "category": "integration",
-  "sourceRepo": "https://github.com/wil0x91/paperclip-plugin-github-issues"
+  "sourceRepo": "https://github.com/wil0x91/paperclip-plugin-github-issues",
+  "quarantine": "Not on npm: registry.npmjs.org returns 404, so the install cannot work."
 }

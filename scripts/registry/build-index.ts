@@ -13,6 +13,11 @@
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import {
+  getInstallCommand,
+  isPluginManifest,
+  type RegistryKind,
+} from "../../src/lib/install-command.ts";
 import { fetchPackumentLite, fetchWeeklyDownloads } from "./lib/npm.ts";
 
 interface PointerEntry {
@@ -20,6 +25,8 @@ interface PointerEntry {
   addedBy: string;
   category: string;
   sourceRepo?: string;
+  kind?: RegistryKind;
+  quarantine?: string;
 }
 
 interface StoredManifest {
@@ -39,6 +46,7 @@ interface BuiltPlugin {
   latestVersion: string;
   manifest: Record<string, unknown>;
   installs: number;
+  kind: RegistryKind;
   installCommand: string;
   resolvedAt: string;
 }
@@ -56,12 +64,35 @@ async function main(): Promise<void> {
   const quarantined: { slug: string; reason: string }[] = [];
 
   await Promise.all(
-    pointers.map(async ({ slug, pointer }) => {
-      const stored = readStoredManifest(slug);
+    pointers.map(async ({ slug: fileSlug, pointer }) => {
+      // Public slug matches the site route (/plugins/{slug}); the file slug only locates files.
+      const slug = toSiteSlug(pointer.npmPackage);
+      const kind: RegistryKind = pointer.kind ?? "plugin";
+      if (pointer.quarantine) {
+        quarantined.push({ slug, reason: pointer.quarantine });
+        return;
+      }
+      const command = getInstallCommand(kind, pointer.npmPackage);
+      if (!command) {
+        quarantined.push({
+          slug,
+          reason: `kind "${kind}" is not installable, so it is not listed`,
+        });
+        return;
+      }
+      const stored = readStoredManifest(fileSlug);
       if (!stored) {
         quarantined.push({
           slug,
           reason: "no registry/manifests/{slug}.json — run extract-manifest",
+        });
+        return;
+      }
+      if (kind === "plugin" && !isPluginManifest(stored.manifest)) {
+        quarantined.push({
+          slug,
+          reason:
+            "stored manifest is not a Paperclip plugin manifest (id, apiVersion, entrypoints)",
         });
         return;
       }
@@ -91,7 +122,8 @@ async function main(): Promise<void> {
         latestVersion,
         manifest: stored.manifest,
         installs,
-        installCommand: `npx paperclipai@latest plugin install ${pointer.npmPackage}`,
+        kind,
+        installCommand: command,
         resolvedAt: stored.resolvedAt,
       });
     })
@@ -148,7 +180,7 @@ function renderLlmsFull(
     if (Array.isArray(m.capabilities) && m.capabilities.length > 0) {
       lines.push(`- Capabilities: ${m.capabilities.join(", ")}`);
     }
-    lines.push(`- Install: npx paperclipai@latest plugin install ${p.npmPackage}`);
+    lines.push(`- Install: ${p.installCommand}`);
     lines.push("");
   }
   if (quarantined.length > 0) {
@@ -157,6 +189,10 @@ function renderLlmsFull(
     lines.push("");
   }
   return lines.join("\n");
+}
+
+function toSiteSlug(npmPackage: string): string {
+  return npmPackage.toLowerCase().replace(/^@/, "").replace(/\//g, "-");
 }
 
 function readPointers(): { slug: string; pointer: PointerEntry }[] {

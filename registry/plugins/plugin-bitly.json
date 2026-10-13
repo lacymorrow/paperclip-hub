@@ -2,5 +2,6 @@
   "$schema": "../schema.json",
   "npmPackage": "@bbugs280/plugin-bitly",
   "addedBy": "lacymorrow",
-  "category": "integration"
+  "category": "integration",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update."
 }

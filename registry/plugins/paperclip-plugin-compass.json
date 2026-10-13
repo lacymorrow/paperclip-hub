@@ -3,5 +3,6 @@
   "npmPackage": "paperclip-plugin-compass",
   "addedBy": "lacymorrow",
   "category": "tools",
-  "sourceRepo": "https://github.com/Tr1ckyMag1ca1/paperclip-plugin-compass"
+  "sourceRepo": "https://github.com/Tr1ckyMag1ca1/paperclip-plugin-compass",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls agents.list without a company context and the host rejects it. Needs a plugin update."
 }

@@ -2,5 +2,6 @@
   "$schema": "../schema.json",
   "npmPackage": "@betaform/paperclaw-dashboard",
   "addedBy": "lacymorrow",
-  "category": "tools"
+  "category": "tools",
+  "quarantine": "Install rejected by paperclipai 2026.1012.0: manifest ui.slots[0] is a sidebar slot with routePath, which is only allowed on page, routeSidebar and companySettingsPage slots."
 }

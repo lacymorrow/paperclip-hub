@@ -3,5 +3,6 @@
   "npmPackage": "paperclip-plugin-knok",
   "addedBy": "lacymorrow",
   "category": "integration",
-  "sourceRepo": "https://github.com/TomasWard1/paperclip-plugin-knok"
+  "sourceRepo": "https://github.com/TomasWard1/paperclip-plugin-knok",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update."
 }

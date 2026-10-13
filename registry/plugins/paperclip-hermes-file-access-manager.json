@@ -3,5 +3,6 @@
   "npmPackage": "paperclip-hermes-file-access-manager",
   "addedBy": "marospekarik",
   "category": "tools",
-  "sourceRepo": "https://github.com/marospekarik/paperclip-hermes-file-access-manager"
+  "sourceRepo": "https://github.com/marospekarik/paperclip-hermes-file-access-manager",
+  "quarantine": "Installs fine, but its manifest.js is not a static data literal (BinaryExpression at line 10), so the registry cannot extract a manifest. Hidden until upstream ships a literal manifest."
 }

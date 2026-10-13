@@ -3,5 +3,6 @@
   "npmPackage": "@honcho-ai/paperclip-honcho",
   "addedBy": "lacymorrow",
   "category": "memory",
-  "sourceRepo": "https://github.com/plastic-labs/paperclip-honcho"
+  "sourceRepo": "https://github.com/plastic-labs/paperclip-honcho",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update."
 }

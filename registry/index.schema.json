@@ -25,6 +25,7 @@
           "latestVersion": { "type": "string" },
           "manifest": { "type": "object" },
           "installs": { "type": "number", "minimum": 0 },
+          "kind": { "type": "string", "enum": ["plugin", "adapter", "library"] },
           "installCommand": { "type": "string" },
           "resolvedAt": { "type": "string", "format": "date-time" }
         }

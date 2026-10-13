@@ -2,5 +2,6 @@
   "$schema": "../schema.json",
   "npmPackage": "@niubitli/plugin-feishu-connector-v2",
   "addedBy": "lacymorrow",
-  "category": "integration"
+  "category": "integration",
+  "quarantine": "Install rejected by paperclipai 2026.1012.0: manifest declares unknown capability issue.attachments.create."
 }

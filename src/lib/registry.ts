@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "@/data/plugins";
+import { getInstallCommand, isPluginManifest, type RegistryKind } from "@/lib/install-command";
 
 const PLUGINS_DIR = "registry/plugins";
 const MANIFESTS_DIR = "registry/manifests";
@@ -14,6 +15,8 @@ interface PointerEntry {
   addedBy: string;
   category: string;
   sourceRepo?: string;
+  kind?: RegistryKind;
+  quarantine?: string;
 }
 
 interface StoredManifest {
@@ -67,6 +70,12 @@ function readRegistryRecords(): RegistryRecord[] {
         const manifest = existsSync(manifestPath)
           ? (JSON.parse(readFileSync(manifestPath, "utf8")) as StoredManifest)
           : null;
+        // Mirror build-index quarantine rules: only entries with a verified,
+        // installable shape are listed (never show a command that cannot work).
+        const kind = pointer.kind ?? "plugin";
+        if (pointer.quarantine || !manifest || !getInstallCommand(kind, pointer.npmPackage))
+          return [];
+        if (kind === "plugin" && !isPluginManifest(manifest.manifest)) return [];
         return [{ slug, pointer, manifest }];
       } catch {
         console.warn(`[registry] skipping malformed file: ${file}`);
@@ -110,7 +119,13 @@ function sanitizeAuthorName(raw: string): string {
 function synthesizePlugin(record: RegistryRecord, installs: number): Plugin {
   const { pointer, manifest } = record;
   const m = manifest?.manifest as
-    | { id?: string; displayName?: string; description?: string; author?: string; capabilities?: string[] }
+    | {
+        id?: string;
+        displayName?: string;
+        description?: string;
+        author?: string;
+        capabilities?: string[];
+      }
     | undefined;
   const manifestAuthor = m?.author ? sanitizeAuthorName(m.author) : "";
   const authorName = manifestAuthor || pointer.addedBy;
@@ -129,7 +144,7 @@ function synthesizePlugin(record: RegistryRecord, installs: number): Plugin {
     version: manifest?.version ?? "unknown",
     capabilities: Array.isArray(m?.capabilities) ? m.capabilities : [],
     sourceRepo: pointer.sourceRepo,
-    installCommand: `npx paperclipai@latest plugin install ${pointer.npmPackage}`,
+    installCommand: getInstallCommand(pointer.kind ?? "plugin", pointer.npmPackage) ?? "",
     submittedAt: manifest?.resolvedAt ?? new Date(0).toISOString(),
   };
 }

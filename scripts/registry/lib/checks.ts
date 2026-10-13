@@ -10,7 +10,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { ExtractionError, extractManifestAtVersion } from "./extract.ts";
 import { fetchPackumentLite } from "./npm.ts";
 import { compileSchema, formatErrors } from "./schema.ts";
-import { npmPackageToSlug } from "./slug.ts";
+import { acceptableSlugs, npmPackageToSlug } from "./slug.ts";
 
 export interface CheckResult {
   check: string;
@@ -100,18 +100,18 @@ export function checkSchema(changes: ChangedRegistryFiles): CheckResult {
 
 /**
  * Filename without `.json` must equal the slug derived from `npmPackage`
- * (with the `@scope/` prefix stripped, matching `npmPackageToSlug`).
+ * (with the `@scope/` prefix stripped, or `scope-name` on a collision; see `acceptableSlugs`).
  */
 export function checkFilename(changes: ChangedRegistryFiles): CheckResult {
   const errors: string[] = [];
   for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
-      const expected = npmPackageToSlug(data.npmPackage);
+      const accepted = acceptableSlugs(data.npmPackage);
       const actual = file.replace(`${PLUGIN_DIR}/`, "").replace(/\.json$/, "");
-      if (expected !== actual) {
+      if (!accepted.includes(actual)) {
         errors.push(
-          `${file}: filename "${actual}.json" does not match npmPackage slug "${expected}.json"`
+          `${file}: filename "${actual}.json" does not match npmPackage slug ${accepted.map((a) => `"${a}.json"`).join(" or ")}`
         );
       }
     } catch {

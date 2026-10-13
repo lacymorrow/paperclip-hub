@@ -8,7 +8,7 @@ interface InstallCardProps {
 }
 
 export function InstallCard({ cliCommand, pluginName }: InstallCardProps) {
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [state, setState] = useState<"idle" | "copied" | "manual">("idle");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
@@ -18,19 +18,37 @@ export function InstallCard({ cliCommand, pluginName }: InstallCardProps) {
     []
   );
 
-  const copy = async (key: string, text: string) => {
+  const cmdRef = useRef<HTMLElement | null>(null);
+
+  const copy = async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      setCopiedKey(key);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        setCopiedKey(null);
-        timeoutRef.current = null;
-      }, 1400);
+      await navigator.clipboard.writeText(cliCommand);
+      setState("copied");
     } catch {
-      // ignored — clipboard not available
+      // Clipboard blocked: select the command so the person can copy it by hand.
+      const el = cmdRef.current;
+      const selection = window.getSelection();
+      if (el && selection) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      setState("manual");
     }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setState("idle");
+      timeoutRef.current = null;
+    }, 2000);
   };
+
+  const label =
+    state === "copied"
+      ? "Copied. Paste it into your terminal."
+      : state === "manual"
+        ? "Selected. Press ⌘C or Ctrl+C to copy."
+        : "Copy install command";
 
   return (
     <div className="hc-d-install">
@@ -38,35 +56,21 @@ export function InstallCard({ cliCommand, pluginName }: InstallCardProps) {
         <span>Install</span>
         <span className="kbd">via paperclipai</span>
       </div>
-      {/* biome-ignore lint/a11y/useSemanticElements: contains a nested Copy button, so it cannot be a <button> */}
-      <div
-        className="hc-d-install-cmd"
-        onClick={() => copy("cli", cliCommand)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") copy("cli", cliCommand);
-        }}
-      >
-        <span className="prompt">$</span>
-        <span className="cmd">{cliCommand}</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            copy("cli", cliCommand);
-          }}
-        >
-          {copiedKey === "cli" ? "✓ copied" : "Copy"}
-        </button>
+      <div className="hc-d-install-cmd">
+        <span className="prompt" aria-hidden="true">
+          $
+        </span>
+        <code className="cmd" ref={cmdRef}>
+          {cliCommand}
+        </code>
       </div>
       <button
         type="button"
         className="hc-d-install-primary"
-        onClick={() => copy("primary", cliCommand)}
-        aria-label={`Install ${pluginName}`}
+        onClick={copy}
+        aria-label={state === "idle" ? `Copy the install command for ${pluginName}` : undefined}
       >
-        {copiedKey === "primary" ? "✓ Copied — paste into your terminal" : "Add to project →"}
+        <span aria-live="polite">{label}</span>
       </button>
     </div>
   );

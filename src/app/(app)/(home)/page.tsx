@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { Plugin } from "@/data/plugins";
 import { CATEGORIES, filterPlugins } from "@/data/plugins";
 import { getPlugins } from "@/lib/registry";
 
@@ -68,10 +67,6 @@ function shortDate(date: string): string {
   });
 }
 
-function pickFeatured(all: Plugin[]): Plugin | undefined {
-  return [...all].sort((a, b) => b.installs - a.installs)[0];
-}
-
 function buildHref(
   base: string,
   params: { q?: string; category?: string; sort?: string; page?: string },
@@ -99,13 +94,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     sort: sortKey,
   });
 
-  const featured = pickFeatured(allPlugins);
   const isSearching = Boolean(params.q);
-  const isFiltered = activeCategory !== "all";
-  const baseResults =
-    featured && !isSearching && !isFiltered
-      ? results.filter((p) => p.slug !== featured.slug)
-      : results;
+  const baseResults = results;
   const PAGE_SIZE = 8;
   const page = Math.max(1, Number.parseInt(params.page ?? "") || 1);
   const totalPages = Math.ceil(baseResults.length / PAGE_SIZE);
@@ -157,7 +147,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
       {/* Header */}
-      <header className="hc-header">
+      <header className={`hc-header${isSearching ? "" : " hc-header--ondark"}`}>
         <Link href="/" className="hc-brand">
           <span className="hc-brand-wm">
             <b>Paper</b>clip
@@ -173,6 +163,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
         </nav>
         <div className="hc-header-actions">
+          {!isSearching && (
+            <form action="/" method="get" className="hc-hd-search" aria-label="Search plugins">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input name="q" placeholder="Search the library" aria-label="Search plugins" />
+            </form>
+          )}
           <Link href="https://paperclip.ing" className="hc-btn">
             Get Paperclip →
           </Link>
@@ -210,132 +219,55 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </section>
       ) : (
         <>
-          {/* Hero */}
-          <section className="hc-hero">
-            <div className="hc-hero-l">
-              <div className="hc-eyebrow">
-                <span className="vol">Paperclip Hub</span>
-                <span>
-                  The plugin directory for <Link href="https://paperclip.ing">Paperclip</Link>.
-                </span>
-              </div>
+          {/* Hero — "Signal" (board-approved, LAC-3358) */}
+          <section className="hc-signal">
+            <div className="hc-signal-arc" aria-hidden>
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="hc-signal-fade" aria-hidden />
+            <div className="hc-signal-in">
               <h1>
-                Plugins for <em>autonomous</em>
-                <span className="s">teams that build with agents.</span>
+                Every tool your
+                <br />
+                agents need.
               </h1>
               <p>
-                The Paperclip Hub is a curated directory of connectors, providers, tools and memory
-                backends — published by the community, indexed nightly, installed in one line.
+                The open directory of plugins for Paperclip. Connectors, providers, tools and
+                memory, installed in one line.
               </p>
-              <form action="/" method="get" className="hc-hero-search" aria-label="Search plugins">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="var(--ink-2)"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-                <input
-                  name="q"
-                  defaultValue={params.q ?? ""}
-                  placeholder={'Try "github", "memory", "discord"…'}
-                  aria-label="Search plugins"
-                />
-                <button type="submit">Search</button>
-              </form>
-              <div className="hc-hero-meta">
-                <div>
-                  <b>{allPlugins.length}</b>
-                  <small>plugins indexed</small>
-                </div>
-                <div>
-                  <b>{publisherCount}</b>
-                  <small>publishers</small>
-                </div>
-                <div>
-                  <b>{totalInstallsLabel}</b>
-                  <small>npm downloads / wk</small>
-                </div>
+              <div>
+                <Link href="#directory" className="hc-signal-cta">
+                  Browse the library
+                </Link>
+              </div>
+              <div className="hc-signal-alt">
+                or run <code>npx paperclipai plugin install</code>
+              </div>
+              <div className="hc-signal-stats">
+                <span>
+                  <b>{allPlugins.length}</b> plugins
+                </span>
+                <span className="sep">·</span>
+                <span>
+                  <b>{publisherCount}</b> publishers
+                </span>
+                <span className="sep">·</span>
+                <span>
+                  <b>{totalInstallsLabel}</b> downloads / wk
+                </span>
               </div>
             </div>
-
-            <div className="hc-hero-r">
-              {featured && (
-                <article className="hc-poster">
-                  <div className="hc-poster-head">
-                    <span>Featured plugin</span>
-                    <span className="stamp">Top Plugin</span>
-                  </div>
-                  <div className="hc-poster-rule" />
-                  <div className="hc-poster-cat">
-                    <span className="d" />
-                    {featured.category} · by @{featured.author.name.toLowerCase()}
-                  </div>
-                  <h2>
-                    <Link href={`/plugins/${featured.slug}`}>
-                      {featured.name}.<em> Wired into Paperclip.</em>
-                    </Link>
-                  </h2>
-                  <span className="hc-poster-pkg">$ {featured.installCommand}</span>
-                  <p className="hc-poster-desc">{featured.description}</p>
-                  <div className="hc-poster-foot">
-                    <div>
-                      <b>{fmtK(featured.installs)}</b>
-                      <small>downloads / wk</small>
-                    </div>
-                    <div>
-                      <b>v{featured.version}</b>
-                      <small>{shortDate(featured.submittedAt)}</small>
-                    </div>
-                    <Link href={`/plugins/${featured.slug}`} className="hc-poster-cta">
-                      Install
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    </Link>
-                  </div>
-                </article>
-              )}
-            </div>
           </section>
-
-          {/* Ticker */}
-          <div className="hc-ticker">
-            <span>
-              <span className="star">●</span> Registry
-            </span>
-            <span className="div" />
-            <span>
-              <b>{allPlugins.length}</b> plugins indexed
-            </span>
-            <span className="div" />
-            <span>
-              <b>{publisherCount}</b> publishers
-            </span>
-          </div>
         </>
       )}
 
       {/* Section header */}
-      <div className="hc-section-hd">
+      <div className="hc-section-hd" id="directory">
         <div className="l">
           <span className="eyebrow">§ ii — the directory</span>
           <h2>

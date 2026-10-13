@@ -53,7 +53,7 @@ jobs:
           git config user.name "paperclip-hub-bot"
           git config user.email "noreply@cliphub.fyi"
           git checkout -b "$BRANCH"
-          git add registry/manifests public/plugins.json
+          git add registry/manifests
           git commit -m "chore(registry): auto-bump plugin manifests"
           git push -u origin "$BRANCH"
           gh pr create \

@@ -1056,13 +1056,12 @@
 }
 .hub-c1 .hc-d-install-cmd {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
   gap: 10px;
   padding: 12px 14px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px dashed rgba(255, 255, 255, 0.18);
-  cursor: pointer;
 }
 .hub-c1 .hc-d-install-cmd .prompt {
   font-family: var(--hub-font-mono);
@@ -1075,18 +1074,10 @@
   font-family: var(--hub-font-mono);
   font-size: 13px;
   color: var(--paper);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  user-select: all;
 }
-.hub-c1 .hc-d-install-cmd button {
-  background: var(--paper);
-  color: var(--ink);
-  border: 0;
-  font: 600 11px var(--hub-font-sans);
-  padding: 6px 10px;
-}
-.hub-c1 .hc-d-install-cmd.alt { background: transparent; }
 .hub-c1 .hc-d-install-or {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

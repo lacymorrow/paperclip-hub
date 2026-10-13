@@ -3,5 +3,6 @@
   "npmPackage": "@anneal-memory/paperclip-plugin",
   "addedBy": "lacymorrow",
   "category": "memory",
-  "sourceRepo": "https://github.com/phillipclapham/anneal-memory-paperclip-plugin"
+  "sourceRepo": "https://github.com/phillipclapham/anneal-memory-paperclip-plugin",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update."
 }

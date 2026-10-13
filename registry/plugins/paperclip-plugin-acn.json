@@ -3,5 +3,6 @@
   "npmPackage": "@acnlabs/paperclip-plugin-acn",
   "addedBy": "lacymorrow",
   "category": "integration",
-  "sourceRepo": "https://github.com/acnlabs/paperclip-acn-plugin"
+  "sourceRepo": "https://github.com/acnlabs/paperclip-acn-plugin",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update."
 }

@@ -3,5 +3,6 @@
   "npmPackage": "@gaud_erp/paperclip-plugin-agentmemory",
   "addedBy": "lacymorrow",
   "category": "memory",
-  "sourceRepo": "https://github.com/gauderp/paperclip-plugin-agentmemory"
+  "sourceRepo": "https://github.com/gauderp/paperclip-plugin-agentmemory",
+  "quarantine": "Install fails on paperclipai 2026.1012.0: worker setup() calls skills.managed.reconcile without a company context and the host rejects it. Needs a plugin update."
 }

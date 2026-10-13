@@ -74,6 +74,14 @@
   "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "overrides": [
     {
+      "includes": ["**/src/components/loaders/loader-atoms.tsx"],
+      "linter": { "rules": { "a11y": { "useAriaPropsSupportedByRole": "off" } } }
+    },
+    {
+      "includes": ["**/tests/**/*"],
+      "linter": { "rules": { "suspicious": { "noThenProperty": "off" } } }
+    },
+    {
       "includes": ["**/scripts/**/*", "playwright.config.ts", "vitest.config*.ts"],
       "linter": {
         "rules": {

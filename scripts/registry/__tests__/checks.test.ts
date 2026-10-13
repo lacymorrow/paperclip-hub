@@ -12,6 +12,8 @@ import {
   type ChangedRegistryFiles,
   checkCollision,
   checkFilename,
+  checkNpmExists,
+  checkOwnership,
   checkSchema,
   checkSingleFile,
   checkTyposquat,
@@ -37,12 +39,15 @@ beforeEach(() => {
       additionalProperties: false,
       properties: {
         $schema: { type: "string" },
-        npmPackage: { type: "string", pattern: "^(@[a-z0-9-~][a-z0-9-._~]*/)?[a-z0-9-~][a-z0-9-._~]*$" },
+        npmPackage: {
+          type: "string",
+          pattern: "^(@[a-z0-9-~][a-z0-9-._~]*/)?[a-z0-9-~][a-z0-9-._~]*$",
+        },
         addedBy: { type: "string", minLength: 1 },
         category: { type: "string", enum: ["tools", "integration", "observability"] },
         sourceRepo: { type: "string" },
       },
-    }),
+    })
   );
 });
 
@@ -125,7 +130,10 @@ describe("checkFilename", () => {
 describe("checkCollision", () => {
   it("passes when new entry doesn't shadow existing", () => {
     const existing = new Set(["registry/plugins/existing.json"]);
-    const r = checkCollision(makeChanges({ addedPointers: ["registry/plugins/new.json"] }), existing);
+    const r = checkCollision(
+      makeChanges({ addedPointers: ["registry/plugins/new.json"] }),
+      existing
+    );
     expect(r.ok).toBe(true);
   });
 
@@ -133,7 +141,7 @@ describe("checkCollision", () => {
     const existing = new Set(["registry/plugins/already-there.json"]);
     const r = checkCollision(
       makeChanges({ addedPointers: ["registry/plugins/already-there.json"] }),
-      existing,
+      existing
     );
     expect(r.ok).toBe(false);
   });
@@ -146,7 +154,7 @@ describe("checkSingleFile", () => {
         addedPointers: ["registry/plugins/a.json"],
         addedManifests: ["registry/manifests/a.json"],
       }),
-      [],
+      []
     );
     expect(r.ok).toBe(true);
   });
@@ -154,7 +162,7 @@ describe("checkSingleFile", () => {
   it("fails when multiple plugins are touched without the override label", () => {
     const r = checkSingleFile(
       makeChanges({ addedPointers: ["registry/plugins/a.json", "registry/plugins/b.json"] }),
-      [],
+      []
     );
     expect(r.ok).toBe(false);
   });
@@ -162,7 +170,7 @@ describe("checkSingleFile", () => {
   it("passes with multiple plugins when multi-plugin-pr label is applied", () => {
     const r = checkSingleFile(
       makeChanges({ addedPointers: ["registry/plugins/a.json", "registry/plugins/b.json"] }),
-      ["multi-plugin-pr"],
+      ["multi-plugin-pr"]
     );
     expect(r.ok).toBe(true);
   });
@@ -179,7 +187,7 @@ describe("checkTyposquat", () => {
     const r = checkTyposquat(
       makeChanges({ addedPointers: ["registry/plugins/paperclip-plugin-discrd.json"] }),
       existing,
-      [],
+      []
     );
     expect(r.ok).toBe(false);
     expect(r.errors[0]).toMatch(/typosquat|edits/i);
@@ -190,7 +198,7 @@ describe("checkTyposquat", () => {
     const r = checkTyposquat(
       makeChanges({ addedPointers: ["registry/plugins/paperclip-plugin-discrd.json"] }),
       existing,
-      ["confirmed-not-typosquat"],
+      ["confirmed-not-typosquat"]
     );
     expect(r.ok).toBe(true);
   });
@@ -200,8 +208,36 @@ describe("checkTyposquat", () => {
     const r = checkTyposquat(
       makeChanges({ addedPointers: ["registry/plugins/totally-different-name.json"] }),
       existing,
-      [],
+      []
     );
     expect(r.ok).toBe(true);
+  });
+});
+
+describe("quarantine edits", () => {
+  // A nonexistent package: if either check looked it up, it would fail.
+  const missing = "@nobody-zz/not-a-real-paperclip-plugin-zz";
+
+  it("skips npm-exists and ownership for a modified pointer that sets quarantine", async () => {
+    const file = writePointer("q", {
+      npmPackage: missing,
+      addedBy: "someone-else",
+      category: "tools",
+      quarantine: "Install fails.",
+    });
+    const changes = makeChanges({ modifiedPointers: [file] });
+    expect((await checkNpmExists(changes)).ok).toBe(true);
+    expect((await checkOwnership(changes, "maintainer", [])).ok).toBe(true);
+  });
+
+  it("still checks an added pointer even if it sets quarantine", async () => {
+    const file = writePointer("q", {
+      npmPackage: missing,
+      addedBy: "someone-else",
+      category: "tools",
+      quarantine: "Install fails.",
+    });
+    const changes = makeChanges({ addedPointers: [file] });
+    expect((await checkOwnership(changes, "maintainer", [])).ok).toBe(false);
   });
 });

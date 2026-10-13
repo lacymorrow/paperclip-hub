@@ -8,7 +8,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { compileSchema, formatErrors } from "../lib/schema.ts";
-import { npmPackageToSlug } from "../lib/slug.ts";
+import { acceptableSlugs } from "../lib/slug.ts";
 
 describe("registry entries pass schema validation", () => {
   it("every registry/plugins/*.json validates against the slim pointer schema", () => {
@@ -41,8 +41,18 @@ describe("registry entries pass schema validation", () => {
     }
   });
 
+  // Quarantined pointers are published as `quarantined` in the index with a
+  // reason and may legitimately have no stored manifest.
+  const isQuarantined = (file: string) =>
+    Boolean(
+      (JSON.parse(readFileSync(join("registry/plugins", file), "utf8")) as { quarantine?: string })
+        .quarantine
+    );
+
   it("every pointer has a corresponding manifest", () => {
-    const pointers = readdirSync("registry/plugins").filter((f) => f.endsWith(".json"));
+    const pointers = readdirSync("registry/plugins")
+      .filter((f) => f.endsWith(".json"))
+      .filter((f) => !isQuarantined(f));
     const manifests = new Set(readdirSync("registry/manifests").filter((f) => f.endsWith(".json")));
     for (const p of pointers) {
       expect(manifests.has(p), `missing registry/manifests/${p}`).toBe(true);
@@ -57,20 +67,23 @@ describe("registry entries pass schema validation", () => {
     }
   });
 
-  it("every pointer filename matches npmPackageToSlug(npmPackage)", () => {
+  it("every pointer filename matches acceptableSlugs(npmPackage)", () => {
     const dir = "registry/plugins";
     for (const file of readdirSync(dir).filter((f) => f.endsWith(".json"))) {
       const slug = file.replace(/\.json$/, "");
       const data = JSON.parse(readFileSync(join(dir, file), "utf8")) as { npmPackage: string };
-      const expected = npmPackageToSlug(data.npmPackage);
-      expect(slug, `${file}: filename should be ${expected}.json for npmPackage ${data.npmPackage}`).toBe(
-        expected,
-      );
+      const accepted = acceptableSlugs(data.npmPackage);
+      expect(
+        accepted,
+        `${file}: filename should be one of ${accepted.join(".json, ")}.json for npmPackage ${data.npmPackage}`
+      ).toContain(slug);
     }
   });
 
   it("each stored manifest's npmPackage equals the corresponding pointer's npmPackage", () => {
-    const files = readdirSync("registry/plugins").filter((f) => f.endsWith(".json"));
+    const files = readdirSync("registry/plugins")
+      .filter((f) => f.endsWith(".json"))
+      .filter((f) => !isQuarantined(f));
     for (const file of files) {
       const pointer = JSON.parse(readFileSync(join("registry/plugins", file), "utf8")) as {
         npmPackage: string;

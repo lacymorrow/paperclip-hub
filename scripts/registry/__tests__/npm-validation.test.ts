@@ -5,7 +5,12 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { fetchPackumentLite, fetchTarball, fetchVersionInfo, fetchWeeklyDownloads } from "../lib/npm.ts";
+import {
+  fetchPackumentLite,
+  fetchTarball,
+  fetchVersionInfo,
+  fetchWeeklyDownloads,
+} from "../lib/npm.ts";
 
 describe("npm package-name validation", () => {
   it.each([
@@ -28,7 +33,7 @@ describe("npm package-name validation", () => {
 describe("tarball host allowlist", () => {
   it("refuses a tarball URL outside the allowlist", async () => {
     await expect(fetchTarball("https://evil.example.com/pkg.tgz")).rejects.toThrow(
-      /non-allowlisted host/,
+      /non-allowlisted host/
     );
   });
 

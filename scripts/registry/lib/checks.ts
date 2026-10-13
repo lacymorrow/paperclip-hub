@@ -10,7 +10,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { ExtractionError, extractManifestAtVersion } from "./extract.ts";
 import { fetchPackumentLite } from "./npm.ts";
 import { compileSchema, formatErrors } from "./schema.ts";
-import { npmPackageToSlug } from "./slug.ts";
+import { acceptableSlugs, npmPackageToSlug } from "./slug.ts";
 
 export interface CheckResult {
   check: string;
@@ -30,6 +30,25 @@ export interface PointerEntry {
   addedBy: string;
   category: string;
   sourceRepo?: string;
+  quarantine?: string;
+}
+
+/**
+ * A modified pointer that sets `quarantine` is a maintainer hiding a broken
+ * entry, not a submission, so npm-exists and ownership don't apply to it.
+ * Added pointers are never exempt.
+ */
+function submissionPointers(changes: ChangedRegistryFiles): string[] {
+  const quarantined = new Set(
+    changes.modifiedPointers.filter((file) => {
+      try {
+        return Boolean((JSON.parse(readFileSync(file, "utf8")) as PointerEntry).quarantine);
+      } catch {
+        return false;
+      }
+    })
+  );
+  return [...changes.addedPointers, ...changes.modifiedPointers.filter((f) => !quarantined.has(f))];
 }
 
 export interface StoredManifest {
@@ -100,18 +119,18 @@ export function checkSchema(changes: ChangedRegistryFiles): CheckResult {
 
 /**
  * Filename without `.json` must equal the slug derived from `npmPackage`
- * (with the `@scope/` prefix stripped, matching `npmPackageToSlug`).
+ * (with the `@scope/` prefix stripped, or `scope-name` on a collision; see `acceptableSlugs`).
  */
 export function checkFilename(changes: ChangedRegistryFiles): CheckResult {
   const errors: string[] = [];
   for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
-      const expected = npmPackageToSlug(data.npmPackage);
+      const accepted = acceptableSlugs(data.npmPackage);
       const actual = file.replace(`${PLUGIN_DIR}/`, "").replace(/\.json$/, "");
-      if (expected !== actual) {
+      if (!accepted.includes(actual)) {
         errors.push(
-          `${file}: filename "${actual}.json" does not match npmPackage slug "${expected}.json"`
+          `${file}: filename "${actual}.json" does not match npmPackage slug ${accepted.map((a) => `"${a}.json"`).join(" or ")}`
         );
       }
     } catch {
@@ -178,7 +197,7 @@ export function checkSingleFile(changes: ChangedRegistryFiles, prLabels: string[
  */
 export async function checkNpmExists(changes: ChangedRegistryFiles): Promise<CheckResult> {
   const errors: string[] = [];
-  for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
+  for (const file of submissionPointers(changes)) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
       const packument = await fetchPackumentLite(data.npmPackage);
@@ -217,7 +236,7 @@ export async function checkOwnership(
 ): Promise<CheckResult> {
   const errors: string[] = [];
   const onBehalf = prLabels.includes("submitted-on-behalf");
-  for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
+  for (const file of submissionPointers(changes)) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
       if (onBehalf) continue;

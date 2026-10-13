@@ -28,7 +28,7 @@ describe("walker depth + node limits", () => {
       "var arr = [",
       ...Array.from({ length: 30000 }, (_, i) => `v${i}`).map((s) => `${s},`),
       "];",
-      "export default { arr };",
+      "export default { arr };"
     );
     expect(() => extractDefaultExport(decls.join(""))).toThrow(/too many AST nodes/);
   });
@@ -128,7 +128,7 @@ describe("pointer schema validation", () => {
         npmPackage: "p",
         addedBy: "u",
         category: "not-real",
-      }),
+      })
     ).toBe(false);
   });
 
@@ -139,7 +139,7 @@ describe("pointer schema validation", () => {
         npmPackage: "MyPackage",
         addedBy: "u",
         category: "tools",
-      }),
+      })
     ).toBe(false);
   });
 
@@ -150,7 +150,7 @@ describe("pointer schema validation", () => {
         npmPackage: "p",
         addedBy: "user.name",
         category: "tools",
-      }),
+      })
     ).toBe(false);
   });
 
@@ -162,7 +162,7 @@ describe("pointer schema validation", () => {
         addedBy: "u",
         category: "tools",
         author: "should-not-be-here",
-      }),
+      })
     ).toBe(false);
   });
 
@@ -174,7 +174,7 @@ describe("pointer schema validation", () => {
         addedBy: "u",
         category: "tools",
         sourceRepo: "not a url",
-      }),
+      })
     ).toBe(false);
   });
 
@@ -186,7 +186,7 @@ describe("pointer schema validation", () => {
         addedBy: "u",
         category: "tools",
         sourceRepo: "https://github.com/octocat/my-plugin",
-      }),
+      })
     ).toBe(true);
   });
 });

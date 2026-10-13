@@ -16,7 +16,8 @@ import addFormatsImport from "ajv-formats";
 // biome-ignore lint/suspicious/noExplicitAny: interop
 const Ajv = ((AjvImport as any).default ?? AjvImport) as typeof AjvImport;
 // biome-ignore lint/suspicious/noExplicitAny: interop
-const addFormats = ((addFormatsImport as any).default ?? addFormatsImport) as typeof addFormatsImport;
+const addFormats = ((addFormatsImport as any).default ??
+  addFormatsImport) as typeof addFormatsImport;
 
 // `strict: false` lets our schemas use Draft-07 `$schema` declarations even
 // though Ajv 8's default draft is 2020-12. `validateSchema: false` keeps Ajv

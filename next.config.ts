@@ -23,13 +23,18 @@ const nextConfig: NextConfig = {
     // counts) and Google Fonts (loaded by hub.css). Inline styles are needed
     // because hub.css uses style attributes; inline scripts are needed for
     // Next.js's JSON-LD block in the root layout.
+    // Umami (self-hosted) is allowed only when the site is configured to use it.
+    const umamiOrigin = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID
+      ? new URL(process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL || "https://analytics.lacy.sh/script.js")
+          .origin
+      : "";
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline' ${umamiOrigin}`.trim(),
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https://avatars.githubusercontent.com https://github.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://api.npmjs.org https://registry.npmjs.org",
+      `connect-src 'self' https://api.npmjs.org https://registry.npmjs.org ${umamiOrigin}`.trim(),
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self' https://github.com",

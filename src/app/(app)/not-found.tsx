@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteFooter } from "@/components/site/site-footer";
 import "./plugins/hub.css";
 
 export default function NotFound() {
@@ -32,7 +33,7 @@ export default function NotFound() {
         }}
       >
         <span className="eyebrow" style={{ display: "block", marginBottom: 12 }}>
-          § 404 — not in the library
+          404, not in the library
         </span>
         <h1
           style={{
@@ -67,26 +68,17 @@ export default function NotFound() {
           <Link
             href="/submit"
             className="hc-btn"
-            style={{ background: "transparent", border: "1px solid var(--bd-1)", color: "var(--ink)" }}
+            style={{
+              background: "transparent",
+              border: "1px solid var(--bd-1)",
+              color: "var(--ink)",
+            }}
           >
             Submit a plugin
           </Link>
         </div>
       </section>
-
-      <footer className="hc-foot">
-        <div className="l">
-          <b>Paperclip</b>
-          <span>The Hub</span>
-        </div>
-        <div className="r">
-          <Link href="/submit">Submit</Link>
-          <Link href="https://docs.paperclip.ing">Docs</Link>
-          <Link href="https://discord.gg/m4HZY7xNG3">Discord</Link>
-          <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
-          <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

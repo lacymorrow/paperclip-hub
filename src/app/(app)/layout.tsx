@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import type React from "react";
+import { Umami } from "@/components/site/umami";
 import { fontSans, fontSerif } from "@/config/fonts";
 import {
   metadata as defaultMetadata,
@@ -21,6 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <script
           type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -52,6 +54,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }),
           }}
         />
+        {/* Hub fonts as a parallel stylesheet link; a CSS @import chains the request behind hub.css. */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+        />
         {headLinkHints.map((l: HeadLinkHint) => (
           <link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
         ))}
@@ -62,6 +69,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <main>{children}</main>
         <Analytics />
         <SpeedInsights />
+        <Umami />
       </body>
     </html>
   );

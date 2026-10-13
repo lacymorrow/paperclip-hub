@@ -197,7 +197,9 @@ export function PluginSubmissionForm({ existingSlugs = [] }: PluginSubmissionFor
               <FormControl>
                 <Input placeholder="https://github.com/you/your-plugin" {...field} />
               </FormControl>
-              <FormDescription>Shown on the plugin's hub page as a "view source" link.</FormDescription>
+              <FormDescription>
+                Shown on the plugin's hub page as a "view source" link.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

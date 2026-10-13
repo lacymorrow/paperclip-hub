@@ -12,6 +12,8 @@ import {
   type ChangedRegistryFiles,
   checkCollision,
   checkFilename,
+  checkNpmExists,
+  checkOwnership,
   checkSchema,
   checkSingleFile,
   checkTyposquat,
@@ -209,5 +211,33 @@ describe("checkTyposquat", () => {
       []
     );
     expect(r.ok).toBe(true);
+  });
+});
+
+describe("quarantine edits", () => {
+  // A nonexistent package: if either check looked it up, it would fail.
+  const missing = "@nobody-zz/not-a-real-paperclip-plugin-zz";
+
+  it("skips npm-exists and ownership for a modified pointer that sets quarantine", async () => {
+    const file = writePointer("q", {
+      npmPackage: missing,
+      addedBy: "someone-else",
+      category: "tools",
+      quarantine: "Install fails.",
+    });
+    const changes = makeChanges({ modifiedPointers: [file] });
+    expect((await checkNpmExists(changes)).ok).toBe(true);
+    expect((await checkOwnership(changes, "maintainer", [])).ok).toBe(true);
+  });
+
+  it("still checks an added pointer even if it sets quarantine", async () => {
+    const file = writePointer("q", {
+      npmPackage: missing,
+      addedBy: "someone-else",
+      category: "tools",
+      quarantine: "Install fails.",
+    });
+    const changes = makeChanges({ addedPointers: [file] });
+    expect((await checkOwnership(changes, "maintainer", [])).ok).toBe(false);
   });
 });

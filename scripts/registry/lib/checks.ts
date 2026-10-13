@@ -30,6 +30,25 @@ export interface PointerEntry {
   addedBy: string;
   category: string;
   sourceRepo?: string;
+  quarantine?: string;
+}
+
+/**
+ * A modified pointer that sets `quarantine` is a maintainer hiding a broken
+ * entry, not a submission, so npm-exists and ownership don't apply to it.
+ * Added pointers are never exempt.
+ */
+function submissionPointers(changes: ChangedRegistryFiles): string[] {
+  const quarantined = new Set(
+    changes.modifiedPointers.filter((file) => {
+      try {
+        return Boolean((JSON.parse(readFileSync(file, "utf8")) as PointerEntry).quarantine);
+      } catch {
+        return false;
+      }
+    })
+  );
+  return [...changes.addedPointers, ...changes.modifiedPointers.filter((f) => !quarantined.has(f))];
 }
 
 export interface StoredManifest {
@@ -178,7 +197,7 @@ export function checkSingleFile(changes: ChangedRegistryFiles, prLabels: string[
  */
 export async function checkNpmExists(changes: ChangedRegistryFiles): Promise<CheckResult> {
   const errors: string[] = [];
-  for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
+  for (const file of submissionPointers(changes)) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
       const packument = await fetchPackumentLite(data.npmPackage);
@@ -217,7 +236,7 @@ export async function checkOwnership(
 ): Promise<CheckResult> {
   const errors: string[] = [];
   const onBehalf = prLabels.includes("submitted-on-behalf");
-  for (const file of [...changes.addedPointers, ...changes.modifiedPointers]) {
+  for (const file of submissionPointers(changes)) {
     try {
       const data = JSON.parse(readFileSync(file, "utf8")) as PointerEntry;
       if (onBehalf) continue;

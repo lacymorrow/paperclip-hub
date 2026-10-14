@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
 import { SiteFooter } from "@/components/site/site-footer";
+import { featuredSponsor } from "@/config/featured";
+import { sponsorEvent } from "@/config/sponsor";
 import { CATEGORIES, filterPlugins } from "@/data/plugins";
 import { getPlugins } from "@/lib/registry";
 
@@ -111,6 +113,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const grid = baseResults.slice(gridStart, gridStart + PAGE_SIZE);
 
   const trending = [...allPlugins].sort((a, b) => b.installs - a.installs).slice(0, 5);
+  // A quarantined or delisted slug drops out of getPlugins(), so the card hides itself.
+  const featuredSlug = featuredSponsor?.slug;
+  const featured = featuredSlug ? allPlugins.find((p) => p.slug === featuredSlug) : undefined;
   const recent = [...allPlugins]
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
     .slice(0, 4);
@@ -355,6 +360,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         )}
 
         <aside className="hc-side">
+          {featured && featuredSponsor ? (
+            <Link
+              href={`/plugins/${featured.slug}`}
+              className="hc-side-card hc-featured"
+              {...sponsorEvent("home-featured")}
+            >
+              <span className="hc-featured-tag">Sponsored by {featuredSponsor.sponsor}</span>
+              <b>{featured.name}</b>
+              <p>{featured.description}</p>
+            </Link>
+          ) : null}
           <div className="hc-side-card">
             <div className="hc-side-hd">
               <h3>

@@ -711,6 +711,23 @@
   position: relative;
 }
 .hub-c1 .hc-side-card.dark { background: var(--ink); color: var(--paper); }
+.hub-c1 .hc-featured { display: flex; flex-direction: column; gap: 8px; }
+.hub-c1 .hc-featured:hover { background: var(--bg-2); }
+.hub-c1 .hc-featured-tag {
+  font-family: var(--hub-font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+.hub-c1 .hc-featured b {
+  font-family: var(--hub-font-serif);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.018em;
+  line-height: 1.05;
+}
+.hub-c1 .hc-featured p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
 .hub-c1 .hc-side-hd {
   display: flex;
   align-items: baseline;
@@ -1945,7 +1962,7 @@
 }
 .hub-c1 .hc-support-tiers {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 .hub-c1 .hc-support-tiers li {
@@ -2013,6 +2030,7 @@
 .hub-c1 .hc-support-biz li:first-child { padding-top: 0; }
 .hub-c1 .hc-support-biz li:last-child { border-bottom: 0; }
 @media (max-width: 1024px) {
+  .hub-c1 .hc-support-tiers,
   .hub-c1 .hc-support-projects { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {

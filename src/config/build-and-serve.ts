@@ -9,7 +9,6 @@ const CONTACT_URL = "https://buildandserve.com/contact";
 export type BuildAndServePlacement =
   | "empty-search"
   | "plugin-detail"
-  | "support-feature"
   | "support-custom";
 
 export function buildAndServeUrl(placement: BuildAndServePlacement): string {

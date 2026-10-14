@@ -20,7 +20,7 @@ describe("sponsor", () => {
     const tier = sponsorTiers.find((t) => t.placement === "tier-featured");
     expect(tier?.tierId).toBe(FEATURED_TIER_ID);
     expect(sponsorTierUrl(FEATURED_TIER_ID)).toBe(
-      "https://github.com/sponsors/lacymorrow/sponsorships?tier_id=667683"
+      "https://github.com/sponsors/lacymorrow/sponsorships?tier_id=668081"
     );
   });
   it("builds frequency urls", () => {

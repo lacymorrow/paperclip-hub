@@ -23,7 +23,7 @@ export interface Project {
 export const projects: readonly Project[] = [
   {
     id: "cliphub",
-    name: "Clip Hub",
+    name: "Paperclip Hub",
     line: "The plugin directory for Paperclip. Free to browse, free to list.",
     url: "https://cliphub.fyi",
     host: "cliphub.fyi",

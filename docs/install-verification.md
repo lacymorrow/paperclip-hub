@@ -26,7 +26,6 @@ Result: **39 of 53 install, 14 fail**. All 14 failures are quarantined. One more
 | `@avirajkhare00/agent-commerce-bridge` | 0.1.4 | plugin | `npx paperclipai@latest plugin install @avirajkhare00/agent-commerce-bridge` | PASS |  |
 | `@bbugs280/plugin-bitly` | 0.2.0 | plugin | `npx paperclipai@latest plugin install @bbugs280/plugin-bitly` | FAIL | Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update. |
 | `@bbugs280/plugin-substack` | 0.1.0 | plugin | `npx paperclipai@latest plugin install @bbugs280/plugin-substack` | PASS |  |
-| `@betaform/paperclaw-dashboard` | 2.6.8 | plugin | `npx paperclipai@latest plugin install @betaform/paperclaw-dashboard` | FAIL | Install rejected by paperclipai 2026.1012.0: manifest ui.slots[0] is a sidebar slot with routePath, which is only allowed on page, routeSidebar and companySettingsPage slots. |
 | `@blaze283/social-agent-plugin` | 0.7.3 | plugin | `npx paperclipai@latest plugin install @blaze283/social-agent-plugin` | FAIL | Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update. |
 | `@bopen-io/clawnet-plugin` | 0.0.12 | plugin | `npx paperclipai@latest plugin install @bopen-io/clawnet-plugin` | PASS |  |
 | `@bopen-io/tortuga-plugin` | 0.0.11 | plugin | `npx paperclipai@latest plugin install @bopen-io/tortuga-plugin` | PASS |  |
@@ -81,3 +80,14 @@ Result: **39 of 53 install, 14 fail**. All 14 failures are quarantined. One more
 - Installs share one npm project under `$HOME/.paperclip/plugins`. Parallel installs corrupt each other (ENOTEMPTY, "Package directory not found"), and leftovers from failed installs can break later ones (`@farhoodlabs/paperclip-plugin-k8s` failed in a polluted tree and passed in a clean one). Verify serially or on a clean prefix.
 - Plugin packages are installed under the server's `os.homedir()`. A throwaway instance must run with a throwaway `HOME`, not just `--data-dir`.
 - Plugin worker code ran on install. No real secrets were present.
+
+## Packages with no public source repo
+
+A missing `repository` field is not a reason to hold a plugin back: npm does not require one. Before listing one, download the tarball and check it for install scripts, subprocess and `eval` use, and every outbound host. Reviewed 2026-10-14:
+
+- `@bbugs280/plugin-bitly`: source lives in a personal Paperclip fork (`bbugs280/paperclip`, issues off). Only calls the Bitly API. OK.
+- `@blaze283/social-agent-plugin`: only calls the LinkedIn API. OK.
+- `@niubitli/plugin-feishu-connector-v2`: spawns Feishu's official `lark-cli` (its declared `@larksuite/cli` dependency). OK.
+- `@betaform/paperclaw-dashboard`: delisted. It is betaform's internal sales dashboard, hardcoded to their booking link, Buffer and OpenAI accounts. Not malicious, but useless to anyone else.
+
+The three OK packages stay quarantined only because they still fail to install on the current CLI.

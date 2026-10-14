@@ -1,6 +1,6 @@
 /**
  * The one sponsored plugin on the home page, paid through the "Featured on
- * Clip Hub" GitHub Sponsors tier (FEATURED_TIER_ID in ./sponsor). null means
+ * Paperclip Hub" GitHub Sponsors tier (FEATURED_TIER_ID in ./sponsor). null means
  * nobody holds the slot and the home page shows nothing extra.
  *
  * To feature a sponsor: confirm the sponsorship on GitHub, check the plugin is

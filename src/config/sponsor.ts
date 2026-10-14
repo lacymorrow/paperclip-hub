@@ -42,14 +42,14 @@ export interface SponsorTier {
   tierId?: number;
 }
 
-/** "Featured on Clip Hub", $25/mo. Fills `featuredSponsor` in config/featured.ts. */
-export const FEATURED_TIER_ID = 667683;
+/** "Featured on Paperclip Hub", $25/mo. Fills `featuredSponsor` in config/featured.ts. */
+export const FEATURED_TIER_ID = 668081;
 
 export const sponsorTiers: readonly SponsorTier[] = [
   { price: "$5", perk: "Sponsor badge on your profile.", placement: "tier-5" },
   {
     price: "$25",
-    perk: "Your plugin featured on the Clip Hub home page.",
+    perk: "Your plugin featured on the Paperclip Hub home page.",
     placement: "tier-featured",
     tierId: FEATURED_TIER_ID,
   },

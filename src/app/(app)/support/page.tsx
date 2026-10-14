@@ -15,7 +15,7 @@ import "../plugins/hub.css";
 
 const SUPPORT_TITLE = "Support the Hub | Paperclip Hub";
 const SUPPORT_DESCRIPTION =
-  "Clip Hub is free. So is most of what we build. Sponsoring on GitHub keeps it that way.";
+  "Paperclip Hub is free. So is most of what we build. Sponsoring on GitHub keeps it that way.";
 const SUPPORT_OG = `/og?${new URLSearchParams({
   title: "Support the Hub",
   description: SUPPORT_DESCRIPTION,
@@ -71,7 +71,7 @@ export default function SupportPage() {
         <section className="hc-support-hero">
           <span className="hc-support-eyebrow">Support</span>
           <h1>
-            Clip Hub is free. So is most of what we build. <em>Sponsoring keeps it that way.</em>
+            Paperclip Hub is free. So is most of what we build. <em>Sponsoring keeps it that way.</em>
           </h1>
           <p>
             Your sponsorship pays for the hours behind these projects: fixing bugs, answering
@@ -171,7 +171,7 @@ export default function SupportPage() {
               rel="noopener"
               {...sponsorEvent("support-feature")}
             >
-              Feature your plugin on Clip Hub <span aria-hidden>→</span>
+              Feature your plugin on Paperclip Hub <span aria-hidden>→</span>
             </a>
           </li>
           <li>

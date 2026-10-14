@@ -16,12 +16,13 @@ describe("sponsor", () => {
   it("mirrors the four live tiers", () => {
     expect(sponsorTiers.map((t) => t.price)).toEqual(["$5", "$25", "$100", "$1,000"]);
   });
-  it("links the featured tier to its own checkout", () => {
+  it("links the featured tier to the public listing, not the auth-walled checkout", () => {
     const tier = sponsorTiers.find((t) => t.placement === "tier-featured");
     expect(tier?.tierId).toBe(FEATURED_TIER_ID);
     expect(sponsorTierUrl(FEATURED_TIER_ID)).toBe(
-      "https://github.com/sponsors/lacymorrow/sponsorships?tier_id=668081"
+      "https://github.com/sponsors/lacymorrow?frequency=recurring&tier_id=668081"
     );
+    expect(sponsorTierUrl(FEATURED_TIER_ID)).not.toContain("/sponsorships");
   });
   it("builds frequency urls", () => {
     expect(sponsorUrl("recurring")).toBe(

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "../projects";
-import { sponsorTiers, sponsorUrl } from "../sponsor";
+import { FEATURED_TIER_ID, sponsorTiers, sponsorTierUrl, sponsorUrl } from "../sponsor";
 
 describe("projects", () => {
   it("has unique ids and https urls", () => {
@@ -13,8 +13,15 @@ describe("projects", () => {
 });
 
 describe("sponsor", () => {
-  it("mirrors the three live tiers", () => {
-    expect(sponsorTiers.map((t) => t.price)).toEqual(["$5", "$100", "$1,000"]);
+  it("mirrors the four live tiers", () => {
+    expect(sponsorTiers.map((t) => t.price)).toEqual(["$5", "$25", "$100", "$1,000"]);
+  });
+  it("links the featured tier to its own checkout", () => {
+    const tier = sponsorTiers.find((t) => t.placement === "tier-featured");
+    expect(tier?.tierId).toBe(FEATURED_TIER_ID);
+    expect(sponsorTierUrl(FEATURED_TIER_ID)).toBe(
+      "https://github.com/sponsors/lacymorrow/sponsorships?tier_id=667683"
+    );
   });
   it("builds frequency urls", () => {
     expect(sponsorUrl("recurring")).toBe(

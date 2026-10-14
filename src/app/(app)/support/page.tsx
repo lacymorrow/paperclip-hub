@@ -3,7 +3,13 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/site/site-footer";
 import { buildAndServeEvent, buildAndServeUrl } from "@/config/build-and-serve";
 import { projects } from "@/config/projects";
-import { sponsorEvent, sponsorTiers, sponsorUrl } from "@/config/sponsor";
+import {
+  FEATURED_TIER_ID,
+  sponsorEvent,
+  sponsorTiers,
+  sponsorTierUrl,
+  sponsorUrl,
+} from "@/config/sponsor";
 
 import "../plugins/hub.css";
 
@@ -111,7 +117,7 @@ export default function SupportPage() {
               </span>
               <p>{tier.perk}</p>
               <a
-                href={sponsorUrl("recurring")}
+                href={tier.tierId ? sponsorTierUrl(tier.tierId) : sponsorUrl("recurring")}
                 target="_blank"
                 rel="noopener"
                 {...sponsorEvent(tier.placement)}
@@ -160,10 +166,10 @@ export default function SupportPage() {
         <ul className="hc-support-biz">
           <li>
             <a
-              href={buildAndServeUrl("support-feature")}
+              href={sponsorTierUrl(FEATURED_TIER_ID)}
               target="_blank"
               rel="noopener"
-              {...buildAndServeEvent("support-feature")}
+              {...sponsorEvent("support-feature")}
             >
               Feature your plugin on Clip Hub <span aria-hidden>→</span>
             </a>

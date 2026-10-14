@@ -1,6 +1,6 @@
 {
   "npmPackage": "@codewithahsan/paperclip-plugin-gsd",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "manifest": {
     "id": "paperclip.gsd",
     "apiVersion": 1,
@@ -104,5 +104,5 @@
       ]
     }
   },
-  "resolvedAt": "2026-06-02T07:55:02.391Z"
+  "resolvedAt": "2026-10-14T10:44:40.202Z"
 }

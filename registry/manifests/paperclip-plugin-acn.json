@@ -1,10 +1,10 @@
 {
   "npmPackage": "@acnlabs/paperclip-plugin-acn",
-  "version": "0.3.0",
+  "version": "0.3.5",
   "manifest": {
     "id": "acnlabs.acn",
     "apiVersion": 1,
-    "version": "0.3.0",
+    "version": "0.3.3",
     "displayName": "ACN — Agent Collaboration Network",
     "description": "Connect Paperclip to ACN Org Harness: issues → Org work, identity/fencing via subnet, optional legacy Task mirror inbound.",
     "author": "acnlabs",
@@ -31,7 +31,8 @@
       "plugin.state.read",
       "plugin.state.write",
       "ui.detailTab.register",
-      "instance.settings.register"
+      "instance.settings.register",
+      "jobs.schedule"
     ],
     "instanceConfigSchema": {
       "type": "object",
@@ -44,9 +45,9 @@
         },
         "paperclipBaseUrl": {
           "type": "string",
-          "title": "Paperclip Base URL",
+          "title": "Paperclip public URL (optional)",
           "default": "",
-          "description": "Public base URL of this Paperclip instance (e.g. https://app.paperclip.ai). Used to construct the ACN harness webhook URL."
+          "description": "Optional. Public HTTPS origin of this Paperclip for realtime ACN→Paperclip push. Leave empty for local use — periodic sync still works. Falls back to PAPERCLIP_PUBLIC_URL env when set."
         },
         "acnApiKeyRef": {
           "type": "string",
@@ -76,7 +77,13 @@
           "type": "boolean",
           "title": "Auto-create Paperclip issues for inbound Org work",
           "default": true,
-          "description": "When true, external org.work_created webhooks create a Paperclip Issue. Does not control Task Pool mirroring."
+          "description": "When true, external Org work (push or periodic sync) creates a Paperclip Issue. Does not control Task Pool mirroring."
+        },
+        "enableOrgWorkPoll": {
+          "type": "boolean",
+          "title": "Periodic Org work sync",
+          "default": true,
+          "description": "Keep Issues in sync by polling ACN Org work every few minutes. On by default so local Paperclip works without a public URL. Realtime push is used automatically when a public URL is available."
         },
         "enableLegacyTaskMirror": {
           "type": "boolean",
@@ -99,6 +106,14 @@
         "description": "Receives HMAC-signed lifecycle events from ACN (org.work_* / org.loop_tick preferred; task.* legacy)."
       }
     ],
+    "jobs": [
+      {
+        "jobKey": "org-work-sync",
+        "displayName": "Sync Org work → Issues",
+        "description": "Pulls ACN Org work into Paperclip Issues (fallback when realtime push is unavailable; safety net when push is on).",
+        "schedule": "*/2 * * * *"
+      }
+    ],
     "ui": {
       "slots": [
         {
@@ -112,5 +127,6 @@
         }
       ]
     }
-  }
+  },
+  "resolvedAt": "2026-10-14T10:44:49.075Z"
 }

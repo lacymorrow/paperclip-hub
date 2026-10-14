@@ -1,10 +1,10 @@
 {
   "npmPackage": "paperclip-plugin-discord",
-  "version": "0.9.1",
+  "version": "0.11.0",
   "manifest": {
     "id": "paperclip-plugin-discord",
     "apiVersion": 1,
-    "version": "0.7.3",
+    "version": "0.11.0",
     "displayName": "Discord Bot",
     "description": "Bidirectional Discord integration: push notifications on agent events, receive slash commands, gather community intelligence, multi-agent sessions, media pipeline, custom commands, and proactive suggestions.",
     "author": "mvanhorn",
@@ -43,18 +43,22 @@
       "type": "object",
       "properties": {
         "discordBotTokenRef": {
-          "type": "string",
+          "type": [
+            "string",
+            "object"
+          ],
           "format": "secret-ref",
           "title": "Discord Bot Token (secret reference)",
-          "description": "Secret UUID for your Discord Bot token. Create the secret in Settings → Secrets, then paste its UUID here.",
-          "default": ""
+          "description": "Your Discord bot token, stored as a secret. Create the secret in Settings → Secrets, then pick it here with the secret picker."
         },
         "paperclipBoardApiKeyRef": {
-          "type": "string",
+          "type": [
+            "string",
+            "object"
+          ],
           "format": "secret-ref",
           "title": "Paperclip Board API Key (secret reference)",
-          "description": "Optional. Secret UUID for a Paperclip board API key. Required when Paperclip is deployed in `authenticated` mode so that plugin-originated calls (approve/reject buttons, workflow steps, inbound reply routing) can satisfy server-side board-auth checks. Create a board API key in Settings → API Keys, store it as a secret, then paste the secret UUID here. Leave blank for `local_trusted` deployments.",
-          "default": ""
+          "description": "Optional. A Paperclip board API key, stored as a secret. Required when Paperclip is deployed in `authenticated` mode so that plugin-originated calls (approve/reject buttons, workflow steps, inbound reply routing) can satisfy server-side board-auth checks. Create a board API key in Settings → API Keys, store it as a secret, then pick it here. Leave empty for `local_trusted` deployments."
         },
         "defaultGuildId": {
           "type": "string",
@@ -566,5 +570,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-04-10T00:00:00Z"
+  "resolvedAt": "2026-10-14T10:44:41.295Z"
 }

@@ -1,10 +1,10 @@
 {
   "npmPackage": "@paperclipai/plugin-exe-dev",
-  "version": "2026.529.0",
+  "version": "2026.1012.0",
   "manifest": {
     "id": "paperclip.exe-dev-sandbox-provider",
     "apiVersion": 1,
-    "version": "0.1.1",
+    "version": "0.1.2",
     "displayName": "exe.dev Sandbox Provider",
     "description": "Sandbox provider plugin that provisions exe.dev VMs as Paperclip execution environments.",
     "author": "Paperclip",
@@ -29,7 +29,7 @@
             "apiKey": {
               "type": "string",
               "format": "secret-ref",
-              "description": "Paste your exe.dev API token, or pick a saved Paperclip secret. Create one at exe.dev → Settings → API tokens with `/exec` scope (`new`, `ls`, `rm`)."
+              "description": "Paste your exe.dev API token, or pick a saved Paperclip secret. Create one at exe.dev → Settings → API tokens with `/exec` scope (`new`, `ls`, `rm`, plus `cp` if you use Source VM)."
             },
             "sshPrivateKey": {
               "type": "string",
@@ -72,20 +72,30 @@
             "cpu": {
               "type": "number",
               "description": "Optional CPU count passed to `exe.dev new --cpu`.",
+              "default": 4,
               "x-paperclip-advanced": true,
               "x-paperclip-group": "VM resources"
             },
             "memory": {
               "type": "string",
               "description": "Optional memory size such as `4GB`.",
+              "default": "4GB",
               "x-paperclip-advanced": true,
               "x-paperclip-group": "VM resources"
             },
             "disk": {
               "type": "string",
               "description": "Optional disk size such as `20GB`.",
+              "default": "20GB",
               "x-paperclip-advanced": true,
               "x-paperclip-group": "VM resources"
+            },
+            "sourceVm": {
+              "type": "string",
+              "title": "Source VM",
+              "description": "Name of an existing exe.dev VM to copy for each run with `exe.dev cp`, disk and config included. Leave blank to create a fresh VM with `exe.dev new`. Your API token must allow `cp`: tokens list their permitted commands, and one without `cp` fails with a 403. When set, leave image, command, env, integrations, tags, setup script, prompt, and comment empty: `cp` cannot apply them, and saving fails until they are cleared.",
+              "x-paperclip-advanced": true,
+              "x-paperclip-group": "VM creation"
             },
             "command": {
               "type": "string",
@@ -170,5 +180,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-06-02T07:54:56.466Z"
+  "resolvedAt": "2026-10-14T10:44:39.249Z"
 }

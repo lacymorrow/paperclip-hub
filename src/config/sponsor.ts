@@ -21,9 +21,15 @@ export function sponsorUrl(frequency: SponsorFrequency): string {
   return `${SPONSOR_URL}?frequency=${frequency}`;
 }
 
-/** Checkout for one specific tier. The id is the tier's number on GitHub. */
+/**
+ * The listing, opened on one specific tier. The id is the tier's number on GitHub.
+ *
+ * Deliberately not `/sponsorships?tier_id=`: that route is behind auth, so a
+ * logged-out visitor clicking a tier gets a GitHub sign-in form instead of the
+ * tier, and link checkers read the 302 as a dead link. Every tier is recurring.
+ */
 export function sponsorTierUrl(tierId: number): string {
-  return `${SPONSOR_URL}/sponsorships?tier_id=${tierId}`;
+  return `${SPONSOR_URL}?frequency=recurring&tier_id=${tierId}`;
 }
 
 /** Umami picks these data attributes up on click, no client JS needed. */

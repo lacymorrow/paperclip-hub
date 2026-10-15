@@ -1,10 +1,10 @@
 {
   "npmPackage": "@vectorize-io/hindsight-paperclip",
-  "version": "0.2.3",
+  "version": "0.4.2",
   "manifest": {
     "id": "paperclip-plugin-hindsight",
     "apiVersion": 1,
-    "version": "0.2.0",
+    "version": "0.4.2",
     "displayName": "Hindsight Memory",
     "author": "Vectorize <support@vectorize.io>",
     "description": "Persistent long-term memory for Paperclip agents. Automatically recalls relevant context before each run and retains agent output after — so every agent gets smarter over time.",
@@ -38,9 +38,32 @@
           "default": "https://api.hindsight.vectorize.io"
         },
         "hindsightApiKeyRef": {
-          "type": "string",
+          "format": "secret-ref",
           "title": "Hindsight API Key (secret ref)",
-          "description": "Name of the Paperclip secret holding your Hindsight Cloud API key. Leave empty for self-hosted."
+          "description": "Paperclip secret holding your Hindsight Cloud API key. Leave empty for self-hosted.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "required": [
+                "type",
+                "secretId"
+              ],
+              "properties": {
+                "type": {
+                  "const": "secret_ref"
+                },
+                "secretId": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
         },
         "dynamicBankId": {
           "type": "boolean",
@@ -81,11 +104,26 @@
           ],
           "default": "mid"
         },
+        "requestTimeoutMs": {
+          "type": "number",
+          "title": "Request Timeout (ms)",
+          "description": "Timeout for each request to Hindsight. Raise it for self-hosted instances where recall on long issue descriptions takes longer than the default.",
+          "minimum": 1000,
+          "default": 15000
+        },
         "autoRetain": {
           "type": "boolean",
-          "title": "Auto-retain on Run Finished",
-          "description": "Automatically retain agent run output to Hindsight when a run completes.",
+          "title": "Auto-retain Issue Comments",
+          "description": "Automatically retain the full body of every issue comment to Hindsight. Agents can still store memories explicitly with the hindsight_retain tool when this is off.",
           "default": true
+        },
+        "enabledAgentIds": {
+          "type": "array",
+          "title": "Enabled Agent IDs",
+          "description": "Restrict Hindsight recall/retain to these agent IDs only. Leave empty to enable for all agents (default).",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -126,5 +164,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-04-24T00:00:00Z"
+  "resolvedAt": "2026-10-15T10:27:32.292Z"
 }

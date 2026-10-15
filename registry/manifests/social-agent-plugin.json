@@ -1,6 +1,6 @@
 {
   "npmPackage": "@blaze283/social-agent-plugin",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "manifest": {
     "id": "konfirmity.social-agent-plugin",
     "apiVersion": 1,
@@ -677,5 +677,5 @@
       ]
     }
   },
-  "resolvedAt": "2026-06-02T07:55:00.956Z"
+  "resolvedAt": "2026-10-15T10:27:44.914Z"
 }

@@ -1,10 +1,10 @@
 {
   "npmPackage": "paperclip-plugin-telegram",
-  "version": "0.6.1",
+  "version": "0.8.1",
   "manifest": {
     "id": "paperclip-plugin-telegram",
     "apiVersion": 1,
-    "version": "0.3.0",
+    "version": "0.8.1",
     "displayName": "Telegram Bot",
     "description": "Bidirectional Telegram integration: push notifications, bot commands, escalation to humans, multi-agent sessions (native + ACP), media pipeline with transcription, custom workflow commands, and proactive suggestion watches.",
     "author": "mvanhorn",
@@ -42,6 +42,33 @@
     "entrypoints": {
       "worker": "./dist/worker.js",
       "ui": "./dist/ui"
+    },
+    "instanceConfigSchema": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "telegramBotTokenRef": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "secret-ref"
+        },
+        "paperclipBoardApiTokenRef": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "secret-ref"
+        },
+        "transcriptionApiKeyRef": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "secret-ref"
+        }
+      }
     },
     "ui": {
       "slots": [
@@ -108,5 +135,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-04-10T00:00:00Z"
+  "resolvedAt": "2026-10-15T10:27:29.312Z"
 }

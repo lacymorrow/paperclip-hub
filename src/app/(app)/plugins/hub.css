@@ -1846,6 +1846,15 @@
 }
 .hub-c1 .hc-foot .hc-foot-bas a { color: var(--ink-2); }
 .hub-c1 .hc-foot { gap: 24px; flex-wrap: wrap; }
+.hub-c1 .hc-foot-more {
+  flex: 0 0 100%;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--hub-font-sans);
+  font-size: 13px;
+  color: var(--ink-3);
+}
 .hub-c1 .hc-d-bas {
   margin: 56px 48px 0;
   padding-top: 20px;

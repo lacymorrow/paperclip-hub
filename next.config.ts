@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
       : "";
     const csp = [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline' ${umamiOrigin}`.trim(),
+      `script-src 'self' 'unsafe-inline' https://www.lacymorrow.com ${umamiOrigin}`.trim(),
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https://avatars.githubusercontent.com https://github.com",
       "font-src 'self' https://fonts.gstatic.com",

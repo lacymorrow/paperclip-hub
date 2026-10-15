@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MoreByLacy } from "./more-by-lacy";
 
 export function SiteFooter() {
   return (
@@ -19,6 +20,7 @@ export function SiteFooter() {
         <Link href="https://github.com/paperclipai/paperclip">Paperclip</Link>
         <Link href="https://github.com/lacymorrow/paperclip-hub">Hub source</Link>
       </nav>
+      <MoreByLacy className="hc-foot-more" />
     </footer>
   );
 }

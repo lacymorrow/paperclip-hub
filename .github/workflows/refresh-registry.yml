@@ -53,10 +53,21 @@ jobs:
           git config user.name "paperclip-hub-bot"
           git config user.email "noreply@cliphub.fyi"
           git checkout -b "$BRANCH"
-          git add registry/manifests
+          # build-index.ts rewrites llms-full.txt too. public/plugins.json is
+          # gitignored and rebuilt at deploy, but llms-full.txt is tracked, so
+          # leaving it unstaged drifts it from the manifests every night.
+          git add registry/manifests public/llms-full.txt
           git commit -m "chore(registry): auto-bump plugin manifests"
           git push -u origin "$BRANCH"
-          gh pr create \
+          PR_URL="$(gh pr create \
             --title "chore(registry): auto-bump plugin manifests" \
-            --body "Nightly refresh: re-extracted manifests for any plugins where npm's \`dist-tags.latest\` advanced past the stored version. Failures leave the stored manifest unchanged; the site keeps serving what it already had." \
-            --label automation
+            --body "Nightly refresh: re-extracted manifests for any plugins where npm's \`dist-tags.latest\` advanced past the stored version. Failures leave the stored manifest unchanged; the site keeps serving what it already had.")"
+          echo "opened $PR_URL"
+
+          # Labeling is cosmetic and runs after the PR exists. A missing label
+          # killed four nights of refreshes under `set -e` before the PR was
+          # ever opened (LAC-4730); an unlabeled PR beats no PR.
+          gh label create automation \
+            --description "Opened by a scheduled workflow" \
+            --color ededed || true
+          gh pr edit "$PR_URL" --add-label automation || true

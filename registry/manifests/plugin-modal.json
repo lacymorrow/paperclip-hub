@@ -1,10 +1,10 @@
 {
   "npmPackage": "@paperclipai/plugin-modal",
-  "version": "2026.529.0",
+  "version": "2026.1012.0",
   "manifest": {
     "id": "paperclip.modal-sandbox-provider",
     "apiVersion": 1,
-    "version": "0.1.0",
+    "version": "0.1.1",
     "displayName": "Modal Sandbox Provider",
     "description": "First-party sandbox provider plugin that provisions Modal sandboxes as Paperclip execution environments.",
     "author": "Paperclip",
@@ -32,11 +32,13 @@
           "properties": {
             "appName": {
               "type": "string",
-              "description": "Modal App name used as the parent for sandboxes. The plugin calls `modal.apps.fromName(appName, { createIfMissing: true })`, so the App is created on first acquire if it does not already exist."
+              "description": "Modal App name used as the parent for sandboxes. The plugin calls `modal.apps.fromName(appName, { createIfMissing: true })`, so the App is created on first acquire if it does not already exist.",
+              "default": "paperclip"
             },
             "image": {
               "type": "string",
-              "description": "Container image reference passed to `modal.images.fromRegistry()`, e.g. `python:3.13` or `node:20`."
+              "description": "Container image reference passed to `modal.images.fromRegistry()`, e.g. `python:3.13` or `node:24`. The default `node:24` satisfies the sandbox runtime contract (node, sh, and tar on PATH).",
+              "default": "node:24"
             },
             "tokenId": {
               "type": "string",
@@ -93,5 +95,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-06-02T07:54:57.152Z"
+  "resolvedAt": "2026-10-17T09:49:05.859Z"
 }

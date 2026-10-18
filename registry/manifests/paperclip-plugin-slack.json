@@ -1,10 +1,10 @@
 {
   "npmPackage": "paperclip-plugin-slack",
-  "version": "2.0.8",
+  "version": "2.1.0",
   "manifest": {
     "id": "paperclip-plugin-slack",
     "apiVersion": 1,
-    "version": "2.0.6",
+    "version": "2.1.0",
     "displayName": "Slack Chat OS",
     "description": "Full Chat OS for Slack: escalation, multi-agent sessions, media pipeline, custom commands, and proactive suggestions. Push Paperclip notifications, receive slash commands, and manage agent workflows.",
     "author": "mvanhorn",
@@ -39,19 +39,46 @@
     },
     "instanceConfigSchema": {
       "type": "object",
+      "additionalProperties": true,
       "properties": {
         "slackTokenRef": {
-          "type": "string",
+          "type": [
+            "string",
+            "object"
+          ],
           "format": "secret-ref",
           "title": "Slack Bot Token (secret reference)",
           "description": "Secret UUID for your Slack Bot OAuth token. Create the secret in Settings → Secrets, then paste its UUID here.",
           "default": ""
         },
+        "slackAppTokenRef": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "secret-ref",
+          "title": "Slack App-Level Token (secret reference)",
+          "description": "Secret UUID for your Slack app-level xapp token with connections:write. Optional; when empty, webhook mode remains active.",
+          "default": ""
+        },
         "slackSigningSecretRef": {
-          "type": "string",
+          "type": [
+            "string",
+            "object"
+          ],
           "format": "secret-ref",
           "title": "Slack Signing Secret (secret reference)",
           "description": "Secret UUID for your Slack app's Signing Secret. Required to verify that incoming webhooks are genuinely from Slack.",
+          "default": ""
+        },
+        "paperclipApiKeyRef": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "secret-ref",
+          "title": "Paperclip API Key (secret reference)",
+          "description": "Secret UUID for a Paperclip API key that can resolve issue-thread confirmations from Slack. Required when issue-thread confirmation notifications are enabled.",
           "default": ""
         },
         "defaultChannelId": {
@@ -92,6 +119,12 @@
           "type": "boolean",
           "title": "Notify on approval requested",
           "default": true
+        },
+        "notifyOnRequestConfirmationCreated": {
+          "type": "boolean",
+          "title": "Notify on issue-thread confirmations",
+          "description": "Posts pending simple and checkbox confirmations. Buttons are available when no additional input is needed; choose options or provide required decline reasons in Paperclip. Requires paperclipApiKeyRef.",
+          "default": false
         },
         "notifyOnAgentError": {
           "type": "boolean",
@@ -171,6 +204,12 @@
         "schedule": "*/1 * * * *"
       },
       {
+        "jobKey": "check-issue-interactions",
+        "displayName": "Check Issue Confirmations",
+        "description": "Posts pending Paperclip issue-thread confirmations to Slack and updates resolved cards.",
+        "schedule": "*/1 * * * *"
+      },
+      {
         "jobKey": "check-watches",
         "displayName": "Check Event Watches",
         "description": "Processes pending event watches and triggers agent invocations for matching events.",
@@ -195,5 +234,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-04-10T00:00:00Z"
+  "resolvedAt": "2026-10-17T09:49:10.809Z"
 }

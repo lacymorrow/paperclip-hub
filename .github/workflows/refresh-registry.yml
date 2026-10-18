@@ -64,10 +64,18 @@ jobs:
             --body "Nightly refresh: re-extracted manifests for any plugins where npm's \`dist-tags.latest\` advanced past the stored version. Failures leave the stored manifest unchanged; the site keeps serving what it already had.")"
           echo "opened $PR_URL"
 
-          # Labeling is cosmetic and runs after the PR exists. A missing label
-          # killed four nights of refreshes under `set -e` before the PR was
-          # ever opened (LAC-4730); an unlabeled PR beats no PR.
+          # Labeling runs after the PR exists. A missing label killed four
+          # nights of refreshes under `set -e` before the PR was ever opened
+          # (LAC-4730); an unlabeled PR beats no PR.
+          #
+          # multi-plugin-pr is not cosmetic: a refresh touches every plugin
+          # whose dist-tags.latest moved, and the submission validator's
+          # single-file check fails any PR spanning more than one plugin
+          # without it. validate-plugin.yml re-runs on `labeled`, so adding
+          # it here turns that check green without a push.
           gh label create automation \
             --description "Opened by a scheduled workflow" \
             --color ededed || true
-          gh pr edit "$PR_URL" --add-label automation || true
+          gh pr edit "$PR_URL" \
+            --add-label automation \
+            --add-label multi-plugin-pr || true

@@ -14,7 +14,8 @@
       "!**/public/workers",
       "!**/public/**/*.js",
       "!**/public/**/*.mjs",
-      "!**/*.css"
+      "!**/*.css",
+      "!**/scripts/registry/fixtures"
     ]
   },
   "formatter": {

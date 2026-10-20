@@ -170,6 +170,32 @@ describe("walker", () => {
     });
   });
 
+  it("resolves exported top-level consts in the same module", () => {
+    // tsc emits `export const X = ...` for a constant the manifest also
+    // references. The binding is local even though it is exported, so the
+    // walker must see it in the symbol table.
+    const src = `
+			export const TIMEOUT_MS = 300_000;
+			const manifest = { timeoutMs: TIMEOUT_MS };
+			export default manifest;
+		`;
+    expect(extractDefaultExport(src)).toEqual({ timeoutMs: 300_000 });
+  });
+
+  it("handles the real daytona manifest, which exports a const it references", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const source = await readFile(
+      new URL("../fixtures/daytona-manifest.js", import.meta.url),
+      "utf8"
+    );
+    const result = extractDefaultExport(source) as {
+      id: string;
+      environmentDrivers?: { defaultAcquireTimeoutMs?: number }[];
+    };
+    expect(result.id).toBe("paperclip.daytona-sandbox-provider");
+    expect(result.environmentDrivers?.[0]?.defaultAcquireTimeoutMs).toBe(300_000);
+  });
+
   it("treats optional-chain member access on undefined as undefined", () => {
     const src = `
 			var maybe = undefined;

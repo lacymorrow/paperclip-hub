@@ -176,16 +176,25 @@ function collectModuleExports(program: Program): Map<string, Node> {
 }
 
 /**
- * Build a symbol table from top-level `var`/`let`/`const` declarators. Function
- * and class declarations are intentionally ignored — they're not allowed in
- * manifest values, and silently registering them would let computed-via-call
+ * Build a symbol table from top-level `var`/`let`/`const` declarators,
+ * including the ones `export` prefixes: `export const X = 1` declares the same
+ * module-local binding as `const X = 1`, and tsc emits that shape whenever a
+ * manifest references a constant the package also exports. Function and class
+ * declarations are intentionally ignored — they're not allowed in manifest
+ * values, and silently registering them would let computed-via-call
  * expressions slip past the "must be statically analyzable" gate.
  */
 function collectTopLevelSymbols(program: Program): Map<string, Node> {
   const symbols = new Map<string, Node>();
   for (const node of program.body) {
-    if (node.type !== "VariableDeclaration") continue;
-    for (const decl of node.declarations) {
+    const declaration =
+      node.type === "VariableDeclaration"
+        ? node
+        : node.type === "ExportNamedDeclaration" && node.declaration?.type === "VariableDeclaration"
+          ? node.declaration
+          : null;
+    if (!declaration) continue;
+    for (const decl of declaration.declarations) {
       if (decl.id.type !== "Identifier") continue;
       if (!decl.init) continue;
       symbols.set(decl.id.name, decl.init);

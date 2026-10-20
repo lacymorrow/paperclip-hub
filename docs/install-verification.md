@@ -91,3 +91,7 @@ A missing `repository` field is not a reason to hold a plugin back: npm does not
 - `@betaform/paperclaw-dashboard`: delisted. It is betaform's internal sales dashboard, hardcoded to their booking link, Buffer and OpenAI accounts. Not malicious, but useless to anyone else.
 
 The three OK packages stay quarantined only because they still fail to install on the current CLI.
+
+Delisted 2026-10-20:
+
+- `@wil0x91/paperclip-plugin-github-issues`: delisted. `registry.npmjs.org` still returns 404, so the package has been unpublished or removed. It was already quarantined and invisible on the site; every nightly refresh was re-reporting an extraction failure for a package that does not exist. Re-add the pointer if the author republishes.

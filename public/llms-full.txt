@@ -2,7 +2,7 @@
 
 > Generated from the registry. The canonical structured form is /plugins.json.
 
-Generated: 2026-10-20T23:23:40.337Z
+Generated: 2026-10-21T10:43:55.876Z
 Total plugins: 40
 
 Each entry below lists: name, npm package, category, install command, weekly downloads, version, capabilities, and source.
@@ -268,18 +268,6 @@ Visual workflow editor that publishes Paperclip Company Skills
 - Capabilities: plugin.state.read, plugin.state.write, ui.sidebar.register, ui.page.register, ui.action.register
 - Install: npx paperclipai@latest plugin install @vlbog/paperclip-plugin-workflow-studio
 
-## Observability
-
-Configure metrics data sources and view imported dashboards (Grafana, AWS CloudWatch)
-
-- URL: https://cliphub.fyi/plugins/gaud_erp-papperclip_observability
-- npm: @gaud_erp/papperclip_observability (v0.3.3)
-- Category: observability
-- Weekly downloads: 4
-- Source: https://github.com/gauderp/paperclip-plugin-observability
-- Capabilities: plugin.state.read, plugin.state.write, secrets.read-ref, ui.sidebar.register, ui.page.register, instance.settings.register, metrics.write
-- Install: npx paperclipai@latest plugin install @gaud_erp/papperclip_observability
-
 ## DriftWatch
 
 Audit agent instructions in read-only mode. Detect drift, overlap, and handoff mismatches across your agent system.
@@ -302,16 +290,28 @@ Paperclip plugin for Magneto AI - exposes power skills as agent tools with hiera
 - Capabilities: agent.tools.register, events.subscribe, events.emit, activity.log.write, plugin.state.read, plugin.state.write
 - Install: npx paperclipai@latest plugin install @magneto-ai/paperclip-plugin
 
-## JKL File Browser
+## Observability
 
-A file browser plugin for Paperclip workspaces
+Configure metrics data sources and view imported dashboards (Grafana, AWS CloudWatch)
 
-- URL: https://cliphub.fyi/plugins/jk3labs-file-browser
-- npm: @jk3labs/file-browser (v0.1.3)
+- URL: https://cliphub.fyi/plugins/gaud_erp-papperclip_observability
+- npm: @gaud_erp/papperclip_observability (v0.3.3)
+- Category: observability
+- Weekly downloads: 4
+- Source: https://github.com/gauderp/paperclip-plugin-observability
+- Capabilities: plugin.state.read, plugin.state.write, secrets.read-ref, ui.sidebar.register, ui.page.register, instance.settings.register, metrics.write
+- Install: npx paperclipai@latest plugin install @gaud_erp/papperclip_observability
+
+## Theme Customizer
+
+In-app theme editor with live preview, curated presets, and shareable configurations. Override colors, radius, and design tokens without rebuilding.
+
+- URL: https://cliphub.fyi/plugins/paperclip-theme
+- npm: paperclip-theme (v0.2.2)
 - Category: tools
 - Weekly downloads: 3
-- Capabilities: events.subscribe, plugin.state.read, plugin.state.write, local.folders, ui.dashboardWidget.register, ui.detailTab.register, api.routes.register, project.workspaces.read
-- Install: npx paperclipai@latest plugin install @jk3labs/file-browser
+- Capabilities: plugin.state.read, plugin.state.write, instance.settings.register
+- Install: npx paperclipai@latest plugin install paperclip-theme
 
 ## Workspace Browser
 
@@ -325,29 +325,6 @@ Browse, search, preview, download, and export full Paperclip project workspaces.
 - Capabilities: ui.sidebar.register, ui.page.register, ui.detailTab.register, projects.read, project.workspaces.read
 - Install: npx paperclipai@latest plugin install paperclip-workspace-browser
 
-## Theme Customizer
-
-In-app theme editor with live preview, curated presets, and shareable configurations. Override colors, radius, and design tokens without rebuilding.
-
-- URL: https://cliphub.fyi/plugins/paperclip-theme
-- npm: paperclip-theme (v0.2.2)
-- Category: tools
-- Weekly downloads: 3
-- Capabilities: plugin.state.read, plugin.state.write, instance.settings.register
-- Install: npx paperclipai@latest plugin install paperclip-theme
-
-## Chat
-
-Interactive AI copilot for managing tasks, agents, and workspaces through natural conversation
-
-- URL: https://cliphub.fyi/plugins/webprismdev-paperclip-plugin-chat
-- npm: @webprismdev/paperclip-plugin-chat (v0.1.12)
-- Category: tools
-- Weekly downloads: 3
-- Source: https://github.com/webprismdevin/paperclip-plugin-chat
-- Capabilities: ui.page.register, ui.sidebar.register, issues.read, issues.create, issues.update, issue.comments.create, agents.read, projects.read, activity.read, costs.read
-- Install: npx paperclipai@latest plugin install @webprismdev/paperclip-plugin-chat
-
 ## Notification Sound
 
 Plays a notification sound when issues change to in_review, blocked, or done.
@@ -358,6 +335,17 @@ Plays a notification sound when issues change to in_review, blocked, or done.
 - Weekly downloads: 3
 - Capabilities: events.subscribe, plugin.state.read, plugin.state.write, ui.action.register
 - Install: npx paperclipai@latest plugin install paperclip-plugin-notification-sound
+
+## JKL File Browser
+
+A file browser plugin for Paperclip workspaces
+
+- URL: https://cliphub.fyi/plugins/jk3labs-file-browser
+- npm: @jk3labs/file-browser (v0.1.3)
+- Category: tools
+- Weekly downloads: 3
+- Capabilities: events.subscribe, plugin.state.read, plugin.state.write, local.folders, ui.dashboardWidget.register, ui.detailTab.register, api.routes.register, project.workspaces.read
+- Install: npx paperclipai@latest plugin install @jk3labs/file-browser
 
 ## Agent Chat
 
@@ -371,17 +359,17 @@ Chat page for direct conversations with agent employees via real agent sessions.
 - Capabilities: agents.read, agents.invoke, agent.sessions.create, agent.sessions.list, agent.sessions.send, agent.sessions.close, companies.read, plugin.state.read, plugin.state.write, activity.log.write, events.subscribe, ui.sidebar.register, ui.page.register, ui.detailTab.register, ui.action.register
 - Install: npx paperclipai@latest plugin install @sergioconejo/paperclip-plugin-agent-chat
 
-## File Navigator
+## Chat
 
-Browse projects with real names and open them directly in your external filebrowser.
+Interactive AI copilot for managing tasks, agents, and workspaces through natural conversation
 
-- URL: https://cliphub.fyi/plugins/paperclip-plugin-navigator
-- npm: paperclip-plugin-navigator (v0.2.1)
+- URL: https://cliphub.fyi/plugins/webprismdev-paperclip-plugin-chat
+- npm: @webprismdev/paperclip-plugin-chat (v0.1.12)
 - Category: tools
-- Weekly downloads: 2
-- Source: https://github.com/rjvc/paperclip-plugin-navigator
-- Capabilities: projects.read, project.workspaces.read, companies.read, ui.page.register, ui.sidebar.register, http.outbound
-- Install: npx paperclipai@latest plugin install paperclip-plugin-navigator
+- Weekly downloads: 3
+- Source: https://github.com/webprismdevin/paperclip-plugin-chat
+- Capabilities: ui.page.register, ui.sidebar.register, issues.read, issues.create, issues.update, issue.comments.create, agents.read, projects.read, activity.read, costs.read
+- Install: npx paperclipai@latest plugin install @webprismdev/paperclip-plugin-chat
 
 ## X Publishing
 
@@ -395,17 +383,17 @@ X/Twitter publishing plugin — drafts, approvals, scheduling, threads, metrics 
 - Capabilities: http.outbound, secrets.read-ref, jobs.schedule, agent.tools.register, plugin.state.read, plugin.state.write, events.subscribe, events.emit, issues.read, issues.create, issues.update, activity.log.write, metrics.write, instance.settings.register, ui.dashboardWidget.register, ui.page.register
 - Install: npx paperclipai@latest plugin install peak6-x-publishing-plugin
 
-## Zernio
+## File Navigator
 
-Social media management via the Zernio API — schedule posts, manage inbox, and view analytics across 14+ platforms.
+Browse projects with real names and open them directly in your external filebrowser.
 
-- URL: https://cliphub.fyi/plugins/paperclip-plugin-zernio
-- npm: paperclip-plugin-zernio (v0.4.1)
-- Category: integration
-- Weekly downloads: 1
-- Source: https://github.com/rwbaker/plugin-zernio
-- Capabilities: plugin.state.read, plugin.state.write, http.outbound, agent.tools.register, webhooks.receive, secrets.read-ref
-- Install: npx paperclipai@latest plugin install paperclip-plugin-zernio
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-navigator
+- npm: paperclip-plugin-navigator (v0.2.1)
+- Category: tools
+- Weekly downloads: 2
+- Source: https://github.com/rjvc/paperclip-plugin-navigator
+- Capabilities: projects.read, project.workspaces.read, companies.read, ui.page.register, ui.sidebar.register, http.outbound
+- Install: npx paperclipai@latest plugin install paperclip-plugin-navigator
 
 ## Agent Commerce
 
@@ -418,17 +406,17 @@ Bridge UI for Agent Commerce next to Paperclip
 - Capabilities: http.outbound, plugin.state.read, plugin.state.write, ui.action.register, ui.page.register, ui.sidebar.register, ui.dashboardWidget.register
 - Install: npx paperclipai@latest plugin install @avirajkhare00/agent-commerce-bridge
 
-## LINE Bridge
+## BCP Commerce
 
-Bidirectional LINE Messaging API integration for Paperclip: verified webhook intake, agent sessions per LINE user, outbound LINE push tools, and inbound media relay.
+Inter-company commerce — let your AI company hire other AI companies. Request quotes, negotiate, and manage deals autonomously.
 
-- URL: https://cliphub.fyi/plugins/paperclip-plugin-line
-- npm: paperclip-plugin-line (v1.0.0)
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-bcp-commerce
+- npm: paperclip-plugin-bcp-commerce (v0.1.0)
 - Category: integration
 - Weekly downloads: 1
-- Source: https://github.com/Bandruption-Platform/paperclip-plugin-line
-- Capabilities: plugin.state.read, plugin.state.write, jobs.schedule, webhooks.receive, agent.tools.register, http.outbound, secrets.read-ref, activity.log.write, metrics.write, issues.read, issues.create, issues.update, issue.comments.read, issue.comments.create, agents.read, agent.sessions.create, agent.sessions.list, agent.sessions.send, agent.sessions.close, events.emit, events.subscribe
-- Install: npx paperclipai@latest plugin install paperclip-plugin-line
+- Source: https://github.com/lucidedev/bcp-protocol
+- Capabilities: webhooks.receive, plugin.state.read, plugin.state.write, http.outbound, agent.tools.register, events.subscribe
+- Install: npx paperclipai@latest plugin install paperclip-plugin-bcp-commerce
 
 ## X Intelligence
 
@@ -454,6 +442,30 @@ Browse and review files linked to Paperclip issues. Manage a review queue, appro
 - Capabilities: plugin.state.read, plugin.state.write, companies.read, issues.read, issue.documents.read, ui.page.register, ui.sidebar.register
 - Install: npx paperclipai@latest plugin install paperclip-file-viewer
 
+## LINE Bridge
+
+Bidirectional LINE Messaging API integration for Paperclip: verified webhook intake, agent sessions per LINE user, outbound LINE push tools, and inbound media relay.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-line
+- npm: paperclip-plugin-line (v1.0.0)
+- Category: integration
+- Weekly downloads: 1
+- Source: https://github.com/Bandruption-Platform/paperclip-plugin-line
+- Capabilities: plugin.state.read, plugin.state.write, jobs.schedule, webhooks.receive, agent.tools.register, http.outbound, secrets.read-ref, activity.log.write, metrics.write, issues.read, issues.create, issues.update, issue.comments.read, issue.comments.create, agents.read, agent.sessions.create, agent.sessions.list, agent.sessions.send, agent.sessions.close, events.emit, events.subscribe
+- Install: npx paperclipai@latest plugin install paperclip-plugin-line
+
+## Zernio
+
+Social media management via the Zernio API — schedule posts, manage inbox, and view analytics across 14+ platforms.
+
+- URL: https://cliphub.fyi/plugins/paperclip-plugin-zernio
+- npm: paperclip-plugin-zernio (v0.4.1)
+- Category: integration
+- Weekly downloads: 1
+- Source: https://github.com/rwbaker/plugin-zernio
+- Capabilities: plugin.state.read, plugin.state.write, http.outbound, agent.tools.register, webhooks.receive, secrets.read-ref
+- Install: npx paperclipai@latest plugin install paperclip-plugin-zernio
+
 ## Substack
 
 Substack plugin for Paperclip. Fetches recent posts and public engagement stats via RSS and the Substack reader API.
@@ -465,29 +477,17 @@ Substack plugin for Paperclip. Fetches recent posts and public engagement stats 
 - Capabilities: agent.tools.register, http.outbound, instance.settings.register
 - Install: npx paperclipai@latest plugin install @bbugs280/plugin-substack
 
-## BCP Commerce
-
-Inter-company commerce — let your AI company hire other AI companies. Request quotes, negotiate, and manage deals autonomously.
-
-- URL: https://cliphub.fyi/plugins/paperclip-plugin-bcp-commerce
-- npm: paperclip-plugin-bcp-commerce (v0.1.0)
-- Category: integration
-- Weekly downloads: 1
-- Source: https://github.com/lucidedev/bcp-protocol
-- Capabilities: webhooks.receive, plugin.state.read, plugin.state.write, http.outbound, agent.tools.register, events.subscribe
-- Install: npx paperclipai@latest plugin install paperclip-plugin-bcp-commerce
-
 ## Quarantined
 
-- paperclip-plugin-knok: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
-- anneal-memory-paperclip-plugin: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
+- gaud_erp-paperclip-plugin-agentmemory: Install fails on paperclipai 2026.1012.0: worker setup() calls skills.managed.reconcile without a company context and the host rejects it. Needs a plugin update.
 - smara-paperclip-plugin-memory: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
+- niubitli-plugin-feishu-connector-v2: Install rejected by paperclipai 2026.1012.0: manifest declares unknown capability issue.attachments.create.
+- anneal-memory-paperclip-plugin: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
+- paperclip-plugin-knok: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
+- oldharlem-paperclip-plugin-linear: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
 - honcho-ai-paperclip-honcho: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
+- gaud_erp-social-networking: Install rejected by paperclipai 2026.1012.0: plugin migrations must use fully qualified schema names.
+- blaze283-social-agent-plugin: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
 - acnlabs-paperclip-plugin-acn: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
 - bbugs280-plugin-bitly: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
 - paperclip-plugin-compass: Install fails on paperclipai 2026.1012.0: worker setup() calls agents.list without a company context and the host rejects it. Needs a plugin update.
-- gaud_erp-social-networking: Install rejected by paperclipai 2026.1012.0: plugin migrations must use fully qualified schema names.
-- niubitli-plugin-feishu-connector-v2: Install rejected by paperclipai 2026.1012.0: manifest declares unknown capability issue.attachments.create.
-- oldharlem-paperclip-plugin-linear: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
-- blaze283-social-agent-plugin: Install fails on paperclipai 2026.1012.0: worker setup() calls config.get without a company context and the host rejects it. Needs a plugin update.
-- gaud_erp-paperclip-plugin-agentmemory: Install fails on paperclipai 2026.1012.0: worker setup() calls skills.managed.reconcile without a company context and the host rejects it. Needs a plugin update.

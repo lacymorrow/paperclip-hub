@@ -1,6 +1,6 @@
 {
   "npmPackage": "@paperclipai/plugin-daytona",
-  "version": "2026.1012.0",
+  "version": "2026.1023.0",
   "manifest": {
     "id": "paperclip.daytona-sandbox-provider",
     "apiVersion": 1,
@@ -157,5 +157,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-10-20T23:22:39.382Z"
+  "resolvedAt": "2026-10-24T09:55:04.434Z"
 }

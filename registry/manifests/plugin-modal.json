@@ -1,6 +1,6 @@
 {
   "npmPackage": "@paperclipai/plugin-modal",
-  "version": "2026.1012.0",
+  "version": "2026.1023.0",
   "manifest": {
     "id": "paperclip.modal-sandbox-provider",
     "apiVersion": 1,
@@ -95,5 +95,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-10-17T09:49:05.859Z"
+  "resolvedAt": "2026-10-27T11:10:17.077Z"
 }

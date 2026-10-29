@@ -1,6 +1,6 @@
 {
   "npmPackage": "@paperclipai/plugin-cloudflare-sandbox",
-  "version": "2026.1012.0",
+  "version": "2026.1023.0",
   "manifest": {
     "id": "paperclip.cloudflare-sandbox-provider",
     "apiVersion": 1,
@@ -98,5 +98,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-10-17T09:49:07.458Z"
+  "resolvedAt": "2026-10-29T11:52:44.269Z"
 }

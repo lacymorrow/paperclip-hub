@@ -1,11 +1,11 @@
 {
   "npmPackage": "@tomismeta/paperclip-aperture",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "manifest": {
     "id": "tomismeta.paperclip-aperture",
     "apiVersion": 1,
-    "version": "0.5.1",
-    "minimumHostVersion": "2026.525.0",
+    "version": "0.6.0",
+    "minimumHostVersion": "2026.1023.0",
     "displayName": "Paperclip Aperture",
     "description": "The live attention layer for Paperclip, combining Aperture Core continuity with Paperclip-native operator policy.",
     "author": "@tomismeta",
@@ -15,13 +15,17 @@
     ],
     "capabilities": [
       "events.subscribe",
-      "http.outbound",
       "agents.read",
+      "approvals.read",
+      "approvals.respond",
       "issues.read",
       "issue.relations.read",
       "issue.comments.read",
       "issue.comments.create",
+      "issue.comments.create_human_attributed",
       "issue.documents.read",
+      "issue.interactions.read",
+      "issue.interactions.respond",
       "activity.log.write",
       "plugin.state.read",
       "plugin.state.write",
@@ -48,12 +52,6 @@
           "title": "Capture Run Failures",
           "default": true,
           "description": "Turn failed agent runs into high-salience attention events."
-        },
-        "paperclipApiBase": {
-          "type": "string",
-          "title": "Paperclip API Base",
-          "default": "",
-          "description": "Optional base URL for Paperclip approval reads and writes. Leave empty to disable approval API fetches when the plugin SDK lacks a first-class approval client."
         }
       }
     },
@@ -81,5 +79,5 @@
       ]
     }
   },
-  "resolvedAt": "2026-10-17T09:49:06.689Z"
+  "resolvedAt": "2026-10-30T11:46:22.019Z"
 }

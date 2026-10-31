@@ -1,6 +1,6 @@
 {
   "npmPackage": "@paperclipai/plugin-e2b",
-  "version": "2026.1012.0",
+  "version": "2026.1023.0",
   "manifest": {
     "id": "paperclip.e2b-sandbox-provider",
     "apiVersion": 1,
@@ -51,5 +51,5 @@
       }
     ]
   },
-  "resolvedAt": "2026-10-17T09:49:07.008Z"
+  "resolvedAt": "2026-10-31T11:19:32.643Z"
 }

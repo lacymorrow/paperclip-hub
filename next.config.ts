@@ -62,7 +62,6 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
 
   experimental: {
-    viewTransition: true,
     optimizePackageImports: ["lucide-react"],
   },
 };

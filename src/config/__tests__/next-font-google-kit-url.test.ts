@@ -51,11 +51,11 @@ describe("next/font/google tolerates Google's extensionless font URLs", () => {
   ].join("\n");
 
   it("resolves an extension for a /l/font?kit= URL", () => {
-    const [kitFile] = findFontFilesInCss(css, ["latin"]);
+    const kitFile = findFontFilesInCss(css, ["latin"])[0];
 
-    expect(kitFile.googleFontFileUrl).toBe(kitUrl);
+    expect(kitFile?.googleFontFileUrl).toBe(kitUrl);
     // next below 16.4.3 read this off the URL path and threw on null.
-    expect(kitFile.ext).toBe("woff2");
+    expect(kitFile?.ext).toBe("woff2");
   });
 
   it("still resolves an extension from the URL path when there is one", () => {

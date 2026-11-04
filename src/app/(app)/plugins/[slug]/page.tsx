@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SiteBrand } from "@/components/site/site-brand";
 import { SiteFooter } from "@/components/site/site-footer";
 
 import { getPluginBySlug, getPlugins } from "@/lib/registry";
@@ -41,7 +42,8 @@ export async function generateMetadata({ params }: PluginDetailPageProps): Promi
   const { slug } = await params;
   const plugin = await getPluginBySlug(slug);
   if (!plugin) return {};
-  const title = pluginTitle(plugin);
+  // Tab title stays on the site-wide pattern; the social card keeps the category keyword.
+  const socialTitle = pluginTitle(plugin);
   const description =
     plugin.description ||
     `${plugin.name} is a Paperclip plugin published as ${plugin.npmPackage} on npm.`;
@@ -53,7 +55,7 @@ export async function generateMetadata({ params }: PluginDetailPageProps): Promi
   const ogImage = `/og?${ogParams.toString()}`;
   const canonical = `https://cliphub.fyi/plugins/${plugin.slug}`;
   return {
-    title,
+    title: plugin.name,
     description,
     alternates: { canonical },
     keywords: [
@@ -66,14 +68,14 @@ export async function generateMetadata({ params }: PluginDetailPageProps): Promi
     openGraph: {
       type: "article",
       url: canonical,
-      title,
+      title: socialTitle,
       description,
       siteName: "Paperclip Hub",
       images: [{ url: ogImage, width: 1200, height: 630, alt: plugin.name }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: socialTitle,
       description,
       images: [ogImage],
     },
@@ -257,12 +259,7 @@ export default async function PluginDetailPage({ params }: PluginDetailPageProps
       />
       {/* Header */}
       <header className="hc-header">
-        <Link href="/" className="hc-brand">
-          <span className="hc-brand-wm">
-            <b>Paper</b>clip
-          </span>
-          <span className="hc-brand-sub">Hub</span>
-        </Link>
+        <SiteBrand />
         <nav className="hc-nav">
           <Link href="/" className="is-active">
             Browse

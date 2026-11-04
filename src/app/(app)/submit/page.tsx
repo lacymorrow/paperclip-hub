@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PluginSubmissionForm } from "@/components/forms/plugin-submission-form";
+import { SiteBrand } from "@/components/site/site-brand";
 import { SiteFooter } from "@/components/site/site-footer";
 
 import "../plugins/hub.css";
@@ -19,6 +20,8 @@ function getExistingRegistrySlugs(): string[] {
   }
 }
 
+const SUBMIT_PAGE_TITLE = "Submit a plugin";
+// Social cards carry the brand themselves: openGraph/twitter titles ignore title.template.
 const SUBMIT_TITLE = "Submit a Paperclip plugin | Paperclip Hub";
 const SUBMIT_DESCRIPTION =
   "Add your npm package to the Paperclip plugin directory. The form pre-fills a GitHub pull request. CI extracts your manifest, validates npm ownership, and indexes the plugin nightly.";
@@ -29,7 +32,7 @@ const SUBMIT_OG = `/og?${new URLSearchParams({
 }).toString()}`;
 
 export const metadata: Metadata = {
-  title: SUBMIT_TITLE,
+  title: SUBMIT_PAGE_TITLE,
   description: SUBMIT_DESCRIPTION,
   alternates: { canonical: "https://cliphub.fyi/submit" },
   keywords: ["Paperclip plugin", "submit Paperclip plugin", "Paperclip Hub"],
@@ -55,12 +58,7 @@ export default function SubmitPage() {
     <div className="hub-c1">
       {/* Header */}
       <header className="hc-header">
-        <Link href="/" className="hc-brand">
-          <span className="hc-brand-wm">
-            <b>Paper</b>clip
-          </span>
-          <span className="hc-brand-sub">Hub</span>
-        </Link>
+        <SiteBrand />
         <nav className="hc-nav">
           <Link href="/">Browse</Link>
           <Link href="/submit" className="is-active">

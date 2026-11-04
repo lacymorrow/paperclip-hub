@@ -26,31 +26,51 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              name: siteConfig.title,
-              description: siteConfig.description,
-              url: siteConfig.url,
-              applicationCategory: "DeveloperApplication",
-              operatingSystem: "Any",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
-              },
-              author: {
-                "@type": "Person",
-                name: siteConfig.creator.name,
-                url: siteConfig.creator.url,
-              },
-              codeRepository: siteConfig.repo.url,
-              programmingLanguage: ["TypeScript", "JavaScript"],
-              runtimePlatform: "Node.js",
-              isBasedOn: {
-                "@type": "SoftwareApplication",
-                name: "Paperclip",
-                url: "https://paperclip.ing",
-                applicationCategory: "DeveloperApplication",
-              },
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteConfig.url}/#website`,
+                  name: siteConfig.title,
+                  // The domain is not the name, but people search for it.
+                  alternateName: [siteConfig.branding.domain],
+                  description: siteConfig.description,
+                  url: siteConfig.url,
+                  inLanguage: "en-US",
+                  publisher: {
+                    "@type": "Person",
+                    name: siteConfig.creator.fullName,
+                    url: siteConfig.creator.url,
+                  },
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  name: siteConfig.title,
+                  description: siteConfig.description,
+                  url: siteConfig.url,
+                  isPartOf: { "@id": `${siteConfig.url}/#website` },
+                  applicationCategory: "DeveloperApplication",
+                  operatingSystem: "Any",
+                  offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "USD",
+                  },
+                  author: {
+                    "@type": "Person",
+                    name: siteConfig.creator.name,
+                    url: siteConfig.creator.url,
+                  },
+                  codeRepository: siteConfig.repo.url,
+                  programmingLanguage: ["TypeScript", "JavaScript"],
+                  runtimePlatform: "Node.js",
+                  isBasedOn: {
+                    "@type": "SoftwareApplication",
+                    name: "Paperclip",
+                    url: "https://paperclip.ing",
+                    applicationCategory: "DeveloperApplication",
+                  },
+                },
+              ],
             }),
           }}
         />

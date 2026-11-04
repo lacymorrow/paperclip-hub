@@ -93,11 +93,14 @@ export async function GET(request: Request) {
         {/* biome-ignore lint/performance/noImgElement: next/og renders plain img */}
         <img src={`${origin}/app/og-logo.png`} width={80} height={80} alt="Logo" />
       </div>
-      <div
-        tw="flex absolute bottom-24 left-24 text-[32px]"
-        style={{ fontWeight: 400, color: colors.muted }}
-      >
-        {url}
+      {/* Name first, domain under it: a plugin card has to say whose directory it is. */}
+      <div tw="flex flex-col absolute bottom-24 left-24">
+        <div tw="flex text-[30px]" style={{ fontWeight: 600, letterSpacing: "-0.02em" }}>
+          Paperclip Hub
+        </div>
+        <div tw="flex text-[24px] mt-2" style={{ fontWeight: 400, color: colors.muted }}>
+          {url}
+        </div>
       </div>
       <div tw="flex flex-col absolute w-[896px] justify-center inset-32">
         <div

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteBrand } from "@/components/site/site-brand";
 import { SiteFooter } from "@/components/site/site-footer";
 import { buildAndServeEvent, buildAndServeUrl } from "@/config/build-and-serve";
 import { projects } from "@/config/projects";
@@ -13,7 +14,9 @@ import {
 
 import "../plugins/hub.css";
 
-const SUPPORT_TITLE = "Support the Hub | Paperclip Hub";
+const SUPPORT_PAGE_TITLE = "Support";
+// Social cards carry the brand themselves: openGraph/twitter titles ignore title.template.
+const SUPPORT_TITLE = "Support Paperclip Hub";
 const SUPPORT_DESCRIPTION =
   "Paperclip Hub is free. So is most of what we build. Sponsoring on GitHub keeps it that way.";
 const SUPPORT_OG = `/og?${new URLSearchParams({
@@ -23,7 +26,7 @@ const SUPPORT_OG = `/og?${new URLSearchParams({
 }).toString()}`;
 
 export const metadata: Metadata = {
-  title: SUPPORT_TITLE,
+  title: SUPPORT_PAGE_TITLE,
   description: SUPPORT_DESCRIPTION,
   alternates: { canonical: "https://cliphub.fyi/support" },
   openGraph: {
@@ -48,12 +51,7 @@ export default function SupportPage() {
   return (
     <div className="hub-c1">
       <header className="hc-header">
-        <Link href="/" className="hc-brand">
-          <span className="hc-brand-wm">
-            <b>Paper</b>clip
-          </span>
-          <span className="hc-brand-sub">Hub</span>
-        </Link>
+        <SiteBrand />
         <nav className="hc-nav">
           <Link href="/">Browse</Link>
           <Link href="/submit">Submit</Link>
@@ -71,7 +69,8 @@ export default function SupportPage() {
         <section className="hc-support-hero">
           <span className="hc-support-eyebrow">Support</span>
           <h1>
-            Paperclip Hub is free. So is most of what we build. <em>Sponsoring keeps it that way.</em>
+            Paperclip Hub is free. So is most of what we build.{" "}
+            <em>Sponsoring keeps it that way.</em>
           </h1>
           <p>
             Your sponsorship pays for the hours behind these projects: fixing bugs, answering

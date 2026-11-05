@@ -34,3 +34,7 @@ Thanks for the contribution! A few things that make review faster:
 ## Reviewer notes
 
 <!-- Anything reviewers should focus on, risks worth flagging, follow-ups intentionally deferred. -->
+
+---
+
+<sub>No preview URL on this PR? That's expected. Previews are opt-in: put `[preview]` in a commit message, or push `git commit --allow-empty -m "[preview]"`. Production deploys are unaffected. See CONTRIBUTING for the details.</sub>

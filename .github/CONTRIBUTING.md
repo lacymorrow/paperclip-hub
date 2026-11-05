@@ -33,6 +33,22 @@ For non-trivial work — new routes, schema changes, auth/permission changes, in
 3. Follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `perf:`, `test:`).
 4. Fill in the PR template — especially the test plan.
 
+## Preview deployments are opt-in
+
+Pushing a branch won't build a Vercel preview. It's a small share of build time here, but the rule is the same across every project so there's one answer to remember.
+
+Want a preview URL? Put `[preview]` anywhere in the commit message:
+
+```sh
+git commit -m "fix(registry): plugin card spacing [preview]"
+```
+
+If you already pushed, an empty commit does it: `git commit --allow-empty -m "[preview]"`. The match is a plain substring, so a commit message that just mentions the marker will build too. Redeploying from the Vercel dashboard also works, since that skips the check entirely.
+
+Production isn't affected. Merges to `main` still build and deploy as they always have.
+
+The policy lives in the Vercel dashboard "Ignored Build Step" field for this project, not in a script here, and it's re-asserted automatically so hand edits there get reverted. If you ever need a per-repo rule instead, add an `ignoreCommand` key to `vercel.json` pointing at a script. That key overrides the dashboard completely, which is worth knowing in both directions: a dashboard change does nothing once it's set.
+
 ## Code style
 
 - **Server Components first.** Reach for `'use client'` only when you need browser-only APIs or interactivity.

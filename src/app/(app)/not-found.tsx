@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteBrand } from "@/components/site/site-brand";
 import { SiteFooter } from "@/components/site/site-footer";
 import "./plugins/hub.css";
 
@@ -6,12 +7,7 @@ export default function NotFound() {
   return (
     <div className="hub-c1">
       <header className="hc-header">
-        <Link href="/" className="hc-brand">
-          <span className="hc-brand-wm">
-            <b>Paper</b>clip
-          </span>
-          <span className="hc-brand-sub">Hub</span>
-        </Link>
+        <SiteBrand />
         <nav className="hc-nav">
           <Link href="/">Browse</Link>
           <Link href="/submit">Submit</Link>

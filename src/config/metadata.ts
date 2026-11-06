@@ -50,7 +50,9 @@ export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
-    template: `%s | ${siteConfig.tagline}`,
+    // One pattern for every page: "<Page> | Paperclip Hub". Pages that need a
+    // different shape (the home page) opt out with `title: { absolute }`.
+    template: `%s | ${siteConfig.title}`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.title,

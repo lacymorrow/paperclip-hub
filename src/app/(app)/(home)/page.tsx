@@ -2,6 +2,7 @@ import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Search } from "luci
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BuildAndServeLink } from "@/components/site/build-and-serve-link";
+import { SiteBrand } from "@/components/site/site-brand";
 import { SiteFooter } from "@/components/site/site-footer";
 import { featuredSponsor } from "@/config/featured";
 import { sponsorEvent } from "@/config/sponsor";
@@ -20,7 +21,8 @@ const HOME_OG_IMAGE = `/og?${new URLSearchParams({
 }).toString()}`;
 
 export const metadata: Metadata = {
-  title: HOME_TITLE,
+  // Brand first on the home page; every other page gets "<Page> | Paperclip Hub".
+  title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
   alternates: {
     canonical: "https://cliphub.fyi/",
@@ -160,12 +162,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       />
       {/* Header */}
       <header className={`hc-header${isSearching ? "" : " hc-header--ondark"}`}>
-        <Link href="/" className="hc-brand">
-          <span className="hc-brand-wm">
-            <b>Paper</b>clip
-          </span>
-          <span className="hc-brand-sub">Hub</span>
-        </Link>
+        <SiteBrand />
         <nav className="hc-nav">
           <Link href="/" className="is-active">
             Browse

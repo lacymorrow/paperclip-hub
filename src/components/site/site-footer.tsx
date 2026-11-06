@@ -4,9 +4,10 @@ import { MoreByLacy } from "./more-by-lacy";
 export function SiteFooter() {
   return (
     <footer className="hc-foot">
+      {/* First mention is the full name. "the Hub" is fine after this. */}
       <div className="l">
         <b>Paperclip</b>
-        <span>The Hub</span>
+        <span>Hub</span>
       </div>
       <p className="hc-foot-bas">
         <Link href="/support" className="hc-bas-link">
